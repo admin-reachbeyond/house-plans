@@ -28,15 +28,9 @@
   <div id="label"></div>
 </div>
 
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
-  }
-}
-</script>
-<script type="module">
-import * as THREE from "three";
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// THREE is now a global, no imports needed
 
 // ---- Real-world dimensions, in meters, taken directly from the floor plans ----
 const W = 9, D = 12, FLOOR_H = 3, H = FLOOR_H * 2;
