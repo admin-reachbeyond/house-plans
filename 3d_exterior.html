@@ -36,11 +36,11 @@
 const W = 9, D = 12, FLOOR_H = 3, H = FLOOR_H * 2;
 
 const GLASS = "#a9c6d6";
-const DOOR_SOLID = "#7d6a55";
-const WALL = "#efe8d8";
-const WALL_DARK = "#e2d9c4";
-const ROOF = "#c9c0aa";
-const TRIM = "#3a352c";
+const DOOR_SOLID = "#36393e";
+const WALL = "#f5f3ec";
+const WALL_DARK = "#e5e2d6";
+const ROOF = "#3a3a3a";
+const TRIM = "#2a2a2a";
 
 const openings = [
   // FRONT (south, z = D)
@@ -52,7 +52,7 @@ const openings = [
   { wall: "back", x0: 4.1, x1: 5.0, y0: 0, y1: 2, type: "door", label: "Kitchen door" },
   { wall: "back", x0: 6.25, x1: 7.75, y0: 0.75, y1: 1.95, type: "window", label: "Kitchen 1.5x1.2" },
   { wall: "back", x0: 2.5, x1: 3.1, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Bed 0.6x1.2" },
-  { wall: "back", x0: 3.95, x1: 4.85, y0: FLOOR_H + 1.2, y1: FLOOR_H + 1.8, type: "window", label: "Ensuite 0.9x0.6" },
+  { wall: "back", x0: 3.95, x1: 4.85, y0: FLOOR_H + 1.35, y1: FLOOR_H + 1.95, type: "window", label: "Ensuite 0.9x0.6" },
   { wall: "back", x0: 5.7, x1: 6.3, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Bed 0.6x1.2" },
   // RIGHT (east, x = W) -- distance measured from front (south)
   { wall: "right", x0: D - 8.25, x1: D - 7.35, y0: 0, y1: 2, type: "door", label: "Kitchen side door" },
@@ -62,11 +62,11 @@ const openings = [
   // LEFT (west, x = 0)
   { wall: "left", x0: D - 1.4, x1: D - 0.5, y0: 0.75, y1: 1.95, type: "window", label: "Living 0.9x1.2" },
   { wall: "left", x0: D - 5.85, x1: D - 4.65, y0: 0, y1: 2, type: "door", label: "Front door" },
-  { wall: "left", x0: D - 7.3, x1: D - 6.7, y0: 0.75, y1: 1.35, type: "window", label: "Bathroom 0.9x0.6" },
+  { wall: "left", x0: D - 7.3, x1: D - 6.7, y0: 1.35, y1: 1.95, type: "window", label: "Bathroom 0.9x0.6" },
   { wall: "left", x0: D - 10.75, x1: D - 9.25, y0: 0.75, y1: 1.95, type: "window", label: "Bed 1.5x1.2" },
   { wall: "left", x0: D - 10.75, x1: D - 9.25, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Bed 1.5x1.2" },
-  { wall: "left", x0: D - 7.37, x1: D - 6.47, y0: FLOOR_H + 1.2, y1: FLOOR_H + 1.8, type: "window", label: "Bathroom 0.9x0.6" },
-  { wall: "left", x0: D - 5.5, x1: D - 4.6, y0: FLOOR_H + 1.2, y1: FLOOR_H + 1.8, type: "window", label: "Ensuite 0.9x0.6" },
+  { wall: "left", x0: D - 7.37, x1: D - 6.47, y0: FLOOR_H + 1.35, y1: FLOOR_H + 1.95, type: "window", label: "Bathroom 0.9x0.6" },
+  { wall: "left", x0: D - 5.5, x1: D - 4.6, y0: FLOOR_H + 1.35, y1: FLOOR_H + 1.95, type: "window", label: "Ensuite 0.9x0.6" },
 ];
 
 function wallToWorld(o) {
@@ -98,14 +98,14 @@ mount.appendChild(renderer.domElement);
 
 scene.add(new THREE.AmbientLight("#ffffff", 0.55));
 const sun = new THREE.DirectionalLight("#fff3de", 1.1);
-sun.position.set(18, 22, 12);
+sun.position.set(18, 22, -6);
 sun.castShadow = true;
 sun.shadow.mapSize.set(2048, 2048);
 sun.shadow.camera.left = -20; sun.shadow.camera.right = 20;
 sun.shadow.camera.top = 20; sun.shadow.camera.bottom = -20;
 scene.add(sun);
 const fill = new THREE.DirectionalLight("#cfe8ff", 0.35);
-fill.position.set(-14, 10, -10);
+fill.position.set(-14, 10, 10);
 scene.add(fill);
 
 const ground = new THREE.Mesh(
@@ -134,29 +134,30 @@ const trim = new THREE.Mesh(trimGeo, trimMat);
 trim.position.set(W / 2, FLOOR_H, D / 2);
 group.add(trim);
 
-const roofOverhang = 0.35;
+const ohFront = 1.8, ohBack = 0.6, ohLeft = 0.8, ohRight = 0.8;
+const roofW = W + ohLeft + ohRight, roofD = D + ohFront + ohBack;
+const roofCenterX = W / 2 + (ohRight - ohLeft) / 2;
+const roofCenterZ = D / 2 + (ohFront - ohBack) / 2;
 const roof = new THREE.Mesh(
-  new THREE.BoxGeometry(W + roofOverhang * 2, 0.3, D + roofOverhang * 2),
+  new THREE.BoxGeometry(roofW, 0.3, roofD),
   new THREE.MeshStandardMaterial({ color: ROOF, roughness: 0.85 })
 );
-roof.position.set(W / 2, H + 0.15, D / 2);
+roof.position.set(roofCenterX, H + 0.15, roofCenterZ);
 roof.castShadow = true;
 group.add(roof);
 
 const parapetMat = new THREE.MeshStandardMaterial({ color: WALL_DARK });
-const parapetGeo = new THREE.BoxGeometry(W + roofOverhang * 2, 0.4, 0.1);
-const p1 = new THREE.Mesh(parapetGeo, parapetMat);
-p1.position.set(W / 2, H + 0.5, D + roofOverhang);
+const p1 = new THREE.Mesh(new THREE.BoxGeometry(roofW, 0.4, 0.1), parapetMat);
+p1.position.set(roofCenterX, H + 0.5, D + ohFront);
 group.add(p1);
-const p2 = new THREE.Mesh(parapetGeo, parapetMat);
-p2.position.set(W / 2, H + 0.5, -roofOverhang);
+const p2 = new THREE.Mesh(new THREE.BoxGeometry(roofW, 0.4, 0.1), parapetMat);
+p2.position.set(roofCenterX, H + 0.5, -ohBack);
 group.add(p2);
-const parapetSideGeo = new THREE.BoxGeometry(0.1, 0.4, D + roofOverhang * 2);
-const p3 = new THREE.Mesh(parapetSideGeo, parapetMat);
-p3.position.set(-roofOverhang, H + 0.5, D / 2);
+const p3 = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.4, roofD), parapetMat);
+p3.position.set(-ohLeft, H + 0.5, roofCenterZ);
 group.add(p3);
-const p4 = new THREE.Mesh(parapetSideGeo, parapetMat);
-p4.position.set(W + roofOverhang, H + 0.5, D / 2);
+const p4 = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.4, roofD), parapetMat);
+p4.position.set(W + ohRight, H + 0.5, roofCenterZ);
 group.add(p4);
 
 // ---- Split-level roof over the rooftop terrace: both sections sloped, shorter/lower at front, longer/higher at back ----
@@ -177,7 +178,7 @@ function slopedPanel(z0, z1, h0, h1, extendStart, extendEnd) {
   const zA = z0 - extendStart, zB = z1 + extendEnd;
   const hA = h0 - rate * extendStart, hB = h1 + rate * extendEnd;
   const depth = zB - zA;
-  const geo = new THREE.BoxGeometry(W + 1.0, 0.15, depth);
+  const geo = new THREE.BoxGeometry(W + ohLeft + ohRight, 0.15, depth);
   const mesh = new THREE.Mesh(geo, roofMat2);
   mesh.rotation.x = -Math.atan2(hB - hA, depth);
   mesh.position.set(W / 2, deckY + (hA + hB) / 2, (zA + zB) / 2);
@@ -186,13 +187,13 @@ function slopedPanel(z0, z1, h0, h1, extendStart, extendEnd) {
 }
 
 // back (longer/higher) sloped panel: z=0 (ridge) -> z=splitZ (eave), overhangs past the back wall
-group.add(slopedPanel(0, splitZ, backRidgeH, backEaveH, 0.6, 0));
-// front (shorter/lower) sloped panel: z=splitZ (ridge) -> z=D (eave), overhangs past the front wall
-group.add(slopedPanel(splitZ, D, frontRidgeH, frontEaveH, 0, 0.6));
+group.add(slopedPanel(0, splitZ, backRidgeH, backEaveH, ohBack, 0));
+// front (shorter/lower) sloped panel: z=splitZ (ridge) -> z=D (eave), overhangs past the front wall to match the balcony coverage below
+group.add(slopedPanel(splitZ, D, frontRidgeH, frontEaveH, 0, ohFront));
 
 // vertical clerestory band connecting the two heights, running the full width at z = splitZ
 const band = new THREE.Mesh(
-  new THREE.BoxGeometry(W + 1.0, backEaveH - frontRidgeH, 0.12),
+  new THREE.BoxGeometry(W + ohLeft + ohRight, backEaveH - frontRidgeH, 0.12),
   bandMat
 );
 band.position.set(W / 2, deckY + frontRidgeH + (backEaveH - frontRidgeH) / 2, splitZ);
@@ -204,10 +205,10 @@ function heightAt(z) {
   return frontRidgeH + (frontEaveH - frontRidgeH) * ((z - splitZ) / (D - splitZ));
 }
 [
-  [0.3, 0.3], [W - 0.3, 0.3],
+  [0.3, -ohBack + 0.3], [W - 0.3, -ohBack + 0.3],
   [0.3, splitZ - 0.3], [W - 0.3, splitZ - 0.3],
   [0.3, splitZ + 0.3], [W - 0.3, splitZ + 0.3],
-  [0.3, D - 0.3], [W - 0.3, D - 0.3],
+  [0.3, D + ohFront - 0.3], [W - 0.3, D + ohFront - 0.3],
 ].forEach(([px, pz]) => {
   const pclear = heightAt(pz);
   const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, pclear, 8), postMat2);
@@ -233,7 +234,7 @@ openings.forEach((o) => {
 
   const glassMat = isGlass
     ? new THREE.MeshBasicMaterial({ color: GLASS })
-    : new THREE.MeshStandardMaterial({ color: DOOR_SOLID, roughness: 0.8 });
+    : new THREE.MeshBasicMaterial({ color: DOOR_SOLID });
   const glassPos = [...pos];
   const offsetAxis = isFrontBack ? 2 : 0;
   glassPos[offsetAxis] += outward * 0.02;
@@ -243,12 +244,14 @@ openings.forEach((o) => {
   group.add(mesh);
 });
 
-const shadeMat = new THREE.MeshStandardMaterial({ color: "#8a8371", roughness: 0.9 });
-const postMat = new THREE.MeshStandardMaterial({ color: "#6b6558" });
+const shadeMat = new THREE.MeshStandardMaterial({ color: ROOF, roughness: 0.85 });
+const postMat = new THREE.MeshStandardMaterial({ color: TRIM });
 function addShade(x0, x1, depth, yTop) {
   const w = x1 - x0;
+  const drop = 0.12;
   const slab = new THREE.Mesh(new THREE.BoxGeometry(w, 0.12, depth), shadeMat);
-  slab.position.set((x0 + x1) / 2, yTop, -depth / 2);
+  slab.position.set((x0 + x1) / 2, yTop - drop / 2, -depth / 2);
+  slab.rotation.x = -Math.atan2(drop, depth);
   slab.castShadow = true;
   group.add(slab);
   [x0 + 0.15, x1 - 0.15].forEach((px) => {
@@ -257,16 +260,79 @@ function addShade(x0, x1, depth, yTop) {
     group.add(post);
   });
 }
-addShade(0, 4, 2.5, FLOOR_H - 0.05);
-addShade(4, 9, 2.5, FLOOR_H - 0.05);
+addShade(0, 9, 2.5, FLOOR_H - 0.05);
 
-const carportW = 5, carportTopY = 2.7;
+// ---- Continuous wraparound shade roof at ground floor ceiling height, same depth/style as the back (outdoor kitchen) shade ----
+const gfShadeY = FLOOR_H - 0.05, gfShadeDepth = 2.5;
+function addShadeSide(wall, span0, span1) {
+  const span = span1 - span0;
+  const isNS = wall === "front" || wall === "back"; // slab runs along X, projects in Z
+  const drop = 0.12;
+  const geo = new THREE.BoxGeometry(isNS ? span : gfShadeDepth, 0.12, isNS ? gfShadeDepth : span);
+  const slab = new THREE.Mesh(geo, shadeMat);
+  slab.castShadow = true;
+  const mid = (span0 + span1) / 2;
+  const postPositions = [];
+  if (wall === "front") {
+    slab.position.set(mid, gfShadeY - drop / 2, D + gfShadeDepth / 2);
+    slab.rotation.x = Math.atan2(drop, gfShadeDepth);
+    postPositions.push([span0 + 0.15, D + gfShadeDepth - 0.15], [span1 - 0.15, D + gfShadeDepth - 0.15]);
+  } else if (wall === "right") {
+    slab.position.set(W + gfShadeDepth / 2, gfShadeY - drop / 2, mid);
+    slab.rotation.z = -Math.atan2(drop, gfShadeDepth);
+    postPositions.push([W + gfShadeDepth - 0.15, span0 + 0.15], [W + gfShadeDepth - 0.15, span1 - 0.15]);
+  } else if (wall === "left") {
+    slab.position.set(-gfShadeDepth / 2, gfShadeY, mid);
+    postPositions.push([-gfShadeDepth + 0.15, span0 + 0.15], [-gfShadeDepth + 0.15, span1 - 0.15]);
+  }
+  group.add(slab);
+  postPositions.forEach(([px, pz]) => {
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, gfShadeY, 8), postMat);
+    post.position.set(px, gfShadeY / 2, pz);
+    group.add(post);
+  });
+}
+addShadeSide("front", 0, W);
+addShadeSide("right", 0, D);
+
+// corner piece connecting the back shade and right shade roofs at the back-right corner
+const cornerDrop = 0.12;
+const cornerSlab = new THREE.Mesh(
+  new THREE.BoxGeometry(gfShadeDepth, 0.12, gfShadeDepth),
+  shadeMat
+);
+cornerSlab.position.set(W + gfShadeDepth / 2, gfShadeY - cornerDrop / 2, -gfShadeDepth / 2);
+cornerSlab.rotation.x = -Math.atan2(cornerDrop, gfShadeDepth);
+cornerSlab.rotation.z = -Math.atan2(cornerDrop, gfShadeDepth);
+cornerSlab.castShadow = true;
+group.add(cornerSlab);
+const cornerPost = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, gfShadeY, 8), postMat);
+cornerPost.position.set(W + gfShadeDepth - 0.15, gfShadeY / 2, -gfShadeDepth + 0.15);
+group.add(cornerPost);
+
+// corner piece connecting the front shade and right shade roofs at the front-right corner
+const cornerSlab2 = new THREE.Mesh(
+  new THREE.BoxGeometry(gfShadeDepth, 0.12, gfShadeDepth),
+  shadeMat
+);
+cornerSlab2.position.set(W + gfShadeDepth / 2, gfShadeY - cornerDrop / 2, D + gfShadeDepth / 2);
+cornerSlab2.rotation.x = Math.atan2(cornerDrop, gfShadeDepth);
+cornerSlab2.rotation.z = -Math.atan2(cornerDrop, gfShadeDepth);
+cornerSlab2.castShadow = true;
+group.add(cornerSlab2);
+const cornerPost2 = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, gfShadeY, 8), postMat);
+cornerPost2.position.set(W + gfShadeDepth - 0.15, gfShadeY / 2, D + gfShadeDepth - 0.15);
+group.add(cornerPost2);
+
+const carportW = 5, carportTopY = gfShadeY;
 const cz0 = D - 9, cz1 = D - 2;
+const cpDrop = 0.12;
 const carportSlab = new THREE.Mesh(
   new THREE.BoxGeometry(carportW, 0.12, cz1 - cz0),
   shadeMat
 );
-carportSlab.position.set(-carportW / 2, carportTopY, (cz0 + cz1) / 2);
+carportSlab.position.set(-carportW / 2, carportTopY - cpDrop / 2, (cz0 + cz1) / 2);
+carportSlab.rotation.z = Math.atan2(cpDrop, carportW);
 carportSlab.castShadow = true;
 group.add(carportSlab);
 [
@@ -277,23 +343,172 @@ group.add(carportSlab);
   post.position.set(px, carportTopY / 2, pz);
   group.add(post);
 });
-const car = new THREE.Mesh(
-  new THREE.BoxGeometry(1.9, 0.6, 5.3),
-  new THREE.MeshStandardMaterial({ color: "#c7d2da" })
-);
-car.position.set(-carportW / 2, 0.35, (cz0 + cz1) / 2);
-car.castShadow = true;
-group.add(car);
 
+// bridge connecting the carport roof to the back shade extension (fills the gap between carport's back edge and the back-left corner)
+const bridgeSlab = new THREE.Mesh(
+  new THREE.BoxGeometry(carportW, 0.12, cz0),
+  shadeMat
+);
+bridgeSlab.position.set(-carportW / 2, carportTopY - cpDrop / 2, cz0 / 2);
+bridgeSlab.rotation.z = Math.atan2(cpDrop, carportW);
+bridgeSlab.castShadow = true;
+group.add(bridgeSlab);
+const bridgePost = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, carportTopY, 8), postMat);
+bridgePost.position.set(-carportW + 0.15, carportTopY / 2, 0.15);
+group.add(bridgePost);
+
+// Toyota Tacoma-style pickup truck, built from primitives (length ~5.3m, width ~1.9m)
+const truckGroup = new THREE.Group();
+const truckBody = new THREE.MeshStandardMaterial({ color: "#3d4750", roughness: 0.5, metalness: 0.3 });
+const truckGlass = new THREE.MeshStandardMaterial({ color: "#232a30", roughness: 0.2, metalness: 0.4 });
+const truckWheel = new THREE.MeshStandardMaterial({ color: "#1a1a1a", roughness: 0.8 });
+const truckChrome = new THREE.MeshStandardMaterial({ color: "#c8ccd0", roughness: 0.3, metalness: 0.6 });
+
+// chassis / bed (full length)
+const chassis = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.5, 5.3), truckBody);
+chassis.position.set(0, 0.65, 0);
+chassis.castShadow = true;
+truckGroup.add(chassis);
+
+// cab (rear third of the truck)
+const cab = new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.95, 1.9), truckBody);
+cab.position.set(0, 1.375, 1.2);
+cab.castShadow = true;
+truckGroup.add(cab);
+
+// windshield (angled)
+const windshield = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.6, 0.06), truckGlass);
+windshield.position.set(0, 1.35, 0.28);
+windshield.rotation.x = -0.35;
+truckGroup.add(windshield);
+// side windows
+const winL = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.5, 1.5), truckGlass);
+winL.position.set(0.93, 1.45, 1.2);
+truckGroup.add(winL);
+const winR = winL.clone();
+winR.position.x = -0.93;
+truckGroup.add(winR);
+
+// truck bed side rails (low walls on the open bed section, front two-thirds)
+[0.93, -0.93].forEach((x) => {
+  const rail = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.35, 3.2), truckBody);
+  rail.position.set(x, 1.075, -1.3);
+  truckGroup.add(rail);
+});
+const tailgate = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.35, 0.06), truckBody);
+tailgate.position.set(0, 1.075, -2.9);
+truckGroup.add(tailgate);
+
+// front bumper/grille hint
+const bumper = new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.15, 0.1), truckChrome);
+bumper.position.set(0, 0.5, -2.6);
+truckGroup.add(bumper);
+
+// wheels (4, laid on their side so the cylinder axis runs along X)
+[[0.85, 1.75], [-0.85, 1.75], [0.85, -1.75], [-0.85, -1.75]].forEach(([x, z]) => {
+  const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.37, 0.37, 0.25, 16), truckWheel);
+  wheel.rotation.z = Math.PI / 2;
+  wheel.position.set(x, 0.37, z);
+  wheel.castShadow = true;
+  truckGroup.add(wheel);
+});
+
+truckGroup.position.set(-carportW / 2, 0, (cz0 + cz1) / 2);
+group.add(truckGroup);
+
+// ---- Small canopy awnings over ground-floor openings not already covered (shade roofs cover the back; carport covers most of the left wall) ----
+const canopyMat = new THREE.MeshStandardMaterial({ color: ROOF, roughness: 0.85 });
+const bracketMat = new THREE.MeshStandardMaterial({ color: TRIM });
+function addCanopy(wall, span0, span1, topY, projection) {
+  const width = span1 - span0;
+  const mid = (span0 + span1) / 2;
+  const geo = new THREE.BoxGeometry(
+    wall === "front" || wall === "back" ? width + 0.3 : projection,
+    0.08,
+    wall === "front" || wall === "back" ? projection : width + 0.3
+  );
+  const canopy = new THREE.Mesh(geo, canopyMat);
+  canopy.castShadow = true;
+  const brackets = [];
+  if (wall === "front") {
+    canopy.position.set(mid, topY, D + projection / 2);
+    brackets.push([span0 + 0.1, D + 0.05], [span1 - 0.1, D + 0.05]);
+  } else if (wall === "right") {
+    canopy.position.set(W + projection / 2, topY, mid);
+    brackets.push([W + 0.05, span0 + 0.1], [W + 0.05, span1 - 0.1]);
+  } else if (wall === "left") {
+    canopy.position.set(-projection / 2, topY, mid);
+    brackets.push([-0.05, span0 + 0.1], [-0.05, span1 - 0.1]);
+  } else if (wall === "back") {
+    canopy.position.set(mid, topY, -projection / 2);
+    brackets.push([span0 + 0.1, -0.05], [span1 - 0.1, -0.05]);
+  }
+  group.add(canopy);
+  brackets.forEach(([bx, bz]) => {
+    const bracket = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.3, 0.04), bracketMat);
+    bracket.position.set(bx, topY - 0.15, bz);
+    group.add(bracket);
+  });
+}
+
+// (Front and right GF canopies replaced by continuous wraparound shade roof, below)
+// Left wall: the two GF openings outside the carport's coverage (dist 2-9m from front)
+
+// ---- First floor canopies: none of these have any existing coverage, so all get one, wider than the ground floor set ----
+const ffCanopyTopY = FLOOR_H + 2.05; // just above the 1.2m-tall windows (sill 0.75 + height 1.2 = top at 1.95, plus small margin)
+const ffProjection = 1.0;
+// Back wall: one connected canopy spanning all 3 windows (2 bedroom + ensuite), extended a bit wider beyond the outer windows
+addCanopy("back", 2.2, 6.6, ffCanopyTopY, ffProjection);
+// Right wall: Chill room window + Bedroom window, widened 0.3m each side to match the back extension
+addCanopy("right", D - 4.2, D - 2.1, ffCanopyTopY, ffProjection);
+addCanopy("right", D - 10.65, D - 8.55, ffCanopyTopY, ffProjection);
+// Left wall: Bedroom window widened, and one connected canopy over the bathroom + ensuite windows
+addCanopy("left", D - 11.05, D - 8.95, ffCanopyTopY, ffProjection);
+addCanopy("left", D - 7.67, D - 4.3, ffCanopyTopY, ffProjection); // connected: bathroom + ensuite, tops now aligned
+
+// ---- Balcony: protruding deck outside the Chill Room, matching the plan's 3.7m x 1.5m balcony room ----
+const balX0 = 5.3, balX1 = W; // 5.3m -> east wall, matches Chill Room's width on the front wall
+const balDepth = 1.5;
+const balZ0 = D, balZ1 = D + balDepth;
+const deckMat = new THREE.MeshStandardMaterial({ color: WALL_DARK, roughness: 0.9 });
 const railMat = new THREE.MeshStandardMaterial({ color: TRIM });
-const rail = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.05, 0.05), railMat);
-rail.position.set(6.75, FLOOR_H + 1.0, D + 0.05);
-group.add(rail);
-for (let i = 0; i < 7; i++) {
-  const baluster = new THREE.Mesh(new THREE.BoxGeometry(0.03, 1.0, 0.03), railMat);
-  baluster.position.set(5.95 + i * 0.3, FLOOR_H + 0.5, D + 0.05);
+
+const balDeck = new THREE.Mesh(
+  new THREE.BoxGeometry(balX1 - balX0, 0.15, balDepth),
+  deckMat
+);
+balDeck.position.set((balX0 + balX1) / 2, FLOOR_H - 0.075, (balZ0 + balZ1) / 2);
+balDeck.castShadow = true;
+balDeck.receiveShadow = true;
+group.add(balDeck);
+
+const railH = 1.0, railY = FLOOR_H + railH / 2;
+// top rails: left edge, right edge (east wall side), and front edge
+const railLeft = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, balDepth), railMat);
+railLeft.position.set(balX0, FLOOR_H + railH, (balZ0 + balZ1) / 2);
+group.add(railLeft);
+const railFront = new THREE.Mesh(new THREE.BoxGeometry(balX1 - balX0, 0.05, 0.05), railMat);
+railFront.position.set((balX0 + balX1) / 2, FLOOR_H + railH, balZ1);
+group.add(railFront);
+const railRight = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, balDepth), railMat);
+railRight.position.set(balX1, FLOOR_H + railH, (balZ0 + balZ1) / 2);
+group.add(railRight);
+// balusters along the front edge
+for (let i = 0; i <= 12; i++) {
+  const baluster = new THREE.Mesh(new THREE.BoxGeometry(0.03, railH, 0.03), railMat);
+  baluster.position.set(balX0 + (i / 12) * (balX1 - balX0), railY, balZ1);
   group.add(baluster);
 }
+// balusters along the left and right edges
+for (let i = 0; i <= 5; i++) {
+  const bL = new THREE.Mesh(new THREE.BoxGeometry(0.03, railH, 0.03), railMat);
+  bL.position.set(balX0, railY, balZ0 + (i / 5) * balDepth);
+  group.add(bL);
+  const bR = new THREE.Mesh(new THREE.BoxGeometry(0.03, railH, 0.03), railMat);
+  bR.position.set(balX1, railY, balZ0 + (i / 5) * balDepth);
+  group.add(bR);
+}
+
 
 let theta = Math.PI / 4, phi = 1.1, radius = 22;
 let dragging = false, lastX = 0, lastY = 0;
