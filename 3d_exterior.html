@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>296 Land Plot — 3D Exterior</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; }
+  #header { padding: 12px 16px; background: #fff; border-bottom: 1px solid #d8d2c2; }
+  #header h1 { margin: 0; font-size: 17px; color: #2b2b2b; }
+  #header p { margin: 2px 0 0; font-size: 12px; color: #6b6558; }
+  #canvas-wrap { position: relative; width: 100%; height: calc(100% - 54px); background: #dfe7ea; }
+  #canvas-wrap canvas { display: block; }
+  #label {
+    position: absolute; top: 12px; left: 12px;
+    background: rgba(255,255,255,0.92); padding: 6px 12px; border-radius: 6px;
+    font-size: 13px; color: #2b2b2b; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 1px solid #d8d2c2; pointer-events: none; display: none;
+  }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <h1>296 Land Plot — 3D Exterior</h1>
+  <p>Drag to rotate · scroll to zoom · hover an opening to see its label &nbsp;·&nbsp; <a href="index.html" style="color:#6b6558;">&larr; back to floor plans</a></p>
+</div>
+<div id="canvas-wrap">
+  <div id="label"></div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from "three";
+
+// ---- Real-world dimensions, in meters, taken directly from the floor plans ----
+const W = 9, D = 12, FLOOR_H = 3, H = FLOOR_H * 2;
+
+const GLASS = "#a9c6d6";
+const DOOR_SOLID = "#7d6a55";
+const WALL = "#efe8d8";
+const WALL_DARK = "#e2d9c4";
+const ROOF = "#c9c0aa";
+const TRIM = "#3a352c";
+
+const openings = [
+  // FRONT (south, z = D)
+  { wall: "front", x0: 1.05, x1: 3.45, y0: 0, y1: 2, type: "door", label: "Living sliding 2.4x2" },
+  { wall: "front", x0: 5.75, x1: 7.75, y0: 0.75, y1: 1.95, type: "window", label: "Dining 2x1.2" },
+  { wall: "front", x0: 1.25, x1: 3.25, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Master 2x1.2" },
+  { wall: "front", x0: 5.85, x1: 7.65, y0: FLOOR_H, y1: FLOOR_H + 2, type: "door", label: "Balcony sliding 1.8x2" },
+  // BACK (north, z = 0)
+  { wall: "back", x0: 4.1, x1: 5.0, y0: 0, y1: 2, type: "door", label: "Kitchen door" },
+  { wall: "back", x0: 6.25, x1: 7.75, y0: 0.75, y1: 1.95, type: "window", label: "Kitchen 1.5x1.2" },
+  { wall: "back", x0: 2.5, x1: 3.1, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Bed 0.6x1.2" },
+  { wall: "back", x0: 3.95, x1: 4.85, y0: FLOOR_H + 1.2, y1: FLOOR_H + 1.8, type: "window", label: "Ensuite 0.9x0.6" },
+  { wall: "back", x0: 5.7, x1: 6.3, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Bed 0.6x1.2" },
+  // RIGHT (east, x = W) -- distance measured from front (south)
+  { wall: "right", x0: D - 8.25, x1: D - 7.35, y0: 0, y1: 2, type: "door", label: "Kitchen side door" },
+  { wall: "right", x0: D - 3.9, x1: D - 2.4, y0: 0.75, y1: 1.95, type: "window", label: "Dining 1.5x1.2" },
+  { wall: "right", x0: D - 3.9, x1: D - 2.4, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Chill room 1.5x1.2" },
+  { wall: "right", x0: D - 10.35, x1: D - 8.85, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Bed 1.5x1.2" },
+  // LEFT (west, x = 0)
+  { wall: "left", x0: D - 1.4, x1: D - 0.5, y0: 0.75, y1: 1.95, type: "window", label: "Living 0.9x1.2" },
+  { wall: "left", x0: D - 5.85, x1: D - 4.65, y0: 0, y1: 2, type: "door", label: "Front door" },
+  { wall: "left", x0: D - 7.3, x1: D - 6.7, y0: 0.75, y1: 1.35, type: "window", label: "Bathroom 0.9x0.6" },
+  { wall: "left", x0: D - 10.75, x1: D - 9.25, y0: 0.75, y1: 1.95, type: "window", label: "Bed 1.5x1.2" },
+  { wall: "left", x0: D - 10.75, x1: D - 9.25, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Bed 1.5x1.2" },
+  { wall: "left", x0: D - 7.37, x1: D - 6.47, y0: FLOOR_H + 1.2, y1: FLOOR_H + 1.8, type: "window", label: "Bathroom 0.9x0.6" },
+  { wall: "left", x0: D - 5.5, x1: D - 4.6, y0: FLOOR_H + 1.2, y1: FLOOR_H + 1.8, type: "window", label: "Ensuite 0.9x0.6" },
+];
+
+function wallToWorld(o) {
+  const mid = (o.x0 + o.x1) / 2;
+  const h = o.y1 - o.y0;
+  const w = o.x1 - o.x0;
+  const y = (o.y0 + o.y1) / 2;
+  const eps = 0.06;
+  if (o.wall === "front") return { size: [w, h, eps], pos: [mid, y, D + eps / 2] };
+  if (o.wall === "back") return { size: [w, h, eps], pos: [mid, y, -eps / 2] };
+  if (o.wall === "right") return { size: [eps, h, w], pos: [W + eps / 2, y, mid] };
+  return { size: [eps, h, w], pos: [-eps / 2, y, mid] };
+}
+
+const mount = document.getElementById("canvas-wrap");
+const labelEl = document.getElementById("label");
+const width = mount.clientWidth, height = mount.clientHeight;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color("#dfe7ea");
+scene.fog = new THREE.Fog("#dfe7ea", 30, 70);
+
+const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 200);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(width, height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+mount.appendChild(renderer.domElement);
+
+scene.add(new THREE.AmbientLight("#ffffff", 0.55));
+const sun = new THREE.DirectionalLight("#fff3de", 1.1);
+sun.position.set(18, 22, 12);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.left = -20; sun.shadow.camera.right = 20;
+sun.shadow.camera.top = 20; sun.shadow.camera.bottom = -20;
+scene.add(sun);
+const fill = new THREE.DirectionalLight("#cfe8ff", 0.35);
+fill.position.set(-14, 10, -10);
+scene.add(fill);
+
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(80, 80),
+  new THREE.MeshStandardMaterial({ color: "#b8c9a3", roughness: 1 })
+);
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = -0.02;
+ground.receiveShadow = true;
+scene.add(ground);
+
+const group = new THREE.Group();
+group.position.set(-W / 2, 0, -D / 2);
+scene.add(group);
+
+const wallMat = new THREE.MeshStandardMaterial({ color: WALL, roughness: 0.9 });
+const houseMesh = new THREE.Mesh(new THREE.BoxGeometry(W, H, D), wallMat);
+houseMesh.position.set(W / 2, H / 2, D / 2);
+houseMesh.castShadow = true;
+houseMesh.receiveShadow = true;
+group.add(houseMesh);
+
+const trimGeo = new THREE.BoxGeometry(W + 0.04, 0.06, D + 0.04);
+const trimMat = new THREE.MeshStandardMaterial({ color: TRIM });
+const trim = new THREE.Mesh(trimGeo, trimMat);
+trim.position.set(W / 2, FLOOR_H, D / 2);
+group.add(trim);
+
+const roofOverhang = 0.35;
+const roof = new THREE.Mesh(
+  new THREE.BoxGeometry(W + roofOverhang * 2, 0.3, D + roofOverhang * 2),
+  new THREE.MeshStandardMaterial({ color: ROOF, roughness: 0.85 })
+);
+roof.position.set(W / 2, H + 0.15, D / 2);
+roof.castShadow = true;
+group.add(roof);
+
+const parapetMat = new THREE.MeshStandardMaterial({ color: WALL_DARK });
+const parapetGeo = new THREE.BoxGeometry(W + roofOverhang * 2, 0.4, 0.1);
+const p1 = new THREE.Mesh(parapetGeo, parapetMat);
+p1.position.set(W / 2, H + 0.5, D + roofOverhang);
+group.add(p1);
+const p2 = new THREE.Mesh(parapetGeo, parapetMat);
+p2.position.set(W / 2, H + 0.5, -roofOverhang);
+group.add(p2);
+const parapetSideGeo = new THREE.BoxGeometry(0.1, 0.4, D + roofOverhang * 2);
+const p3 = new THREE.Mesh(parapetSideGeo, parapetMat);
+p3.position.set(-roofOverhang, H + 0.5, D / 2);
+group.add(p3);
+const p4 = new THREE.Mesh(parapetSideGeo, parapetMat);
+p4.position.set(W + roofOverhang, H + 0.5, D / 2);
+group.add(p4);
+
+openings.forEach((o) => {
+  const { size, pos } = wallToWorld(o);
+  const isGlassDoor = o.type === "door" && o.label.toLowerCase().includes("sliding");
+  const isGlass = o.type === "window" || isGlassDoor;
+  const isFrontBack = o.wall === "front" || o.wall === "back";
+  const outward = o.wall === "front" ? 1 : o.wall === "back" ? -1 : o.wall === "right" ? 1 : -1;
+
+  const pad = 0.06;
+  const frameMat = new THREE.MeshStandardMaterial({ color: TRIM });
+  const frameSize = isFrontBack
+    ? [size[0] + pad, size[1] + pad, size[2]]
+    : [size[0], size[1] + pad, size[2] + pad];
+  const frameMesh = new THREE.Mesh(new THREE.BoxGeometry(...frameSize), frameMat);
+  frameMesh.position.set(...pos);
+  group.add(frameMesh);
+
+  const glassMat = isGlass
+    ? new THREE.MeshBasicMaterial({ color: GLASS })
+    : new THREE.MeshStandardMaterial({ color: DOOR_SOLID, roughness: 0.8 });
+  const glassPos = [...pos];
+  const offsetAxis = isFrontBack ? 2 : 0;
+  glassPos[offsetAxis] += outward * 0.02;
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(...size), glassMat);
+  mesh.position.set(...glassPos);
+  mesh.userData.label = o.label;
+  group.add(mesh);
+});
+
+const shadeMat = new THREE.MeshStandardMaterial({ color: "#8a8371", roughness: 0.9 });
+const postMat = new THREE.MeshStandardMaterial({ color: "#6b6558" });
+function addShade(x0, x1, depth, yTop) {
+  const w = x1 - x0;
+  const slab = new THREE.Mesh(new THREE.BoxGeometry(w, 0.12, depth), shadeMat);
+  slab.position.set((x0 + x1) / 2, yTop, -depth / 2);
+  slab.castShadow = true;
+  group.add(slab);
+  [x0 + 0.15, x1 - 0.15].forEach((px) => {
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, yTop, 8), postMat);
+    post.position.set(px, yTop / 2, -depth + 0.15);
+    group.add(post);
+  });
+}
+addShade(0, 4, 2.5, FLOOR_H - 0.05);
+addShade(4, 9, 2.5, FLOOR_H - 0.05);
+
+const carportW = 5, carportTopY = 2.7;
+const cz0 = D - 9, cz1 = D - 2;
+const carportSlab = new THREE.Mesh(
+  new THREE.BoxGeometry(carportW, 0.12, cz1 - cz0),
+  shadeMat
+);
+carportSlab.position.set(-carportW / 2, carportTopY, (cz0 + cz1) / 2);
+carportSlab.castShadow = true;
+group.add(carportSlab);
+[
+  [-0.15, cz0 + 0.15], [-carportW + 0.15, cz0 + 0.15],
+  [-0.15, cz1 - 0.15], [-carportW + 0.15, cz1 - 0.15],
+].forEach(([px, pz]) => {
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, carportTopY, 8), postMat);
+  post.position.set(px, carportTopY / 2, pz);
+  group.add(post);
+});
+const car = new THREE.Mesh(
+  new THREE.BoxGeometry(1.9, 0.6, 5.3),
+  new THREE.MeshStandardMaterial({ color: "#c7d2da" })
+);
+car.position.set(-carportW / 2, 0.35, (cz0 + cz1) / 2);
+car.castShadow = true;
+group.add(car);
+
+const railMat = new THREE.MeshStandardMaterial({ color: TRIM });
+const rail = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.05, 0.05), railMat);
+rail.position.set(6.75, FLOOR_H + 1.0, D + 0.05);
+group.add(rail);
+for (let i = 0; i < 7; i++) {
+  const baluster = new THREE.Mesh(new THREE.BoxGeometry(0.03, 1.0, 0.03), railMat);
+  baluster.position.set(5.95 + i * 0.3, FLOOR_H + 0.5, D + 0.05);
+  group.add(baluster);
+}
+
+let theta = Math.PI / 4, phi = 1.1, radius = 22;
+let dragging = false, lastX = 0, lastY = 0;
+function updateCamera() {
+  const cx = radius * Math.sin(phi) * Math.sin(theta);
+  const cz = radius * Math.sin(phi) * Math.cos(theta);
+  const cy = radius * Math.cos(phi);
+  camera.position.set(cx, cy, cz);
+  camera.lookAt(0, 2.5, 0);
+}
+updateCamera();
+
+const dom = renderer.domElement;
+dom.addEventListener("pointerdown", (e) => { dragging = true; lastX = e.clientX; lastY = e.clientY; });
+window.addEventListener("pointerup", () => { dragging = false; });
+window.addEventListener("pointermove", (e) => {
+  if (!dragging) return;
+  const dx = e.clientX - lastX, dy = e.clientY - lastY;
+  theta -= dx * 0.006;
+  phi = Math.min(Math.max(phi - dy * 0.006, 0.35), 1.5);
+  lastX = e.clientX; lastY = e.clientY;
+  updateCamera();
+});
+dom.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  radius = Math.min(Math.max(radius + e.deltaY * 0.02, 10), 40);
+  updateCamera();
+}, { passive: false });
+
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+dom.addEventListener("pointermove", (e) => {
+  const rect = dom.getBoundingClientRect();
+  mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(group.children, false).filter(h => h.object.userData.label);
+  if (hits.length) {
+    labelEl.textContent = hits[0].object.userData.label;
+    labelEl.style.display = "block";
+  } else {
+    labelEl.style.display = "none";
+  }
+});
+
+function animate() {
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener("resize", () => {
+  const w = mount.clientWidth, h = mount.clientHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+});
+</script>
+</body>
+</html>
