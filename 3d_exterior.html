@@ -120,6 +120,101 @@ ground.position.y = -0.02;
 ground.receiveShadow = true;
 scene.add(ground);
 
+// ---- Landscaping: trees, low bushes, and a front path ----
+const trunkMat = new THREE.MeshStandardMaterial({ color: "#6b4a35", roughness: 0.9 });
+const foliageMats = [
+  new THREE.MeshStandardMaterial({ color: "#5f8a4f", roughness: 0.9 }),
+  new THREE.MeshStandardMaterial({ color: "#6f9b5c", roughness: 0.9 }),
+  new THREE.MeshStandardMaterial({ color: "#557b47", roughness: 0.9 }),
+];
+function addTree(x, z, scale) {
+  const s = scale || 1;
+  const trunkH = 1.6 * s;
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.12 * s, 0.16 * s, trunkH, 6), trunkMat);
+  trunk.position.set(x, trunkH / 2, z);
+  trunk.castShadow = true;
+  scene.add(trunk);
+  const mat = foliageMats[Math.floor(Math.random() * foliageMats.length)];
+  [0, 1, 2].forEach((i) => {
+    const r = (1.1 - i * 0.18) * s;
+    const foliage = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), mat);
+    foliage.position.set(
+      x + (Math.random() - 0.5) * 0.3 * s,
+      trunkH + i * 0.75 * s,
+      z + (Math.random() - 0.5) * 0.3 * s
+    );
+    foliage.castShadow = true;
+    scene.add(foliage);
+  });
+}
+function addBush(x, z, scale) {
+  const s = scale || 1;
+  const mat = foliageMats[Math.floor(Math.random() * foliageMats.length)];
+  const bush = new THREE.Mesh(new THREE.SphereGeometry(0.4 * s, 8, 6), mat);
+  bush.position.set(x, 0.35 * s, z);
+  bush.scale.y = 0.75;
+  bush.castShadow = true;
+  scene.add(bush);
+}
+
+// trees scattered around the lot, kept clear of the house/carport/shade footprint
+[
+  [12, 8, 1.1], [-13, 9, 1.3], [14, -3, 1], [-14, -6, 1.2],
+  [10, 15, 1.4], [-8, 16, 1.1], [16, 4, 1], [-16, 2, 1.2],
+].forEach(([x, z, s]) => addTree(x, z, s));
+
+// low bushes flanking the front, near the house
+[
+  [-3.2, 7.4], [-1.0, 7.4], [1.5, 7.4], [3.3, 7.4],
+  [-4.9, 3], [-4.9, -2], [4.9, 3], [4.9, -2],
+].forEach(([x, z]) => addBush(x, z, 0.9 + Math.random() * 0.3));
+
+// ---- Lot boundary wall with a 5m gate centered on the front, plus a driveway to the carport and house entrance ----
+const lotX0 = -20, lotX1 = 20, lotZ0 = -16, lotZ1 = 22; // 40m wide x 38m deep block
+const gateHalf = 2.5; // 5m wide gate, centered on the front wall
+const fenceMat = new THREE.MeshStandardMaterial({ color: "#d8d4c8", roughness: 0.85 });
+const fenceH = 1.8, fenceT = 0.2;
+function fenceSeg(x0, x1, z0, z1) {
+  const w = x1 - x0, d = z1 - z0;
+  const seg = new THREE.Mesh(new THREE.BoxGeometry(Math.max(w, fenceT), fenceH, Math.max(d, fenceT)), fenceMat);
+  seg.position.set((x0 + x1) / 2, fenceH / 2, (z0 + z1) / 2);
+  seg.castShadow = true;
+  seg.receiveShadow = true;
+  scene.add(seg);
+}
+fenceSeg(lotX0, lotX1, lotZ0, lotZ0); // back
+fenceSeg(lotX0, lotX0, lotZ0, lotZ1); // left
+fenceSeg(lotX1, lotX1, lotZ0, lotZ1); // right
+fenceSeg(lotX0, -gateHalf, lotZ1, lotZ1); // front, left of gate
+fenceSeg(gateHalf, lotX1, lotZ1, lotZ1); // front, right of gate
+// simple gate posts either side of the opening
+[-gateHalf, gateHalf].forEach((x) => {
+  const post = new THREE.Mesh(new THREE.BoxGeometry(0.25, fenceH + 0.3, 0.25), new THREE.MeshStandardMaterial({ color: TRIM }));
+  post.position.set(x, (fenceH + 0.3) / 2, lotZ1);
+  scene.add(post);
+});
+
+// driveway: paved entry from the gate, running back and branching left to the carport, with a short spur to the front door
+const paveMat = new THREE.MeshStandardMaterial({ color: "#9a958a", roughness: 1 });
+const entryDrive = new THREE.Mesh(new THREE.PlaneGeometry(5, 14), paveMat);
+entryDrive.rotation.x = -Math.PI / 2;
+entryDrive.position.set(0, 0.01, 15);
+entryDrive.receiveShadow = true;
+scene.add(entryDrive);
+
+const carportDrive = new THREE.Mesh(new THREE.PlaneGeometry(6.5, 7), paveMat);
+carportDrive.rotation.x = -Math.PI / 2;
+carportDrive.position.set(-6.75, 0.01, 4.5);
+carportDrive.receiveShadow = true;
+scene.add(carportDrive);
+
+// short pedestrian spur from the driveway to the front (Living) door
+const doorSpur = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 3), paveMat);
+doorSpur.rotation.x = -Math.PI / 2;
+doorSpur.position.set(-2.25, 0.01, 7.5);
+doorSpur.receiveShadow = true;
+scene.add(doorSpur);
+
 const group = new THREE.Group();
 group.position.set(-W / 2, 0, -D / 2);
 scene.add(group);
