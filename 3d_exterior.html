@@ -90,10 +90,12 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color("#dfe7ea");
 scene.fog = new THREE.Fog("#dfe7ea", 30, 70);
 
+const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
+
 const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 200);
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer({ antialias: !isMobile });
 renderer.setSize(width, height);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
 renderer.shadowMap.enabled = true;
 mount.appendChild(renderer.domElement);
 
@@ -101,7 +103,7 @@ scene.add(new THREE.AmbientLight("#ffffff", 0.55));
 const sun = new THREE.DirectionalLight("#fff3de", 1.1);
 sun.position.set(18, 22, -6);
 sun.castShadow = true;
-sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.mapSize.set(isMobile ? 1024 : 2048, isMobile ? 1024 : 2048);
 sun.shadow.camera.left = -20; sun.shadow.camera.right = 20;
 sun.shadow.camera.top = 20; sun.shadow.camera.bottom = -20;
 scene.add(sun);
@@ -583,6 +585,10 @@ dom.addEventListener("wheel", (e) => {
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 dom.addEventListener("pointermove", (e) => {
+  if (e.pointerType === "touch" || dragging || activePointers.size > 1) {
+    labelEl.style.display = "none";
+    return;
+  }
   const rect = dom.getBoundingClientRect();
   mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
   mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
