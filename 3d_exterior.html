@@ -159,6 +159,62 @@ const p4 = new THREE.Mesh(parapetSideGeo, parapetMat);
 p4.position.set(W + roofOverhang, H + 0.5, D / 2);
 group.add(p4);
 
+// ---- Split-level roof over the rooftop terrace: both sections sloped, shorter/lower at front, longer/higher at back ----
+const splitZ = 9; // meters from back wall (z=0); front section covers z=splitZ..D, back section covers z=0..splitZ
+const deckY = H + 0.3; // sits on top of the existing flat roof deck
+const roofMat2 = new THREE.MeshStandardMaterial({ color: ROOF, roughness: 0.85, side: THREE.DoubleSide });
+const postMat2 = new THREE.MeshStandardMaterial({ color: TRIM });
+const bandMat = new THREE.MeshStandardMaterial({ color: WALL_DARK, roughness: 0.9 });
+
+// height (above deckY) at each key point along the depth, both sections sloping down toward the front (+z)
+const backRidgeH = 1.4;   // at z=0 (back wall) - matches front eave height
+const backEaveH = 2.4;    // at z=splitZ (top of the step)
+const frontRidgeH = 2.0;  // at z=splitZ (bottom of the step, start of front section)
+const frontEaveH = 1.4;   // at z=D (front wall)
+
+function slopedPanel(z0, z1, h0, h1, extendStart, extendEnd) {
+  const rate = (h1 - h0) / (z1 - z0);
+  const zA = z0 - extendStart, zB = z1 + extendEnd;
+  const hA = h0 - rate * extendStart, hB = h1 + rate * extendEnd;
+  const depth = zB - zA;
+  const geo = new THREE.BoxGeometry(W + 1.0, 0.15, depth);
+  const mesh = new THREE.Mesh(geo, roofMat2);
+  mesh.rotation.x = -Math.atan2(hB - hA, depth);
+  mesh.position.set(W / 2, deckY + (hA + hB) / 2, (zA + zB) / 2);
+  mesh.castShadow = true;
+  return mesh;
+}
+
+// back (longer/higher) sloped panel: z=0 (ridge) -> z=splitZ (eave), overhangs past the back wall
+group.add(slopedPanel(0, splitZ, backRidgeH, backEaveH, 0.6, 0));
+// front (shorter/lower) sloped panel: z=splitZ (ridge) -> z=D (eave), overhangs past the front wall
+group.add(slopedPanel(splitZ, D, frontRidgeH, frontEaveH, 0, 0.6));
+
+// vertical clerestory band connecting the two heights, running the full width at z = splitZ
+const band = new THREE.Mesh(
+  new THREE.BoxGeometry(W + 1.0, backEaveH - frontRidgeH, 0.12),
+  bandMat
+);
+band.position.set(W / 2, deckY + frontRidgeH + (backEaveH - frontRidgeH) / 2, splitZ);
+group.add(band);
+
+// support posts, height interpolated to match the slope at each post's position
+function heightAt(z) {
+  if (z <= splitZ) return backRidgeH + (backEaveH - backRidgeH) * (z / splitZ);
+  return frontRidgeH + (frontEaveH - frontRidgeH) * ((z - splitZ) / (D - splitZ));
+}
+[
+  [0.3, 0.3], [W - 0.3, 0.3],
+  [0.3, splitZ - 0.3], [W - 0.3, splitZ - 0.3],
+  [0.3, splitZ + 0.3], [W - 0.3, splitZ + 0.3],
+  [0.3, D - 0.3], [W - 0.3, D - 0.3],
+].forEach(([px, pz]) => {
+  const pclear = heightAt(pz);
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, pclear, 8), postMat2);
+  post.position.set(px, deckY + pclear / 2, pz);
+  group.add(post);
+});
+
 openings.forEach((o) => {
   const { size, pos } = wallToWorld(o);
   const isGlassDoor = o.type === "door" && o.label.toLowerCase().includes("sliding");
