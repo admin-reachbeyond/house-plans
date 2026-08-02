@@ -334,13 +334,13 @@
     <path d="M63,428 L63,433 M60,430 L63,433 L66,430" fill="none" stroke="#6b6558" stroke-width="0.8"/>
     <text x="72" y="421" text-anchor="middle" transform="rotate(-90 72,421)" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">0.9m x 1.2m</text>
 
-    <!-- Dining: window (swapped with living), bottom wall, 2m wide x 1.5m tall -->
-    <line x1="232.5" y1="450" x2="292.5" y2="450" stroke="#fbf9f3" stroke-width="5"/>
-    <line x1="232.5" y1="447" x2="262.5" y2="447" stroke="#1a1a1a" stroke-width="1.4"/>
-    <line x1="262.5" y1="453" x2="292.5" y2="453" stroke="#1a1a1a" stroke-width="1.4"/>
+    <!-- Dining: sliding door (Living also has its own sliding door on this wall), bottom wall, 2.4m wide -->
+    <line x1="226.5" y1="450" x2="298.5" y2="450" stroke="#fbf9f3" stroke-width="5"/>
+    <line x1="226.5" y1="447" x2="262.5" y2="447" stroke="#1a1a1a" stroke-width="1.4"/>
+    <line x1="262.5" y1="453" x2="298.5" y2="453" stroke="#1a1a1a" stroke-width="1.4"/>
     <path d="M240,447 L248,447 M244,444 L248,447 L244,450" fill="none" stroke="#6b6558" stroke-width="0.8"/>
     <path d="M285,453 L277,453 M281,450 L277,453 L281,456" fill="none" stroke="#6b6558" stroke-width="0.8"/>
-    <text x="262.5" y="440" text-anchor="middle" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">2m x 1.5m</text>
+    <text x="262.5" y="440" text-anchor="middle" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">2.4m x 2m (door)</text>
 
     <!-- Dining windows: right wall (NW), two 0.9m wide x 1.2m tall, evenly spaced -->
     <!-- Dining window: right wall, single window replacing the previous two, 1.5m wide x 1.2m tall -->
@@ -766,9 +766,9 @@
     <!-- GF Living sliding door 2.4m x2m, swapped with dining, centered at old window position -->
     <rect x="122" y="220" width="96" height="80" fill="#dce8ec" stroke="#1a1a1a" stroke-width="0.8"/>
     <line x1="170" y1="220" x2="170" y2="300" stroke="#1a1a1a" stroke-width="0.5"/>
-    <!-- GF Dining window 2m x1.5m, swapped with living, centered at old door position -->
-    <rect x="310" y="210" width="80" height="60" fill="#dce8ec" stroke="#1a1a1a" stroke-width="0.8"/>
-    <line x1="350" y1="210" x2="350" y2="270" stroke="#1a1a1a" stroke-width="0.5"/>
+    <!-- GF Dining sliding door 2.4m x2m, reverted back from window -->
+    <rect x="302" y="220" width="96" height="80" fill="#dce8ec" stroke="#1a1a1a" stroke-width="0.8"/>
+    <line x1="350" y1="220" x2="350" y2="300" stroke="#1a1a1a" stroke-width="0.5"/>
     <!-- FF Master bedroom window 2m x1.2m -->
     <rect x="130" y="102" width="80" height="48" fill="#dce8ec" stroke="#1a1a1a" stroke-width="0.8"/>
     <line x1="170" y1="102" x2="170" y2="150" stroke="#1a1a1a" stroke-width="0.5"/>
@@ -784,7 +784,7 @@
     <line x1="376" y1="152" x2="376" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
     <line x1="80" y1="300" x2="440" y2="300" stroke="#1a1a1a" stroke-width="1.5"/>
     <text x="170" y="325" text-anchor="middle" class="dim-text" font-size="8">Living door / Master Bed window</text>
-    <text x="350" y="325" text-anchor="middle" class="dim-text" font-size="8">Dining window / Balcony door</text>
+    <text x="350" y="325" text-anchor="middle" class="dim-text" font-size="8">Dining door / Balcony door</text>
   </svg>
 </div>
 
@@ -872,6 +872,103 @@
   </svg>
 </div>
 
+<!-- ================= SITE PLAN ================= -->
+<div class="plan-block">
+  <div class="plan-title">Site Plan — 40m x 38m block, house + driveway + landscaping</div>
+  <svg viewBox="0 0 680 575" xmlns="http://www.w3.org/2000/svg">
+
+    <!-- lot boundary wall, with 5m gate centered on the front (bottom) wall -->
+    <rect x="40" y="40" width="600" height="495" fill="#eef1e8" stroke="#1a1a1a" stroke-width="1.5"/>
+    <line x1="40" y1="535" x2="302.5" y2="535" stroke="#1a1a1a" stroke-width="3"/>
+    <line x1="377.5" y1="535" x2="640" y2="535" stroke="#1a1a1a" stroke-width="3"/>
+    <circle cx="302.5" cy="535" r="3" fill="#3a352c"/>
+    <circle cx="377.5" cy="535" r="3" fill="#3a352c"/>
+    <text x="340" y="552" text-anchor="middle" class="dim-text" font-size="9">5m gate</text>
+
+    <!-- grass, front yard zone between the house/driveway and the gate (right of the driveway only) -->
+    <rect x="302.5" y="362.5" width="337.5" height="172.5" fill="#a8c98f"/>
+
+    <!-- driveway (paved, from gate through to an apron covering the carport and front door) -->
+    <rect x="302.5" y="400" width="75" height="135" fill="#c7c2b4"/>
+    <rect x="302.5" y="190" width="157.5" height="210" fill="#c7c2b4"/>
+    <text x="340" y="470" text-anchor="middle" class="dim-text" font-size="8">driveway</text>
+
+    <!-- carport -->
+    <rect x="340" y="190" width="75" height="105" fill="#f1ede1" stroke="#1a1a1a" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <text x="377.5" y="245" text-anchor="middle" class="dim-text" font-size="8">Carport</text>
+
+    <!-- ground floor shade roof extension: back, right, front (2.5m deep), matching the 3D model - not left, where the carport attaches -->
+    <rect x="415" y="107.5" width="135" height="37.5" fill="#c9c2b0" stroke="#8a8371" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <rect x="550" y="107.5" width="37.5" height="255" fill="#c9c2b0" stroke="#8a8371" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <rect x="415" y="325" width="172.5" height="37.5" fill="#c9c2b0" stroke="#8a8371" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <text x="605" y="235" text-anchor="middle" class="dim-text" font-size="7" transform="rotate(-90 605,235)">shade roof extension</text>
+
+    <!-- house footprint: back-right corner 7m from back wall, 6m from right wall -->
+    <rect x="415" y="145" width="135" height="180" fill="#e7e2d3" stroke="#1a1a1a" stroke-width="1.8"/>
+    <text x="482.5" y="230" text-anchor="middle" class="dim-text" font-size="11" font-weight="600">House</text>
+    <text x="482.5" y="243" text-anchor="middle" class="dim-text" font-size="8">9m x 12m</text>
+
+    <!-- dimension: 7m from back wall to house back corner -->
+    <line x1="550" y1="40" x2="550" y2="145" class="dim-line"/>
+    <line x1="545" y1="40" x2="555" y2="40" class="dim-line"/>
+    <line x1="545" y1="145" x2="555" y2="145" class="dim-line"/>
+    <text x="565" y="95" class="dim-text" font-size="9" transform="rotate(-90 565,95)">7 m</text>
+
+    <!-- dimension: 6m from right wall to house right side -->
+    <line x1="550" y1="95" x2="640" y2="95" class="dim-line"/>
+    <line x1="550" y1="90" x2="550" y2="100" class="dim-line"/>
+    <line x1="640" y1="90" x2="640" y2="100" class="dim-line"/>
+    <text x="595" y="87" text-anchor="middle" class="dim-text" font-size="9">6 m</text>
+
+    <!-- 8 mango trees along the boundary wall (back + left, where the wall is unobstructed) -->
+    <g fill="#5f8a4f" stroke="#3f5f36" stroke-width="0.8">
+      <circle cx="120" cy="58" r="13"/>
+      <circle cx="240" cy="58" r="13"/>
+      <circle cx="360" cy="58" r="13"/>
+      <circle cx="480" cy="58" r="13"/>
+      <circle cx="58" cy="150" r="13"/>
+      <circle cx="58" cy="250" r="13"/>
+      <circle cx="58" cy="350" r="13"/>
+      <circle cx="58" cy="450" r="13"/>
+    </g>
+    <text x="340" y="72" text-anchor="middle" class="dim-text" font-size="7">mango trees along the wall</text>
+
+    <!-- additional mango trees along the front wall (either side of the gate) and right wall (clear zones above/below the house) -->
+    <g fill="#5f8a4f" stroke="#3f5f36" stroke-width="0.8">
+      <circle cx="100" cy="500" r="13"/>
+      <circle cx="190" cy="500" r="13"/>
+      <circle cx="450" cy="500" r="13"/>
+      <circle cx="550" cy="500" r="13"/>
+      <circle cx="605" cy="70" r="13"/>
+      <circle cx="605" cy="470" r="13"/>
+    </g>
+
+    <!-- compass -->
+    <g transform="translate(600,80)">
+      <line x1="-14.1" y1="-14.1" x2="14.1" y2="14.1" stroke="#8a2f23" stroke-width="1.5"/>
+      <line x1="14.1" y1="-14.1" x2="-14.1" y2="14.1" stroke="#8a2f23" stroke-width="1.5"/>
+      <path d="M14.1,14.1 L4,10 L9,15 L4,18 Z" fill="#8a2f23"/>
+      <text x="22" y="26" class="compass-label" text-anchor="middle">N</text>
+      <text x="-22" y="-18" class="compass-label" text-anchor="middle">S</text>
+      <text x="-24" y="20" class="compass-label" text-anchor="middle">E</text>
+      <text x="24" y="-16" class="compass-label" text-anchor="middle">W</text>
+    </g>
+
+    <!-- dimensions -->
+    <line x1="40" y1="20" x2="640" y2="20" class="dim-line"/>
+    <line x1="40" y1="15" x2="40" y2="25" class="dim-line"/>
+    <line x1="640" y1="15" x2="640" y2="25" class="dim-line"/>
+    <text x="340" y="14" text-anchor="middle" class="dim-text">40 m</text>
+
+    <line x1="20" y1="40" x2="20" y2="535" class="dim-line"/>
+    <line x1="15" y1="40" x2="25" y2="40" class="dim-line"/>
+    <line x1="15" y1="535" x2="25" y2="535" class="dim-line"/>
+    <text x="10" y="287.5" text-anchor="middle" class="dim-text" transform="rotate(-90 10,287.5)">33 m</text>
+
+    <text x="340" y="570" text-anchor="middle" class="dim-text" font-size="9">Road</text>
+  </svg>
+
+</div>
+
 </body>
 </html>
-
