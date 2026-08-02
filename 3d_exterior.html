@@ -46,7 +46,7 @@ const TRIM = "#2a2a2a";
 const openings = [
   // FRONT (south, z = D)
   { wall: "front", x0: 1.05, x1: 3.45, y0: 0, y1: 2, type: "door", label: "Living sliding 2.4x2" },
-  { wall: "front", x0: 5.75, x1: 7.75, y0: 0.75, y1: 1.95, type: "window", label: "Dining 2x1.2" },
+  { wall: "front", x0: 5.55, x1: 7.95, y0: 0, y1: 2, type: "door", label: "Dining sliding 2.4x2" },
   { wall: "front", x0: 1.25, x1: 3.25, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Master 2x1.2" },
   { wall: "front", x0: 5.85, x1: 7.65, y0: FLOOR_H, y1: FLOOR_H + 2, type: "door", label: "Balcony sliding 1.8x2" },
   // BACK (north, z = 0)
@@ -124,26 +124,14 @@ scene.add(ground);
 const lotX0 = -20, lotX1 = 20, lotZ0 = -16, lotZ1 = 22; // 40m wide x 38m deep block
 const gateHalf = 2.5; // 5m wide gate reference, centered on the front
 
-// driveway: paved entry from the gate, running back and branching left to the carport, with a short spur to the front door
+// driveway: paved entry leading to the carport only (offset to align with the carport, stops short of the house's front elevation)
 const paveMat = new THREE.MeshStandardMaterial({ color: "#9a958a", roughness: 1 });
-const entryDrive = new THREE.Mesh(new THREE.PlaneGeometry(5, 14), paveMat);
+const entryDrive = new THREE.Mesh(new THREE.PlaneGeometry(5, 11), paveMat);
 entryDrive.rotation.x = -Math.PI / 2;
-entryDrive.position.set(0, 0.01, 15);
+entryDrive.position.set(-7, 0.01, 9.5);
 entryDrive.receiveShadow = true;
 scene.add(entryDrive);
 
-const carportDrive = new THREE.Mesh(new THREE.PlaneGeometry(6.5, 7), paveMat);
-carportDrive.rotation.x = -Math.PI / 2;
-carportDrive.position.set(-6.75, 0.01, 4.5);
-carportDrive.receiveShadow = true;
-scene.add(carportDrive);
-
-// short pedestrian spur from the driveway to the front (Living) door
-const doorSpur = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 3), paveMat);
-doorSpur.rotation.x = -Math.PI / 2;
-doorSpur.position.set(-2.25, 0.01, 7.5);
-doorSpur.receiveShadow = true;
-scene.add(doorSpur);
 
 const group = new THREE.Group();
 group.position.set(-W / 2, 0, -D / 2);
@@ -292,26 +280,27 @@ addShade(0, 9, 2.5, FLOOR_H - 0.05);
 
 // ---- Continuous wraparound shade roof at ground floor ceiling height, same depth/style as the back (outdoor kitchen) shade ----
 const gfShadeY = FLOOR_H - 0.05, gfShadeDepth = 2.5;
-function addShadeSide(wall, span0, span1) {
+function addShadeSide(wall, span0, span1, depthOverride) {
   const span = span1 - span0;
+  const depth = depthOverride || gfShadeDepth;
   const isNS = wall === "front" || wall === "back"; // slab runs along X, projects in Z
   const drop = 0.12;
-  const geo = new THREE.BoxGeometry(isNS ? span : gfShadeDepth, 0.12, isNS ? gfShadeDepth : span);
+  const geo = new THREE.BoxGeometry(isNS ? span : depth, 0.12, isNS ? depth : span);
   const slab = new THREE.Mesh(geo, shadeMat);
   slab.castShadow = true;
   const mid = (span0 + span1) / 2;
   const postPositions = [];
   if (wall === "front") {
-    slab.position.set(mid, gfShadeY - drop / 2, D + gfShadeDepth / 2);
-    slab.rotation.x = Math.atan2(drop, gfShadeDepth);
-    postPositions.push([span0 + 0.15, D + gfShadeDepth - 0.15], [span1 - 0.15, D + gfShadeDepth - 0.15]);
+    slab.position.set(mid, gfShadeY - drop / 2, D + depth / 2);
+    slab.rotation.x = Math.atan2(drop, depth);
+    postPositions.push([span0 + 0.15, D + depth - 0.15], [span1 - 0.15, D + depth - 0.15]);
   } else if (wall === "right") {
-    slab.position.set(W + gfShadeDepth / 2, gfShadeY - drop / 2, mid);
-    slab.rotation.z = -Math.atan2(drop, gfShadeDepth);
-    postPositions.push([W + gfShadeDepth - 0.15, span0 + 0.15], [W + gfShadeDepth - 0.15, span1 - 0.15]);
+    slab.position.set(W + depth / 2, gfShadeY - drop / 2, mid);
+    slab.rotation.z = -Math.atan2(drop, depth);
+    postPositions.push([W + depth - 0.15, span0 + 0.15], [W + depth - 0.15, span1 - 0.15]);
   } else if (wall === "left") {
-    slab.position.set(-gfShadeDepth / 2, gfShadeY, mid);
-    postPositions.push([-gfShadeDepth + 0.15, span0 + 0.15], [-gfShadeDepth + 0.15, span1 - 0.15]);
+    slab.position.set(-depth / 2, gfShadeY, mid);
+    postPositions.push([-depth + 0.15, span0 + 0.15], [-depth + 0.15, span1 - 0.15]);
   }
   group.add(slab);
   postPositions.forEach(([px, pz]) => {
@@ -320,7 +309,7 @@ function addShadeSide(wall, span0, span1) {
     group.add(post);
   });
 }
-addShadeSide("front", 0, W);
+addShadeSide("front", 0, W, 4);
 addShadeSide("right", 0, D);
 
 // corner piece connecting the back shade and right shade roofs at the back-right corner
@@ -338,18 +327,18 @@ const cornerPost = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, gfShade
 cornerPost.position.set(W + gfShadeDepth - 0.15, gfShadeY / 2, -gfShadeDepth + 0.15);
 group.add(cornerPost);
 
-// corner piece connecting the front shade and right shade roofs at the front-right corner
+// corner piece connecting the front shade (4m) and right shade (2.5m) roofs at the front-right corner
 const cornerSlab2 = new THREE.Mesh(
-  new THREE.BoxGeometry(gfShadeDepth, 0.12, gfShadeDepth),
+  new THREE.BoxGeometry(gfShadeDepth, 0.12, 4),
   shadeMat
 );
-cornerSlab2.position.set(W + gfShadeDepth / 2, gfShadeY - cornerDrop / 2, D + gfShadeDepth / 2);
-cornerSlab2.rotation.x = Math.atan2(cornerDrop, gfShadeDepth);
+cornerSlab2.position.set(W + gfShadeDepth / 2, gfShadeY - cornerDrop / 2, D + 2);
+cornerSlab2.rotation.x = Math.atan2(cornerDrop, 4);
 cornerSlab2.rotation.z = -Math.atan2(cornerDrop, gfShadeDepth);
 cornerSlab2.castShadow = true;
 group.add(cornerSlab2);
 const cornerPost2 = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, gfShadeY, 8), postMat);
-cornerPost2.position.set(W + gfShadeDepth - 0.15, gfShadeY / 2, D + gfShadeDepth - 0.15);
+cornerPost2.position.set(W + gfShadeDepth - 0.15, gfShadeY / 2, D + 4 - 0.15);
 group.add(cornerPost2);
 
 const carportW = 5, carportTopY = gfShadeY;
@@ -494,7 +483,122 @@ addCanopy("right", D - 10.65, D - 8.55, ffCanopyTopY, ffProjection);
 addCanopy("left", D - 11.05, D - 8.95, ffCanopyTopY, ffProjection);
 addCanopy("left", D - 7.67, D - 4.3, ffCanopyTopY, ffProjection); // connected: bathroom + ensuite, tops now aligned
 
-// ---- Balcony: protruding deck outside the Chill Room, matching the plan's 3.7m x 1.5m balcony room ----
+// ---- Wraparound concrete floor, matching the extent of the shade canopy above (back, right, front) ----
+const concreteMat = new THREE.MeshStandardMaterial({ color: "#b7b3a8", roughness: 0.95 });
+function addConcreteFloor(x0, x1, z0, z1) {
+  const w = x1 - x0, d = z1 - z0;
+  const slab = new THREE.Mesh(new THREE.BoxGeometry(w, 0.06, d), concreteMat);
+  slab.position.set((x0 + x1) / 2, 0.03, (z0 + z1) / 2);
+  slab.receiveShadow = true;
+  group.add(slab);
+}
+addConcreteFloor(0, W, D, D + 4);              // front, matching the 4m front canopy
+addConcreteFloor(0, W, -gfShadeDepth, 0);      // back, matching the 2.5m back canopy
+addConcreteFloor(W, W + gfShadeDepth, 0, D);   // right, matching the 2.5m right canopy
+addConcreteFloor(W, W + gfShadeDepth, -gfShadeDepth, 0); // back-right corner
+addConcreteFloor(W, W + gfShadeDepth, D, D + 4);         // front-right corner
+addConcreteFloor(-gfShadeDepth, 0, 0, cz0);              // left, narrow (2.5m) from the back wall to the back of the carport
+addConcreteFloor(-carportW, 0, cz0, D);                  // left, full carport width (5m) alongside and past the carport
+addConcreteFloor(-carportW, 0, D, D + 4);                // front-left corner, connecting left floor to front floor
+addConcreteFloor(-gfShadeDepth, 0, -gfShadeDepth, 0);    // back-left corner, matching the narrow (2.5m) back portion
+addConcreteFloor(-carportW, 0, cz0, cz1);                // under the carport
+addConcreteFloor(-carportW, 0, cz1, D);                  // connects the carport floor to the front concrete extension
+
+// ---- Outdoor living space under the extended front shade roof, centered between the Living and Dining doors ----
+const outdoorWood = new THREE.MeshStandardMaterial({ color: "#8a6a4a", roughness: 0.8 });
+const outdoorCushion = new THREE.MeshStandardMaterial({ color: "#dcd3bd", roughness: 0.9 });
+const potMat = new THREE.MeshStandardMaterial({ color: "#a86b4c", roughness: 0.9 });
+const plantMat = new THREE.MeshStandardMaterial({ color: "#5f8a4f", roughness: 0.9 });
+
+// low outdoor sofa, positioned centrally between the two doors, back toward the wall
+function addSofa(x, z, rotY) {
+  const g = new THREE.Group();
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.35, 0.8), outdoorWood);
+  frame.position.y = 0.175;
+  g.add(frame);
+  const seatCushion = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.15, 0.7), outdoorCushion);
+  seatCushion.position.y = 0.43;
+  g.add(seatCushion);
+  const backCushion = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.4, 0.15), outdoorCushion);
+  backCushion.position.set(0, 0.55, -0.33);
+  g.add(backCushion);
+  g.position.set(x, 0, z);
+  g.rotation.y = rotY;
+  g.traverse((o) => { if (o.isMesh) o.castShadow = true; });
+  group.add(g);
+}
+addSofa(4.5, D + 0.8, 0);
+
+// two lounge chairs angled inward, facing back toward the sofa across the coffee table
+function addChair(x, z, rotY) {
+  const g = new THREE.Group();
+  const seat = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.12, 0.6), outdoorCushion);
+  seat.position.y = 0.4;
+  g.add(seat);
+  const back = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.5, 0.1), outdoorCushion);
+  back.position.set(0, 0.65, -0.27);
+  g.add(back);
+  [[-0.25, -0.25], [0.25, -0.25], [-0.25, 0.25], [0.25, 0.25]].forEach(([lx, lz]) => {
+    const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.4, 6), outdoorWood);
+    leg.position.set(lx, 0.2, lz);
+    g.add(leg);
+  });
+  g.position.set(x, 0, z);
+  g.rotation.y = rotY;
+  g.traverse((o) => { if (o.isMesh) o.castShadow = true; });
+  group.add(g);
+}
+addChair(3.3, D + 2.5, Math.PI - 0.35);
+addChair(5.7, D + 2.5, Math.PI + 0.35);
+
+const coffeeTable = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.35, 16), outdoorWood);
+coffeeTable.position.set(4.5, 0.175, D + 1.7);
+coffeeTable.castShadow = true;
+group.add(coffeeTable);
+
+// two ceiling fans mounted under the canopy, over the seating area
+const fanMat = new THREE.MeshStandardMaterial({ color: "#3a3a3a", roughness: 0.6 });
+function addCeilingFan(x, z) {
+  const g = new THREE.Group();
+  const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.25, 6), fanMat);
+  rod.position.y = gfShadeY - 0.15;
+  g.add(rod);
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.08, 12), fanMat);
+  hub.position.y = gfShadeY - 0.27;
+  g.add(hub);
+  for (let i = 0; i < 4; i++) {
+    const blade = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.02, 0.1), fanMat);
+    blade.position.set(0, gfShadeY - 0.27, 0);
+    blade.rotation.y = (Math.PI / 2) * i;
+    blade.translateX(0.35);
+    g.add(blade);
+  }
+  g.position.set(x, 0, z);
+  g.traverse((o) => { if (o.isMesh) o.castShadow = true; });
+  group.add(g);
+}
+addCeilingFan(3.5, D + 1.8);
+addCeilingFan(5.5, D + 1.8);
+
+// potted plants flanking the outdoor space
+function addPottedPlant(x, z, scale) {
+  const s = scale || 1;
+  const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.22 * s, 0.17 * s, 0.35 * s, 10), potMat);
+  pot.position.set(x, 0.175 * s, z);
+  pot.castShadow = true;
+  group.add(pot);
+  [0, 1].forEach((i) => {
+    const foliage = new THREE.Mesh(new THREE.SphereGeometry((0.35 - i * 0.08) * s, 8, 6), plantMat);
+    foliage.position.set(x, (0.5 + i * 0.35) * s, z);
+    foliage.castShadow = true;
+    group.add(foliage);
+  });
+}
+addPottedPlant(0.5, D + 0.6, 1.1);
+addPottedPlant(8.5, D + 0.6, 1.1);
+addPottedPlant(4.65, D + 3.7, 0.9);
+
+
 const balX0 = 5.3, balX1 = W; // 5.3m -> east wall, matches Chill Room's width on the front wall
 const balDepth = 1.5;
 const balZ0 = D, balZ1 = D + balDepth;
