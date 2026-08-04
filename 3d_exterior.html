@@ -38,8 +38,8 @@ const W = 9, D = 12, FLOOR_H = 3, H = FLOOR_H * 2;
 
 const GLASS = "#a9c6d6";
 const DOOR_SOLID = "#36393e";
-const WALL = "#cbc6bd";
-const WALL_DARK = "#b6b0a5";
+const WALL = "#a8a8a4";
+const WALL_DARK = "#a8a8a4";
 const ROOF = "#3a3a3a";
 const TRIM = "#2a2a2a";
 
@@ -96,20 +96,16 @@ const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 200);
 const renderer = new THREE.WebGLRenderer({ antialias: !isMobile });
 renderer.setSize(width, height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
-renderer.shadowMap.enabled = !isMobile;
+renderer.shadowMap.enabled = false;
 mount.appendChild(renderer.domElement);
 
-scene.add(new THREE.AmbientLight("#ffffff", isMobile ? 0.85 : 0.55));
-const sun = new THREE.DirectionalLight("#fff3de", 1.1);
-sun.position.set(18, 22, -6);
-sun.castShadow = !isMobile;
-sun.shadow.mapSize.set(1024, 1024);
-sun.shadow.camera.left = -20; sun.shadow.camera.right = 20;
-sun.shadow.camera.top = 20; sun.shadow.camera.bottom = -20;
-scene.add(sun);
+scene.add(new THREE.AmbientLight("#ffffff", isMobile ? 1.05 : 0.95));
 const fill = new THREE.DirectionalLight("#cfe8ff", 0.35);
 fill.position.set(-14, 10, 10);
 scene.add(fill);
+const fill2 = new THREE.DirectionalLight("#ffffff", 0.3);
+fill2.position.set(14, 12, -8);
+scene.add(fill2);
 
 const ground = new THREE.Mesh(
   new THREE.PlaneGeometry(80, 80),
