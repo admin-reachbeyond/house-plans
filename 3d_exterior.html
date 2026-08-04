@@ -146,7 +146,7 @@ const trim = new THREE.Mesh(trimGeo, trimMat);
 trim.position.set(W / 2, FLOOR_H, D / 2);
 group.add(trim);
 
-const ohFront = 1.8, ohBack = 0.6, ohLeft = 0.8, ohRight = 0.8;
+const ohFront = 1.8, ohBack = 0.8, ohLeft = 0.8, ohRight = 0.8;
 const roofW = W + ohLeft + ohRight, roofD = D + ohFront + ohBack;
 const roofCenterX = W / 2 + (ohRight - ohLeft) / 2;
 const roofCenterZ = D / 2 + (ohFront - ohBack) / 2;
