@@ -38,8 +38,8 @@ const W = 9, D = 12, FLOOR_H = 3, H = FLOOR_H * 2;
 
 const GLASS = "#a9c6d6";
 const DOOR_SOLID = "#36393e";
-const WALL = "#f5f3ec";
-const WALL_DARK = "#e5e2d6";
+const WALL = "#cbc6bd";
+const WALL_DARK = "#b6b0a5";
 const ROOF = "#3a3a3a";
 const TRIM = "#2a2a2a";
 
@@ -150,6 +150,43 @@ const trim = new THREE.Mesh(trimGeo, trimMat);
 trim.position.set(W / 2, FLOOR_H, D / 2);
 group.add(trim);
 
+// ---- Procedural clay roof-tile texture (canvas-generated, tiled via UV repeat) ----
+function createRoofTileTexture() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 128; canvas.height = 128;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#8f5236";
+  ctx.fillRect(0, 0, 128, 128);
+  const tileW = 32, tileH = 22;
+  for (let row = 0, y = -tileH; y < 128 + tileH; row++, y += tileH) {
+    const offset = (row % 2) * (tileW / 2);
+    for (let x = -tileW; x < 128 + tileW; x += tileW) {
+      const shade = (row + Math.round(x / tileW)) % 2 === 0 ? "#9c5c3d" : "#864a30";
+      ctx.fillStyle = shade;
+      ctx.beginPath();
+      ctx.moveTo(x + offset, y + tileH);
+      ctx.arc(x + offset + tileW / 2, y + tileH, tileW / 2, Math.PI, 0);
+      ctx.lineTo(x + offset + tileW, y + tileH);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = "rgba(0,0,0,0.25)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  return tex;
+}
+const roofTileTexture = createRoofTileTexture();
+function tiledCanopyMat(sizeX, sizeZ) {
+  const tex = roofTileTexture.clone();
+  tex.needsUpdate = true;
+  tex.repeat.set(Math.max(sizeX, 0.5) / 1.4, Math.max(sizeZ, 0.5) / 1.4);
+  return new THREE.MeshStandardMaterial({ map: tex, roughness: 0.85 });
+}
+
 const ohFront = 1.8, ohBack = 0.6, ohLeft = 0.8, ohRight = 0.8;
 const roofW = W + ohLeft + ohRight, roofD = D + ohFront + ohBack;
 const roofCenterX = W / 2 + (ohRight - ohLeft) / 2;
@@ -179,7 +216,10 @@ group.add(p4);
 // ---- Split-level roof over the rooftop terrace: both sections sloped, shorter/lower at front, longer/higher at back ----
 const splitZ = 9; // meters from back wall (z=0); front section covers z=splitZ..D, back section covers z=0..splitZ
 const deckY = H + 0.3; // sits on top of the existing flat roof deck
-const roofMat2 = new THREE.MeshStandardMaterial({ color: ROOF, roughness: 0.85, side: THREE.DoubleSide });
+const slopedRoofTex = roofTileTexture.clone();
+slopedRoofTex.needsUpdate = true;
+slopedRoofTex.repeat.set((W + ohLeft + ohRight) / 1.4, D / 1.4);
+const roofMat2 = new THREE.MeshStandardMaterial({ map: slopedRoofTex, roughness: 0.85, side: THREE.DoubleSide });
 const postMat2 = new THREE.MeshStandardMaterial({ color: TRIM });
 const bandMat = new THREE.MeshStandardMaterial({ color: WALL_DARK, roughness: 0.9 });
 
@@ -265,7 +305,7 @@ const postMat = new THREE.MeshStandardMaterial({ color: TRIM });
 function addShade(x0, x1, depth, yTop) {
   const w = x1 - x0;
   const drop = 0.12;
-  const slab = new THREE.Mesh(new THREE.BoxGeometry(w, 0.12, depth), shadeMat);
+  const slab = new THREE.Mesh(new THREE.BoxGeometry(w, 0.12, depth), tiledCanopyMat(w, depth));
   slab.position.set((x0 + x1) / 2, yTop - drop / 2, -depth / 2);
   slab.rotation.x = -Math.atan2(drop, depth);
   slab.castShadow = true;
@@ -286,7 +326,7 @@ function addShadeSide(wall, span0, span1, depthOverride) {
   const isNS = wall === "front" || wall === "back"; // slab runs along X, projects in Z
   const drop = 0.12;
   const geo = new THREE.BoxGeometry(isNS ? span : depth, 0.12, isNS ? depth : span);
-  const slab = new THREE.Mesh(geo, shadeMat);
+  const slab = new THREE.Mesh(geo, tiledCanopyMat(isNS ? span : depth, isNS ? depth : span));
   slab.castShadow = true;
   const mid = (span0 + span1) / 2;
   const postPositions = [];
@@ -316,7 +356,7 @@ addShadeSide("right", 0, D);
 const cornerDrop = 0.12;
 const cornerSlab = new THREE.Mesh(
   new THREE.BoxGeometry(gfShadeDepth, 0.12, gfShadeDepth),
-  shadeMat
+  tiledCanopyMat(gfShadeDepth, gfShadeDepth)
 );
 cornerSlab.position.set(W + gfShadeDepth / 2, gfShadeY - cornerDrop / 2, -gfShadeDepth / 2);
 cornerSlab.rotation.x = -Math.atan2(cornerDrop, gfShadeDepth);
@@ -330,7 +370,7 @@ group.add(cornerPost);
 // corner piece connecting the front shade (4m) and right shade (2.5m) roofs at the front-right corner
 const cornerSlab2 = new THREE.Mesh(
   new THREE.BoxGeometry(gfShadeDepth, 0.12, 4),
-  shadeMat
+  tiledCanopyMat(gfShadeDepth, 4)
 );
 cornerSlab2.position.set(W + gfShadeDepth / 2, gfShadeY - cornerDrop / 2, D + 2);
 cornerSlab2.rotation.x = Math.atan2(cornerDrop, 4);
@@ -346,7 +386,7 @@ const cz0 = D - 9, cz1 = D - 2;
 const cpDrop = 0.12;
 const carportSlab = new THREE.Mesh(
   new THREE.BoxGeometry(carportW, 0.12, cz1 - cz0),
-  shadeMat
+  tiledCanopyMat(carportW, cz1 - cz0)
 );
 carportSlab.position.set(-carportW / 2, carportTopY - cpDrop / 2, (cz0 + cz1) / 2);
 carportSlab.rotation.z = Math.atan2(cpDrop, carportW);
@@ -364,7 +404,7 @@ group.add(carportSlab);
 // bridge connecting the carport roof to the back shade extension: steps down from the carport's 6m width to the standard 2.5m wraparound width
 const bridgeSlab = new THREE.Mesh(
   new THREE.BoxGeometry(gfShadeDepth, 0.12, cz0),
-  shadeMat
+  tiledCanopyMat(gfShadeDepth, cz0)
 );
 bridgeSlab.position.set(-gfShadeDepth / 2, carportTopY - cpDrop / 2, cz0 / 2);
 bridgeSlab.rotation.z = Math.atan2(cpDrop, gfShadeDepth);
@@ -378,7 +418,7 @@ group.add(bridgePost);
 const backLeftDrop = 0.12;
 const backLeftCorner = new THREE.Mesh(
   new THREE.BoxGeometry(gfShadeDepth, 0.12, gfShadeDepth),
-  shadeMat
+  tiledCanopyMat(gfShadeDepth, gfShadeDepth)
 );
 backLeftCorner.position.set(-gfShadeDepth / 2, gfShadeY - backLeftDrop / 2, -gfShadeDepth / 2);
 backLeftCorner.rotation.x = -Math.atan2(backLeftDrop, gfShadeDepth);
@@ -505,12 +545,13 @@ const bracketMat = new THREE.MeshStandardMaterial({ color: TRIM });
 function addCanopy(wall, span0, span1, topY, projection) {
   const width = span1 - span0;
   const mid = (span0 + span1) / 2;
+  const isNS = wall === "front" || wall === "back";
   const geo = new THREE.BoxGeometry(
-    wall === "front" || wall === "back" ? width + 0.3 : projection,
+    isNS ? width + 0.3 : projection,
     0.08,
-    wall === "front" || wall === "back" ? projection : width + 0.3
+    isNS ? projection : width + 0.3
   );
-  const canopy = new THREE.Mesh(geo, canopyMat);
+  const canopy = new THREE.Mesh(geo, tiledCanopyMat(isNS ? width + 0.3 : projection, isNS ? projection : width + 0.3));
   canopy.castShadow = true;
   const brackets = [];
   if (wall === "front") {
