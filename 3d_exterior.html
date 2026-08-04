@@ -258,9 +258,13 @@ openings.forEach((o) => {
 
 const shadeMat = new THREE.MeshStandardMaterial({ color: ROOF, roughness: 0.85 });
 const postMat = new THREE.MeshStandardMaterial({ color: TRIM });
+const CANOPY_SLOPE = Math.tan(12 * Math.PI / 180); // ~12 degrees on a 2.5m-deep panel - the reference slope that reads correctly
+const CANOPY_DROP = 2.5 * CANOPY_SLOPE; // fixed drop amount reused across all canopy pieces regardless of span, so wider pieces (front, carport) don't end up over-steep
+const carportW = 6; // declared early so the low-slope ratio below can reference it
+const LOW_SLOPE_RATIO = CANOPY_DROP / carportW; // the carport's gentler slope angle (~5 degrees), reused for the back/right/corner pieces so they match it
 function addShade(x0, x1, depth, yTop) {
   const w = x1 - x0;
-  const drop = 0.12;
+  const drop = depth * LOW_SLOPE_RATIO;
   const slab = new THREE.Mesh(new THREE.BoxGeometry(w, 0.12, depth), shadeMat);
   slab.position.set((x0 + x1) / 2, yTop - drop / 2, -depth / 2);
   slab.rotation.x = -Math.atan2(drop, depth);
@@ -280,7 +284,7 @@ function addShadeSide(wall, span0, span1, depthOverride) {
   const span = span1 - span0;
   const depth = depthOverride || gfShadeDepth;
   const isNS = wall === "front" || wall === "back"; // slab runs along X, projects in Z
-  const drop = 0.12;
+  const drop = wall === "front" ? CANOPY_DROP : depth * LOW_SLOPE_RATIO;
   const geo = new THREE.BoxGeometry(isNS ? span : depth, 0.12, isNS ? depth : span);
   const slab = new THREE.Mesh(geo, shadeMat);
   slab.castShadow = true;
@@ -295,7 +299,8 @@ function addShadeSide(wall, span0, span1, depthOverride) {
     slab.rotation.z = -Math.atan2(drop, depth);
     postPositions.push([W + depth - 0.15, span0 + 0.15], [W + depth - 0.15, span1 - 0.15]);
   } else if (wall === "left") {
-    slab.position.set(-depth / 2, gfShadeY, mid);
+    slab.position.set(-depth / 2, gfShadeY - drop / 2, mid);
+    slab.rotation.z = Math.atan2(drop, depth);
     postPositions.push([-depth + 0.15, span0 + 0.15], [-depth + 0.15, span1 - 0.15]);
   }
   group.add(slab);
@@ -308,44 +313,51 @@ function addShadeSide(wall, span0, span1, depthOverride) {
 addShadeSide("front", 0, W, 4);
 addShadeSide("right", 0, D);
 
+// ---- Hip-style corner panel: a mitered roof piece with a diagonal ridge running from the
+// wall corner (high point) down to the outer corner post (low point), instead of a flat tilted box ----
+const hipCornerMat = new THREE.MeshStandardMaterial({ color: ROOF, roughness: 0.85, side: THREE.DoubleSide });
+function addHipCorner(innerX, innerZ, outerX, outerZ, dropZ, dropX, topY) {
+  const dropPost = (dropZ + dropX) / 2;
+  const geo = new THREE.BufferGeometry();
+  const P1 = [innerX, topY, innerZ];               // wall corner - high point
+  const P2 = [innerX, topY - dropZ, outerZ];        // low point, matches the Z-facing neighbor's edge height
+  const P3 = [outerX, topY - dropPost, outerZ];     // post corner - low point
+  const P4 = [outerX, topY - dropX, innerZ];        // low point, matches the X-facing neighbor's edge height
+  const vertices = new Float32Array([
+    ...P1, ...P2, ...P3,
+    ...P1, ...P3, ...P4,
+  ]);
+  geo.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
+  geo.computeVertexNormals();
+  const mesh = new THREE.Mesh(geo, hipCornerMat);
+  mesh.castShadow = true;
+  group.add(mesh);
+  return mesh;
+}
+
 // corner piece connecting the back shade and right shade roofs at the back-right corner
-const cornerDrop = 0.12;
-const cornerSlab = new THREE.Mesh(
-  new THREE.BoxGeometry(gfShadeDepth, 0.12, gfShadeDepth),
-  shadeMat
-);
-cornerSlab.position.set(W + gfShadeDepth / 2, gfShadeY - cornerDrop / 2, -gfShadeDepth / 2);
-cornerSlab.rotation.x = -Math.atan2(cornerDrop, gfShadeDepth);
-cornerSlab.rotation.z = -Math.atan2(cornerDrop, gfShadeDepth);
-cornerSlab.castShadow = true;
-group.add(cornerSlab);
+const cornerDropStd = gfShadeDepth * LOW_SLOPE_RATIO; // matches the now carport-slope back/right sides (all 2.5m deep)
+addHipCorner(W, 0, W + gfShadeDepth, -gfShadeDepth, cornerDropStd, cornerDropStd, gfShadeY);
 const cornerPost = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, gfShadeY, 8), postMat);
 cornerPost.position.set(W + gfShadeDepth - 0.15, gfShadeY / 2, -gfShadeDepth + 0.15);
 group.add(cornerPost);
 
 // corner piece connecting the front shade (4m) and right shade (2.5m) roofs at the front-right corner
-const cornerSlab2 = new THREE.Mesh(
-  new THREE.BoxGeometry(gfShadeDepth, 0.12, 4),
-  shadeMat
-);
-cornerSlab2.position.set(W + gfShadeDepth / 2, gfShadeY - cornerDrop / 2, D + 2);
-cornerSlab2.rotation.x = Math.atan2(cornerDrop, 4);
-cornerSlab2.rotation.z = -Math.atan2(cornerDrop, gfShadeDepth);
-cornerSlab2.castShadow = true;
-group.add(cornerSlab2);
+const frontDrop = CANOPY_DROP;
+addHipCorner(W, D, W + gfShadeDepth, D + 4, frontDrop, cornerDropStd, gfShadeY);
 const cornerPost2 = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, gfShadeY, 8), postMat);
 cornerPost2.position.set(W + gfShadeDepth - 0.15, gfShadeY / 2, D + 4 - 0.15);
 group.add(cornerPost2);
 
-const carportW = 6, carportTopY = gfShadeY;
+const carportTopY = gfShadeY;
 const cz0 = D - 9, cz1 = D - 2;
-const cpDrop = 0.12;
+const carportDrop = CANOPY_DROP; // fixed drop, not scaled to the 6m span, so it isn't over-steep
 const carportSlab = new THREE.Mesh(
   new THREE.BoxGeometry(carportW, 0.12, cz1 - cz0),
   shadeMat
 );
-carportSlab.position.set(-carportW / 2, carportTopY - cpDrop / 2, (cz0 + cz1) / 2);
-carportSlab.rotation.z = Math.atan2(cpDrop, carportW);
+carportSlab.position.set(-carportW / 2, carportTopY - carportDrop / 2, (cz0 + cz1) / 2);
+carportSlab.rotation.z = Math.atan2(carportDrop, carportW);
 carportSlab.castShadow = true;
 group.add(carportSlab);
 [
@@ -358,12 +370,13 @@ group.add(carportSlab);
 });
 
 // bridge connecting the carport roof to the back shade extension: steps down from the carport's 6m width to the standard 2.5m wraparound width
+const bridgeDrop = gfShadeDepth * (carportDrop / carportW); // same slope angle as the carport, not just the same absolute drop
 const bridgeSlab = new THREE.Mesh(
   new THREE.BoxGeometry(gfShadeDepth, 0.12, cz0),
   shadeMat
 );
-bridgeSlab.position.set(-gfShadeDepth / 2, carportTopY - cpDrop / 2, cz0 / 2);
-bridgeSlab.rotation.z = Math.atan2(cpDrop, gfShadeDepth);
+bridgeSlab.position.set(-gfShadeDepth / 2, carportTopY - bridgeDrop / 2, cz0 / 2);
+bridgeSlab.rotation.z = Math.atan2(bridgeDrop, gfShadeDepth);
 bridgeSlab.castShadow = true;
 group.add(bridgeSlab);
 const bridgePost = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, carportTopY, 8), postMat);
@@ -371,16 +384,7 @@ bridgePost.position.set(-gfShadeDepth + 0.15, carportTopY / 2, 0.15);
 group.add(bridgePost);
 
 // roof corner piece filling the gap between the back shade and the carport bridge, matching the concrete back-left corner below
-const backLeftDrop = 0.12;
-const backLeftCorner = new THREE.Mesh(
-  new THREE.BoxGeometry(gfShadeDepth, 0.12, gfShadeDepth),
-  shadeMat
-);
-backLeftCorner.position.set(-gfShadeDepth / 2, gfShadeY - backLeftDrop / 2, -gfShadeDepth / 2);
-backLeftCorner.rotation.x = -Math.atan2(backLeftDrop, gfShadeDepth);
-backLeftCorner.rotation.z = Math.atan2(backLeftDrop, gfShadeDepth);
-backLeftCorner.castShadow = true;
-group.add(backLeftCorner);
+addHipCorner(0, 0, -gfShadeDepth, -gfShadeDepth, cornerDropStd, cornerDropStd, gfShadeY);
 const backLeftCornerPost = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, gfShadeY, 8), postMat);
 backLeftCornerPost.position.set(-gfShadeDepth + 0.15, gfShadeY / 2, -gfShadeDepth + 0.15);
 group.add(backLeftCornerPost);
@@ -509,18 +513,23 @@ function addCanopy(wall, span0, span1, topY, projection) {
   );
   const canopy = new THREE.Mesh(geo, canopyMat);
   canopy.castShadow = true;
+  const ffDrop = 0.3;
   const brackets = [];
   if (wall === "front") {
-    canopy.position.set(mid, topY, D + projection / 2);
+    canopy.position.set(mid, topY - ffDrop / 2, D + projection / 2);
+    canopy.rotation.x = Math.atan2(ffDrop, projection);
     brackets.push([span0 + 0.1, D + 0.05], [span1 - 0.1, D + 0.05]);
   } else if (wall === "right") {
-    canopy.position.set(W + projection / 2, topY, mid);
+    canopy.position.set(W + projection / 2, topY - ffDrop / 2, mid);
+    canopy.rotation.z = -Math.atan2(ffDrop, projection);
     brackets.push([W + 0.05, span0 + 0.1], [W + 0.05, span1 - 0.1]);
   } else if (wall === "left") {
-    canopy.position.set(-projection / 2, topY, mid);
+    canopy.position.set(-projection / 2, topY - ffDrop / 2, mid);
+    canopy.rotation.z = Math.atan2(ffDrop, projection);
     brackets.push([-0.05, span0 + 0.1], [-0.05, span1 - 0.1]);
   } else if (wall === "back") {
-    canopy.position.set(mid, topY, -projection / 2);
+    canopy.position.set(mid, topY - ffDrop / 2, -projection / 2);
+    canopy.rotation.x = -Math.atan2(ffDrop, projection);
     brackets.push([span0 + 0.1, -0.05], [span1 - 0.1, -0.05]);
   }
   group.add(canopy);
