@@ -874,8 +874,14 @@
 
 <!-- ================= SITE PLAN ================= -->
 <div class="plan-block">
-  <div class="plan-title">Site Plan — 40m x 38m block, house + driveway + landscaping</div>
+  <div class="plan-title">Site Plan — 40m x 33m block, house + driveway + landscaping</div>
   <svg viewBox="0 0 680 575" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="sitePlanArrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 Z" fill="#4a4536"/>
+      </marker>
+    </defs>
+
 
     <!-- lot boundary wall, with 5m gate centered on the front (bottom) wall -->
     <rect x="40" y="40" width="600" height="495" fill="#eef1e8" stroke="#1a1a1a" stroke-width="1.5"/>
@@ -885,66 +891,291 @@
     <circle cx="377.5" cy="535" r="3" fill="#3a352c"/>
     <text x="340" y="552" text-anchor="middle" class="dim-text" font-size="9">5m gate</text>
 
-    <!-- grass, front yard zone between the house/driveway and the gate (right of the driveway only) -->
-    <rect x="302.5" y="362.5" width="337.5" height="172.5" fill="#a8c98f"/>
+    <!-- grass, front yard zone between the driveway and the gate (right of the driveway path only), inset 2m from the front and right walls, top edge aligned with the front canopy's actual edge -->
+    <rect x="377.5" y="385" width="232.5" height="120" fill="#a8c98f"/>
 
-    <!-- driveway (paved, from gate through to an apron covering the carport and front door) -->
-    <rect x="302.5" y="400" width="75" height="135" fill="#c7c2b4"/>
-    <rect x="302.5" y="190" width="157.5" height="210" fill="#c7c2b4"/>
+    <!-- planted clusters along the front and right walls (4 each), not a continuous bar -->
+    <g>
+
+      <!-- fern cluster (evenly spaced) -->
+      <circle cx="439.2" cy="525.5" r="10.9" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="443.1" cy="521.9" r="9.3" fill="#3f6b3a" opacity="0.92"/>
+      <circle cx="432.1" cy="523.9" r="9.3" fill="#2f5c2a" opacity="0.92"/>
+      <circle cx="428.8" cy="519.2" r="10.7" fill="#7fae5c" opacity="0.92"/>
+      <circle cx="427.0" cy="521.6" r="9.6" fill="#2f5c2a" opacity="0.92"/>
+
+      <!-- bougainvillea (evenly spaced) -->
+      <circle cx="476.9" cy="516.6" r="10.3" fill="#3f6b3a" opacity="0.92"/>
+      <circle cx="479.8" cy="522.2" r="10.1" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="471.2" cy="525.4" r="8.3" fill="#3f6b3a" opacity="0.92"/>
+      <circle cx="481.2" cy="519.4" r="4.0" fill="#d6549a"/>
+      <circle cx="472.1" cy="516.7" r="4.2" fill="#d6549a"/>
+      <circle cx="470.5" cy="524.0" r="3.9" fill="#c23b7a"/>
+      <circle cx="473.6" cy="524.2" r="5.0" fill="#b8306a"/>
+
+      <!-- fern cluster (evenly spaced) -->
+      <circle cx="504.7" cy="521.6" r="10.1" fill="#2f5c2a" opacity="0.92"/>
+      <circle cx="515.3" cy="521.7" r="10.9" fill="#7fae5c" opacity="0.92"/>
+      <circle cx="505.0" cy="520.2" r="9.6" fill="#3f6b3a" opacity="0.92"/>
+      <circle cx="506.8" cy="524.3" r="8.9" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="513.0" cy="515.4" r="9.1" fill="#7fae5c" opacity="0.92"/>
+
+      <!-- bougainvillea (evenly spaced) -->
+      <circle cx="544.3" cy="519.5" r="9.3" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="548.3" cy="520.1" r="9.2" fill="#3f6b3a" opacity="0.92"/>
+      <circle cx="543.6" cy="518.7" r="8.3" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="551.3" cy="522.2" r="4.5" fill="#c23b7a"/>
+      <circle cx="536.0" cy="520.2" r="4.1" fill="#d6549a"/>
+      <circle cx="547.9" cy="524.7" r="4.0" fill="#c23b7a"/>
+      <circle cx="550.9" cy="522.0" r="4.4" fill="#b8306a"/>
+
+      <!-- fern cluster, moved closer to the mango tree in the corner -->
+      <circle cx="584.3" cy="523.8" r="10.0" fill="#3f6b3a" opacity="0.92"/>
+      <circle cx="576.9" cy="521.0" r="10.5" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="582.0" cy="516.6" r="8.1" fill="#2f5c2a" opacity="0.92"/>
+      <circle cx="596.2" cy="514.4" r="8.7" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="585.7" cy="519.5" r="9.3" fill="#7fae5c" opacity="0.92"/>
+
+      <!-- right wall: 4 clusters -->
+      <circle cx="624.4" cy="388.9" r="9.1" fill="#2f5c2a" opacity="0.92"/>
+      <circle cx="616.4" cy="391.8" r="9.7" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="621.3" cy="388.3" r="9.9" fill="#7fae5c" opacity="0.92"/>
+      <circle cx="616.8" cy="386.3" r="8.6" fill="#2f5c2a" opacity="0.92"/>
+      <circle cx="628.2" cy="384.6" r="8.4" fill="#3f6b3a" opacity="0.92"/>
+
+      <circle cx="615.6" cy="437.0" r="10.5" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="615.3" cy="435.0" r="8.7" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="629.0" cy="429.8" r="9.5" fill="#7fae5c" opacity="0.92"/>
+      <circle cx="622.0" cy="431.2" r="10.6" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="631.5" cy="433.2" r="9.1" fill="#2f5c2a" opacity="0.92"/>
+
+      <circle cx="617.9" cy="481.7" r="10.9" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="617.5" cy="473.8" r="10.6" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="634.9" cy="478.5" r="8.3" fill="#2f5c2a" opacity="0.92"/>
+      <circle cx="615.6" cy="475.8" r="9.5" fill="#7fae5c" opacity="0.92"/>
+      <circle cx="620.0" cy="481.1" r="9.8" fill="#5a8c4c" opacity="0.92"/>
+
+      <circle cx="631.6" cy="520.8" r="10.9" fill="#3f6b3a" opacity="0.92"/>
+      <circle cx="621.0" cy="517.2" r="10.8" fill="#7fae5c" opacity="0.92"/>
+      <circle cx="618.7" cy="515.8" r="8.8" fill="#7fae5c" opacity="0.92"/>
+      <circle cx="630.3" cy="522.6" r="9.7" fill="#2f5c2a" opacity="0.92"/>
+      <circle cx="631.1" cy="521.8" r="10.9" fill="#7fae5c" opacity="0.92"/>
+    </g>
+    <text x="476" y="504" text-anchor="middle" class="dim-text" font-size="6.5">Bougainvillea</text>
+    <text x="585" y="504" text-anchor="middle" class="dim-text" font-size="6.5">Fern</text>
+
+    <!-- same planting design mirrored to the left of the driveway, along the front wall -->
+    <circle cx="277" cy="520" r="22.5" fill="#8a6fb0" stroke="#5c4a80" stroke-width="1"/>
+    <text x="277" y="493" text-anchor="middle" class="dim-text" font-size="6.5">purple flowering tree</text>
+    <g>
+      <circle cx="240.8" cy="525.5" r="10.9" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="236.9" cy="521.9" r="9.3" fill="#3f6b3a" opacity="0.92"/>
+      <circle cx="247.9" cy="523.9" r="9.3" fill="#2f5c2a" opacity="0.92"/>
+      <circle cx="251.2" cy="519.2" r="10.7" fill="#7fae5c" opacity="0.92"/>
+      <circle cx="253.0" cy="521.6" r="9.6" fill="#2f5c2a" opacity="0.92"/>
+
+      <circle cx="203.1" cy="516.6" r="10.3" fill="#3f6b3a" opacity="0.92"/>
+      <circle cx="200.2" cy="522.2" r="10.1" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="208.8" cy="525.4" r="8.3" fill="#3f6b3a" opacity="0.92"/>
+      <circle cx="198.8" cy="519.4" r="4.0" fill="#d6549a"/>
+      <circle cx="207.9" cy="516.7" r="4.2" fill="#d6549a"/>
+      <circle cx="209.5" cy="524.0" r="3.9" fill="#c23b7a"/>
+      <circle cx="206.4" cy="524.2" r="5.0" fill="#b8306a"/>
+
+      <circle cx="175.3" cy="521.6" r="10.1" fill="#2f5c2a" opacity="0.92"/>
+      <circle cx="164.7" cy="521.7" r="10.9" fill="#7fae5c" opacity="0.92"/>
+      <circle cx="175.0" cy="520.2" r="9.6" fill="#3f6b3a" opacity="0.92"/>
+      <circle cx="173.2" cy="524.3" r="8.9" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="167.0" cy="515.4" r="9.1" fill="#7fae5c" opacity="0.92"/>
+
+      <circle cx="135.7" cy="519.5" r="9.3" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="131.7" cy="520.1" r="9.2" fill="#3f6b3a" opacity="0.92"/>
+      <circle cx="136.4" cy="518.7" r="8.3" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="128.7" cy="522.2" r="4.5" fill="#c23b7a"/>
+      <circle cx="144.0" cy="520.2" r="4.1" fill="#d6549a"/>
+      <circle cx="132.1" cy="524.7" r="4.0" fill="#c23b7a"/>
+      <circle cx="129.1" cy="522.0" r="4.4" fill="#b8306a"/>
+
+      <circle cx="95.7" cy="523.8" r="10.0" fill="#3f6b3a" opacity="0.92"/>
+      <circle cx="103.1" cy="521.0" r="10.5" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="98.0" cy="516.6" r="8.1" fill="#2f5c2a" opacity="0.92"/>
+      <circle cx="83.8" cy="514.4" r="8.7" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="94.3" cy="519.5" r="9.3" fill="#7fae5c" opacity="0.92"/>
+    </g>
+    <text x="205" y="504" text-anchor="middle" class="dim-text" font-size="6.5">Bougainvillea</text>
+    <text x="95" y="504" text-anchor="middle" class="dim-text" font-size="6.5">Fern</text>
+
+    <!-- mango trees, ~4m canopy diameter (r=30 at 15px/m), trunks 1.5m in from the walls, in the top-right, bottom-right and bottom-left corners -->
+    <g>
+      <circle cx="617.5" cy="62.5" r="30" fill="#5f8a4f" stroke="#3f5f36" stroke-width="1"/>
+      <circle cx="617.5" cy="512.5" r="30" fill="#5f8a4f" stroke="#3f5f36" stroke-width="1"/>
+      <circle cx="62.5" cy="512.5" r="30" fill="#5f8a4f" stroke="#3f5f36" stroke-width="1"/>
+    </g>
+    <text x="62.5" y="475" text-anchor="middle" class="dim-text" font-size="7">mango tree</text>
+
+    <!-- existing panama berry tree, top-left corner, ~4m canopy, trunk 1.5m in from the walls -->
+    <circle cx="62.5" cy="62.5" r="30" fill="#7a9c4a" stroke="#4f6b34" stroke-width="1"/>
+    <text x="8" y="25" text-anchor="start" class="dim-text" font-size="7">Panama berry</text>
+
+    <!-- row of banana trees along the left wall, ~5m long, centered on the plot's vertical midpoint, trunks 1.5m off the wall -->
+    <g fill="#8fbf5c" stroke="#5a7a3a" stroke-width="1">
+      <circle cx="62.5" cy="250" r="13"/>
+      <circle cx="62.5" cy="275" r="13"/>
+      <circle cx="62.5" cy="300" r="13"/>
+      <circle cx="62.5" cy="325" r="13"/>
+    </g>
+    <text x="35" y="287.5" text-anchor="middle" class="dim-text" font-size="7" transform="rotate(-90 35,287.5)">banana trees, ~5m row</text>
+
+    <!-- driveway (paved): straight 5m-wide strip from the gate, single 90-degree widen at the front canopy's edge, then apron under the carport/canopy -->
+    <rect x="302.5" y="385" width="75" height="150" fill="#c7c2b4"/>
+    <rect x="302.5" y="190" width="157.5" height="195" fill="#c7c2b4"/>
+    <!-- extra 2m driveway width on the left (post side), from the carport's front edge to the canopy's edge, for turning room -->
+    <rect x="272.5" y="295" width="30" height="90" fill="#c7c2b4"/>
+    <!-- triangular taper at the top of the extension, matching the bottom taper's dimensions, flaring up into the main apron instead of a straight L-angle -->
+    <polygon points="272.5,295 302.5,295 302.5,270" fill="#c7c2b4"/>
+    <!-- triangular taper at the bottom of the extension, flaring the extra width back down into the main driveway instead of a straight cutoff -->
+    <polygon points="272.5,385 302.5,385 302.5,410" fill="#c7c2b4"/>
+
+
     <text x="340" y="470" text-anchor="middle" class="dim-text" font-size="8">driveway</text>
 
-    <!-- carport -->
-    <rect x="340" y="190" width="75" height="105" fill="#f1ede1" stroke="#1a1a1a" stroke-width="1.2" stroke-dasharray="5,3"/>
-    <text x="377.5" y="245" text-anchor="middle" class="dim-text" font-size="8">Carport</text>
+    <!-- purple flowering tree, front wall, right of the driveway (clear of pavement), 3m canopy -->
+    <circle cx="403" cy="520" r="22.5" fill="#8a6fb0" stroke="#5c4a80" stroke-width="1"/>
+    <text x="403" y="493" text-anchor="middle" class="dim-text" font-size="6.5">purple flowering tree</text>
 
-    <!-- ground floor shade roof extension: back, right, front (2.5m deep), matching the 3D model - not left, where the carport attaches -->
-    <rect x="415" y="107.5" width="135" height="37.5" fill="#c9c2b0" stroke="#8a8371" stroke-width="1.2" stroke-dasharray="5,3"/>
-    <rect x="550" y="107.5" width="37.5" height="255" fill="#c9c2b0" stroke="#8a8371" stroke-width="1.2" stroke-dasharray="5,3"/>
-    <rect x="415" y="325" width="172.5" height="37.5" fill="#c9c2b0" stroke="#8a8371" stroke-width="1.2" stroke-dasharray="5,3"/>
-    <text x="605" y="235" text-anchor="middle" class="dim-text" font-size="7" transform="rotate(-90 605,235)">shade roof extension</text>
+    <!-- carport: 6m x 7m, attached flush to house's left wall (matching floor plan + 3D model) -->
+    <rect x="325" y="190" width="90" height="105" fill="#a39a89" stroke="#6d6556" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <text x="370" y="245" text-anchor="middle" class="dim-text" font-size="8">Carport</text>
+
+    <!-- support post, front-left corner of the carport (open side, nearest the driveway) -->
+    <rect x="320.5" y="290.5" width="9" height="9" fill="#4a4536" stroke="#2b271f" stroke-width="0.8"/>
+    <text x="325" y="285" text-anchor="middle" class="dim-text" font-size="6.5">Post</text>
+
+    <!-- dimension: carport width (6m) and height (7m), meeting at the shared corner -->
+    <line x1="325" y1="295" x2="415" y2="295" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
+    <text x="370" y="308" text-anchor="middle" class="dim-text" font-size="7">6 m</text>
+    <line x1="410" y1="190" x2="410" y2="295" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
+    <text x="398" y="242" text-anchor="middle" class="dim-text" font-size="7" transform="rotate(-90 398,242)">7 m</text>
+
+    <!-- ground floor shade roof extension: back (2.5m), right (2.5m), front (4m) - matching the 3D model - not left, where the carport attaches -->
+    <rect x="415" y="107.5" width="135" height="37.5" fill="#a39a89" stroke="#6d6556" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <rect x="550" y="107.5" width="37.5" height="255" fill="#a39a89" stroke="#6d6556" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <rect x="415" y="325" width="172.5" height="60" fill="#a39a89" stroke="#6d6556" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <text x="566" y="235" text-anchor="middle" class="dim-text" font-size="7" transform="rotate(-90 566,235)">shade roof extension</text>
+
+    <!-- dimension: front canopy projection width (4m), from the house wall to the canopy edge -->
+    <line x1="440" y1="325" x2="440" y2="385" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
+    <text x="452" y="358" text-anchor="middle" class="dim-text" font-size="7" transform="rotate(-90 452,358)">4 m</text>
+
+    <!-- dimension: side (right) canopy projection width (2.5m), from the house wall to the canopy edge -->
+    <line x1="550" y1="155" x2="587.5" y2="155" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
+    <text x="568.75" y="167" text-anchor="middle" class="dim-text" font-size="7">2.5 m</text>
+
+    <!-- connecting canopy: bridges the back shade roof down to the carport's back edge, flush along the house's back-left wall (matching the 3D model's bridge + hip-corner pieces) -->
+    <rect x="377.5" y="107.5" width="37.5" height="82.5" fill="#a39a89" stroke="#6d6556" stroke-width="1.2" stroke-dasharray="5,3"/>
+
+    <!-- paved section where the left palm/fern cluster used to sit: triangle from the canopy's bottom-left corner down to the driveway edge, extended further down for a more gradual transition -->
+    <polygon points="415,385 377.5,385 377.5,460" fill="#c7c2b4"/>
+
+    <!-- passion fruit vine, growing along the back (top) edge of the carport (drawn after the canopy rects so it isn't painted over) -->
+    <path d="M325.0,188.0 L336.2,183.2 L347.5,185.1 L358.8,190.9 L370.0,192.8 L381.2,188.0 L392.5,183.2 L403.8,185.1 L415.0,190.9" fill="none" stroke="#3f6b2e" stroke-width="1.4"/>
+    <circle cx="325.0" cy="185.0" r="3" fill="#6b3fa0" stroke="#4a2b70" stroke-width="0.5"/>
+    <circle cx="347.5" cy="182.1" r="3" fill="#6b3fa0" stroke="#4a2b70" stroke-width="0.5"/>
+    <circle cx="370.0" cy="189.8" r="3" fill="#6b3fa0" stroke="#4a2b70" stroke-width="0.5"/>
+    <circle cx="392.5" cy="180.2" r="3" fill="#6b3fa0" stroke="#4a2b70" stroke-width="0.5"/>
+    <circle cx="415.0" cy="187.9" r="3" fill="#6b3fa0" stroke="#4a2b70" stroke-width="0.5"/>
+    <ellipse cx="336.2" cy="181.2" rx="4" ry="2.3" fill="#4f8a3a" transform="rotate(20 336.2 181.2)"/>
+    <ellipse cx="358.8" cy="188.9" rx="4" ry="2.3" fill="#4f8a3a" transform="rotate(20 358.8 188.9)"/>
+    <ellipse cx="381.2" cy="186.0" rx="4" ry="2.3" fill="#4f8a3a" transform="rotate(20 381.2 186.0)"/>
+    <ellipse cx="403.8" cy="183.1" rx="4" ry="2.3" fill="#4f8a3a" transform="rotate(20 403.8 183.1)"/>
+    <text x="370" y="176" text-anchor="middle" class="dim-text" font-size="6.5">passion fruit vine</text>
+
+    <!-- kaffir lime tree, above the carport and to the left of the back canopy -->
+    <circle cx="350" cy="150" r="18" fill="#6fa050" stroke="#4a6e35" stroke-width="1"/>
+    <text x="350" y="126" text-anchor="middle" class="dim-text" font-size="6.5">Kaffir lime</text>
+
+    <!-- planted clusters: left just below the canopy's bottom-left corner (clear of the new paved triangle), right just below the canopy's far-right edge -->
+    <g>
+      <circle cx="427.3" cy="405.9" r="10.6" fill="#3f6b3a" opacity="0.92"/>
+      <circle cx="420.4" cy="409.3" r="10.0" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="430.0" cy="406.8" r="11.2" fill="#2f5c2a" opacity="0.92"/>
+      <circle cx="422.5" cy="409.1" r="8.0" fill="#7fae5c" opacity="0.92"/>
+      <circle cx="422.7" cy="394.6" r="10.4" fill="#2f5c2a" opacity="0.92"/>
+
+      <circle cx="570.6" cy="406.9" r="8.3" fill="#5a8c4c" opacity="0.92"/>
+      <circle cx="573.9" cy="393.9" r="11.0" fill="#2f5c2a" opacity="0.92"/>
+      <circle cx="577.1" cy="401.1" r="10.4" fill="#3f6b3a" opacity="0.92"/>
+      <circle cx="583.1" cy="404.6" r="11.4" fill="#7fae5c" opacity="0.92"/>
+      <circle cx="577.8" cy="401.7" r="8.1" fill="#7fae5c" opacity="0.92"/>
+    </g>
+
+    <!-- palm tree, moved to the left of the right-side fern cluster -->
+    <g>
+      <line x1="560" y1="393" x2="547.0" y2="385.5" stroke="#3f7a3a" stroke-width="2" stroke-linecap="round"/>
+      <line x1="560" y1="393" x2="551.4" y2="380.7" stroke="#3f7a3a" stroke-width="2" stroke-linecap="round"/>
+      <line x1="560" y1="393" x2="557.4" y2="378.2" stroke="#3f7a3a" stroke-width="2" stroke-linecap="round"/>
+      <line x1="560" y1="393" x2="560.0" y2="378.0" stroke="#3f7a3a" stroke-width="2" stroke-linecap="round"/>
+      <line x1="560" y1="393" x2="562.6" y2="378.2" stroke="#3f7a3a" stroke-width="2" stroke-linecap="round"/>
+      <line x1="560" y1="393" x2="568.6" y2="380.7" stroke="#3f7a3a" stroke-width="2" stroke-linecap="round"/>
+      <line x1="560" y1="393" x2="573.0" y2="385.5" stroke="#3f7a3a" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="560" cy="393" r="2.5" fill="#6b4a2f"/>
+    </g>
+    <text x="560" y="371" text-anchor="middle" class="dim-text" font-size="6.5">Palm</text>
+
+    <!-- palm tree, below the canopy's bottom-left corner, right of the returning fern cluster -->
+    <g>
+      <line x1="443" y1="397" x2="430.0" y2="389.5" stroke="#3f7a3a" stroke-width="2" stroke-linecap="round"/>
+      <line x1="443" y1="397" x2="434.4" y2="384.7" stroke="#3f7a3a" stroke-width="2" stroke-linecap="round"/>
+      <line x1="443" y1="397" x2="440.4" y2="382.2" stroke="#3f7a3a" stroke-width="2" stroke-linecap="round"/>
+      <line x1="443" y1="397" x2="443.0" y2="382.0" stroke="#3f7a3a" stroke-width="2" stroke-linecap="round"/>
+      <line x1="443" y1="397" x2="445.6" y2="382.2" stroke="#3f7a3a" stroke-width="2" stroke-linecap="round"/>
+      <line x1="443" y1="397" x2="451.6" y2="384.7" stroke="#3f7a3a" stroke-width="2" stroke-linecap="round"/>
+      <line x1="443" y1="397" x2="456.0" y2="389.5" stroke="#3f7a3a" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="443" cy="397" r="2.5" fill="#6b4a2f"/>
+    </g>
+    <text x="443" y="375" text-anchor="middle" class="dim-text" font-size="6.5">Palm</text>
 
     <!-- house footprint: back-right corner 7m from back wall, 6m from right wall -->
     <rect x="415" y="145" width="135" height="180" fill="#e7e2d3" stroke="#1a1a1a" stroke-width="1.8"/>
     <text x="482.5" y="230" text-anchor="middle" class="dim-text" font-size="11" font-weight="600">House</text>
     <text x="482.5" y="243" text-anchor="middle" class="dim-text" font-size="8">9m x 12m</text>
 
-    <!-- dimension: 7m from back wall to house back corner -->
-    <line x1="550" y1="40" x2="550" y2="145" class="dim-line"/>
-    <line x1="545" y1="40" x2="555" y2="40" class="dim-line"/>
-    <line x1="545" y1="145" x2="555" y2="145" class="dim-line"/>
+    <!-- dimension: 7m from back wall to house back corner, arrow-tipped, wall-to-house -->
+    <line x1="550" y1="40" x2="550" y2="145" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
     <text x="565" y="95" class="dim-text" font-size="9" transform="rotate(-90 565,95)">7 m</text>
 
-    <!-- dimension: 6m from right wall to house right side -->
-    <line x1="550" y1="95" x2="640" y2="95" class="dim-line"/>
-    <line x1="550" y1="90" x2="550" y2="100" class="dim-line"/>
-    <line x1="640" y1="90" x2="640" y2="100" class="dim-line"/>
-    <text x="595" y="87" text-anchor="middle" class="dim-text" font-size="9">6 m</text>
+    <!-- dimension: 6m from right wall to house right side, arrow-tipped, wall-to-house, aligned with house's top-right corner -->
+    <line x1="550" y1="145" x2="640" y2="145" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
+    <text x="595" y="137" text-anchor="middle" class="dim-text" font-size="9">6 m</text>
 
-    <!-- 8 mango trees along the boundary wall (back + left, where the wall is unobstructed) -->
-    <g fill="#5f8a4f" stroke="#3f5f36" stroke-width="0.8">
-      <circle cx="120" cy="58" r="13"/>
-      <circle cx="240" cy="58" r="13"/>
-      <circle cx="360" cy="58" r="13"/>
-      <circle cx="480" cy="58" r="13"/>
-      <circle cx="58" cy="150" r="13"/>
-      <circle cx="58" cy="250" r="13"/>
-      <circle cx="58" cy="350" r="13"/>
-      <circle cx="58" cy="450" r="13"/>
-    </g>
-    <text x="340" y="72" text-anchor="middle" class="dim-text" font-size="7">mango trees along the wall</text>
+    <!-- dimension: back canopy edge to back wall, arrow-tipped -->
+    <line x1="475" y1="40" x2="475" y2="107.5" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
+    <text x="490" y="73" class="dim-text" font-size="9" transform="rotate(-90 490,73)">4.5 m</text>
 
-    <!-- additional mango trees along the front wall (either side of the gate) and right wall (clear zones above/below the house) -->
-    <g fill="#5f8a4f" stroke="#3f5f36" stroke-width="0.8">
-      <circle cx="100" cy="500" r="13"/>
-      <circle cx="190" cy="500" r="13"/>
-      <circle cx="450" cy="500" r="13"/>
-      <circle cx="550" cy="500" r="13"/>
-      <circle cx="605" cy="70" r="13"/>
-      <circle cx="605" cy="470" r="13"/>
-    </g>
+    <!-- dimension: right canopy edge to right wall, arrow-tipped -->
+    <line x1="587.5" y1="320" x2="640" y2="320" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
+    <text x="613" y="312" text-anchor="middle" class="dim-text" font-size="9">3.5 m</text>
 
-    <!-- compass -->
-    <g transform="translate(600,80)">
+    <!-- dimension: left wall to driveway, just outside the front wall -->
+    <line x1="40" y1="562" x2="302.5" y2="562" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
+    <text x="171" y="555" text-anchor="middle" class="dim-text" font-size="9">17.5 m</text>
+
+    <!-- dimension: driveway to right wall, just outside the front wall -->
+    <line x1="377.5" y1="562" x2="640" y2="562" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
+    <text x="508.75" y="555" text-anchor="middle" class="dim-text" font-size="9">17.5 m</text>
+
+    <!-- dimension: carport edge to driveway edge, left side (small) -->
+    <line x1="302.5" y1="245" x2="325" y2="245" stroke="#4a4536" stroke-width="1.2" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
+    <text x="313.5" y="238" text-anchor="middle" class="dim-text" font-size="6.5">1.5 m</text>
+
+    <!-- dimension: grass area length (15.5m) and width (8m), measured from the driveway's right edge and the front canopy's edge -->
+    <line x1="377.5" y1="450" x2="610" y2="450" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
+    <text x="494" y="443" text-anchor="middle" class="dim-text" font-size="9">15.5 m</text>
+    <line x1="530" y1="385" x2="530" y2="505" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
+    <text x="545" y="445" text-anchor="middle" class="dim-text" font-size="9" transform="rotate(-90 545,445)">8 m</text>
+
+    <!-- compass, scaled down and positioned outside the boundary wall (top margin) -->
+    <g transform="translate(600,21) scale(0.55)">
       <line x1="-14.1" y1="-14.1" x2="14.1" y2="14.1" stroke="#8a2f23" stroke-width="1.5"/>
       <line x1="14.1" y1="-14.1" x2="-14.1" y2="14.1" stroke="#8a2f23" stroke-width="1.5"/>
       <path d="M14.1,14.1 L4,10 L9,15 L4,18 Z" fill="#8a2f23"/>
