@@ -120,13 +120,38 @@ scene.add(ground);
 const lotX0 = -20, lotX1 = 20, lotZ0 = -16, lotZ1 = 22; // 40m wide x 38m deep block
 const gateHalf = 2.5; // 5m wide gate reference, centered on the front
 
-// driveway: paved entry leading to the carport only (offset to align with the carport, stops short of the house's front elevation)
-const paveMat = new THREE.MeshStandardMaterial({ color: "#9a958a", roughness: 1 });
-const entryDrive = new THREE.Mesh(new THREE.PlaneGeometry(5, 11), paveMat);
-entryDrive.rotation.x = -Math.PI / 2;
-entryDrive.position.set(-7, 0.01, 9.5);
-entryDrive.receiveShadow = true;
-scene.add(entryDrive);
+// driveway: matches the site plan's paved shape - a straight 5m-wide strip from the gate,
+// widening into a broad apron under the carport/canopy, plus an extra-width turning extension
+// on the left (post) side with tapered corners connecting it to the main apron and gate strip.
+const paveMat = new THREE.MeshStandardMaterial({ color: "#b7b3a8", roughness: 0.95 }); // matches concreteMat, so the driveway reads as the same paving as the floors around the house
+const driveway = new THREE.Group();
+
+function addPaveRect(x0, x1, z0, z1) {
+  const w = x1 - x0, d = z1 - z0;
+  const slab = new THREE.Mesh(new THREE.PlaneGeometry(w, d), paveMat);
+  slab.rotation.x = -Math.PI / 2;
+  slab.position.set((x0 + x1) / 2, 0.06, (z0 + z1) / 2); // matches the concrete floor slabs' top surface height (0.06)
+  slab.receiveShadow = true;
+  driveway.add(slab);
+}
+function addPaveTri(p1, p2, p3) {
+  const shape = new THREE.Shape([p1, p2, p3].map(([x, z]) => new THREE.Vector2(x, -z))); // y negated: rotation.x=-90deg maps shape-Y to -world-Z
+  const geo = new THREE.ShapeGeometry(shape);
+  const mesh = new THREE.Mesh(geo, paveMat);
+  mesh.rotation.x = -Math.PI / 2;
+  mesh.position.y = 0.06; // matches the concrete floor slabs' top surface height
+  mesh.receiveShadow = true;
+  driveway.add(mesh);
+}
+
+addPaveRect(-12, -7, 10, 20);      // straight 5m-wide strip from the gate
+addPaveRect(-12, -1.5, -3, 10);    // wide apron under the carport/canopy, up to the paved patio edge
+addPaveRect(-14.5, -12, 4, 10);    // extra-width turning extension on the left (post) side
+addPaveTri([-14.5, 4], [-12, 4], [-12, 2.333]);   // taper connecting the extension up into the main apron
+addPaveTri([-14.5, 10], [-12, 10], [-12, 15]);    // taper connecting the extension down into the gate strip
+addPaveTri([-4.5, 10], [-7, 10], [-7, 15]);        // connector triangle: house's front paved patio corner down to the driveway's gate strip edge
+
+scene.add(driveway);
 
 
 const group = new THREE.Group();
@@ -259,7 +284,7 @@ openings.forEach((o) => {
 const shadeMat = new THREE.MeshStandardMaterial({ color: ROOF, roughness: 0.85 });
 const postMat = new THREE.MeshStandardMaterial({ color: TRIM });
 const CANOPY_SLOPE = Math.tan(12 * Math.PI / 180); // ~12 degrees on a 2.5m-deep panel - the reference slope that reads correctly
-const CANOPY_DROP = 2.5 * CANOPY_SLOPE; // fixed drop amount reused across all canopy pieces regardless of span, so wider pieces (front, carport) don't end up over-steep
+const CANOPY_DROP = 2.5 * CANOPY_SLOPE; // reference drop for a 2.5m panel at 12 degrees; only used directly for the carport now (see carportDrop) and to derive LOW_SLOPE_RATIO
 const carportW = 6; // declared early so the low-slope ratio below can reference it
 const LOW_SLOPE_RATIO = CANOPY_DROP / carportW; // the carport's gentler slope angle (~5 degrees), reused for the back/right/corner pieces so they match it
 function addShade(x0, x1, depth, yTop) {
@@ -270,9 +295,10 @@ function addShade(x0, x1, depth, yTop) {
   slab.rotation.x = -Math.atan2(drop, depth);
   slab.castShadow = true;
   group.add(slab);
-  [x0 + 0.15, x1 - 0.15].forEach((px) => {
-    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, yTop, 8), postMat);
-    post.position.set(px, yTop / 2, -depth + 0.15);
+  [x0 + 0.15, (x0 + x1) / 2, x1 - 0.15].forEach((px) => {
+    const postH = yTop - drop * ((depth - 0.15) / depth); // slab height at this post's distance from the wall, not the flat wall height
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, postH, 8), postMat);
+    post.position.set(px, postH / 2, -depth + 0.15);
     group.add(post);
   });
 }
@@ -284,7 +310,7 @@ function addShadeSide(wall, span0, span1, depthOverride) {
   const span = span1 - span0;
   const depth = depthOverride || gfShadeDepth;
   const isNS = wall === "front" || wall === "back"; // slab runs along X, projects in Z
-  const drop = wall === "front" ? CANOPY_DROP : depth * LOW_SLOPE_RATIO;
+  const drop = depth * LOW_SLOPE_RATIO; // same ~5 degree slope for every side, including front, so the whole ground-floor canopy reads as one consistent roofline
   const geo = new THREE.BoxGeometry(isNS ? span : depth, 0.12, isNS ? depth : span);
   const slab = new THREE.Mesh(geo, shadeMat);
   slab.castShadow = true;
@@ -293,35 +319,38 @@ function addShadeSide(wall, span0, span1, depthOverride) {
   if (wall === "front") {
     slab.position.set(mid, gfShadeY - drop / 2, D + depth / 2);
     slab.rotation.x = Math.atan2(drop, depth);
-    postPositions.push([span0 + 0.15, D + depth - 0.15], [span1 - 0.15, D + depth - 0.15]);
+    postPositions.push([span0 + 0.15, D + depth - 0.15], [mid, D + depth - 0.15], [span1 - 0.15, D + depth - 0.15]);
   } else if (wall === "right") {
     slab.position.set(W + depth / 2, gfShadeY - drop / 2, mid);
     slab.rotation.z = -Math.atan2(drop, depth);
-    postPositions.push([W + depth - 0.15, span0 + 0.15], [W + depth - 0.15, span1 - 0.15]);
+    postPositions.push([W + depth - 0.15, span0 + 0.15], [W + depth - 0.15, span1 - 0.15], [W + depth - 0.15, span0 + span * (1 / 3)], [W + depth - 0.15, span0 + span * (2 / 3)]);
   } else if (wall === "left") {
     slab.position.set(-depth / 2, gfShadeY - drop / 2, mid);
     slab.rotation.z = Math.atan2(drop, depth);
     postPositions.push([-depth + 0.15, span0 + 0.15], [-depth + 0.15, span1 - 0.15]);
   }
   group.add(slab);
+  const postH = gfShadeY - drop * ((depth - 0.15) / depth); // slab height at each post's distance from the wall, not the flat wall height
   postPositions.forEach(([px, pz]) => {
-    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, gfShadeY, 8), postMat);
-    post.position.set(px, gfShadeY / 2, pz);
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, postH, 8), postMat);
+    post.position.set(px, postH / 2, pz);
     group.add(post);
   });
 }
-addShadeSide("front", 0, W, 4);
+const frontCanopyDepth = 3; // shortened from 4m so a level/relaxed sofa gaze clears under it to open sky
+const frontPavingDepth = 4; // paved patio extends past the roofline, uncovered but usable, for outdoor furniture
+addShadeSide("front", 0, W, frontCanopyDepth);
 addShadeSide("right", 0, D);
 
-// ---- Hip-style corner panel: a mitered roof piece with a diagonal ridge running from the
-// wall corner (high point) down to the outer corner post (low point), instead of a flat tilted box ----
+// ---- Square (90 degree) corner panel: extends both adjacent canopies to meet at a right angle,
+// with a hip ridge running from the wall corner (high point) down to the outer corner (low point) ----
 const hipCornerMat = new THREE.MeshStandardMaterial({ color: ROOF, roughness: 0.85, side: THREE.DoubleSide });
 function addHipCorner(innerX, innerZ, outerX, outerZ, dropZ, dropX, topY) {
   const dropPost = (dropZ + dropX) / 2;
   const geo = new THREE.BufferGeometry();
   const P1 = [innerX, topY, innerZ];               // wall corner - high point
   const P2 = [innerX, topY - dropZ, outerZ];        // low point, matches the Z-facing neighbor's edge height
-  const P3 = [outerX, topY - dropPost, outerZ];     // post corner - low point
+  const P3 = [outerX, topY - dropPost, outerZ];     // outer corner - low point
   const P4 = [outerX, topY - dropX, innerZ];        // low point, matches the X-facing neighbor's edge height
   const vertices = new Float32Array([
     ...P1, ...P2, ...P3,
@@ -332,22 +361,24 @@ function addHipCorner(innerX, innerZ, outerX, outerZ, dropZ, dropX, topY) {
   const mesh = new THREE.Mesh(geo, hipCornerMat);
   mesh.castShadow = true;
   group.add(mesh);
+
+  // support post at the outer corner (P3), inset 0.15m toward the building along each axis, at the slab's actual height there
+  const signX = Math.sign(outerX - innerX), signZ = Math.sign(outerZ - innerZ);
+  const postH = topY - dropPost;
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, postH, 8), postMat);
+  post.position.set(outerX - signX * 0.15, postH / 2, outerZ - signZ * 0.15);
+  group.add(post);
+
   return mesh;
 }
 
 // corner piece connecting the back shade and right shade roofs at the back-right corner
 const cornerDropStd = gfShadeDepth * LOW_SLOPE_RATIO; // matches the now carport-slope back/right sides (all 2.5m deep)
 addHipCorner(W, 0, W + gfShadeDepth, -gfShadeDepth, cornerDropStd, cornerDropStd, gfShadeY);
-const cornerPost = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, gfShadeY, 8), postMat);
-cornerPost.position.set(W + gfShadeDepth - 0.15, gfShadeY / 2, -gfShadeDepth + 0.15);
-group.add(cornerPost);
 
-// corner piece connecting the front shade (4m) and right shade (2.5m) roofs at the front-right corner
-const frontDrop = CANOPY_DROP;
-addHipCorner(W, D, W + gfShadeDepth, D + 4, frontDrop, cornerDropStd, gfShadeY);
-const cornerPost2 = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, gfShadeY, 8), postMat);
-cornerPost2.position.set(W + gfShadeDepth - 0.15, gfShadeY / 2, D + 4 - 0.15);
-group.add(cornerPost2);
+// corner piece connecting the front shade (3m) and right shade (2.5m) roofs at the front-right corner
+const frontDrop = frontCanopyDepth * LOW_SLOPE_RATIO; // matches the front canopy's now-uniform ~5 degree slope
+addHipCorner(W, D, W + gfShadeDepth, D + frontCanopyDepth, frontDrop, cornerDropStd, gfShadeY);
 
 const carportTopY = gfShadeY;
 const cz0 = D - 9, cz1 = D - 2;
@@ -361,11 +392,11 @@ carportSlab.rotation.z = Math.atan2(carportDrop, carportW);
 carportSlab.castShadow = true;
 group.add(carportSlab);
 [
-  [-0.15, cz0 + 0.15], [-carportW + 0.15, cz0 + 0.15],
-  [-0.15, cz1 - 0.15], [-carportW + 0.15, cz1 - 0.15],
+  [-carportW + 0.15, cz0 + 0.15], [-carportW + 0.15, cz1 - 0.15],
 ].forEach(([px, pz]) => {
-  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, carportTopY, 8), postMat);
-  post.position.set(px, carportTopY / 2, pz);
+  const postH = carportTopY - carportDrop * ((carportW - 0.15) / carportW); // slab height at this post's distance from the wall
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, postH, 8), postMat);
+  post.position.set(px, postH / 2, pz);
   group.add(post);
 });
 
@@ -379,15 +410,24 @@ bridgeSlab.position.set(-gfShadeDepth / 2, carportTopY - bridgeDrop / 2, cz0 / 2
 bridgeSlab.rotation.z = Math.atan2(bridgeDrop, gfShadeDepth);
 bridgeSlab.castShadow = true;
 group.add(bridgeSlab);
-const bridgePost = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, carportTopY, 8), postMat);
-bridgePost.position.set(-gfShadeDepth + 0.15, carportTopY / 2, 0.15);
+const bridgePostH = carportTopY - bridgeDrop * ((gfShadeDepth - 0.15) / gfShadeDepth); // slab height at this post's distance from the wall
+const bridgePost = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, bridgePostH, 8), postMat);
+bridgePost.position.set(-gfShadeDepth + 0.15, bridgePostH / 2, 0.15);
 group.add(bridgePost);
+// support post where a line from the carport's top-left post (toward the house) meets a line down from the bridge post (toward the car)
+{
+  const px = -gfShadeDepth + 0.15, pz = cz0 + 0.15; // this point sits under the carport roof, just past the bridge's own footprint
+  const dist = Math.abs(px); // distance from the wall (X=0), using the carport's own slope since that's the roof covering this point
+  const postH = carportTopY - carportDrop * (dist / carportW);
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, postH, 8), postMat);
+  post.position.set(px, postH / 2, pz);
+  group.add(post);
+}
+
+
 
 // roof corner piece filling the gap between the back shade and the carport bridge, matching the concrete back-left corner below
 addHipCorner(0, 0, -gfShadeDepth, -gfShadeDepth, cornerDropStd, cornerDropStd, gfShadeY);
-const backLeftCornerPost = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, gfShadeY, 8), postMat);
-backLeftCornerPost.position.set(-gfShadeDepth + 0.15, gfShadeY / 2, -gfShadeDepth + 0.15);
-group.add(backLeftCornerPost);
 
 // Toyota Tacoma-style pickup truck, built from primitives (length ~5.3m, width ~1.9m)
 const truckGroup = new THREE.Group();
@@ -513,7 +553,7 @@ function addCanopy(wall, span0, span1, topY, projection) {
   );
   const canopy = new THREE.Mesh(geo, canopyMat);
   canopy.castShadow = true;
-  const ffDrop = 0.3;
+  const ffDrop = projection * LOW_SLOPE_RATIO; // same ~5 degree slope as the ground floor canopy, instead of the old fixed 16.7 degree drop
   const brackets = [];
   if (wall === "front") {
     canopy.position.set(mid, topY - ffDrop / 2, D + projection / 2);
@@ -564,14 +604,14 @@ function addConcreteFloor(x0, x1, z0, z1) {
   slab.receiveShadow = true;
   group.add(slab);
 }
-addConcreteFloor(0, W, D, D + 4);              // front, matching the 4m front canopy
+addConcreteFloor(0, W, D, D + frontPavingDepth); // front, paved 4m out - extends past the 3m roofline so the patio isn't capped by the canopy
 addConcreteFloor(0, W, -gfShadeDepth, 0);      // back, matching the 2.5m back canopy
 addConcreteFloor(W, W + gfShadeDepth, 0, D);   // right, matching the 2.5m right canopy
 addConcreteFloor(W, W + gfShadeDepth, -gfShadeDepth, 0); // back-right corner
-addConcreteFloor(W, W + gfShadeDepth, D, D + 4);         // front-right corner
+addConcreteFloor(W, W + gfShadeDepth, D, D + frontPavingDepth);         // front-right corner
 addConcreteFloor(-gfShadeDepth, 0, 0, cz0);              // left, narrow (2.5m) from the back wall to the back of the carport
 addConcreteFloor(-carportW, 0, cz0, D);                  // left, full carport width (5m) alongside and past the carport
-addConcreteFloor(-carportW, 0, D, D + 4);                // front-left corner, connecting left floor to front floor
+addConcreteFloor(-carportW, 0, D, D + frontPavingDepth); // front-left corner, connecting left floor to front floor
 addConcreteFloor(-gfShadeDepth, 0, -gfShadeDepth, 0);    // back-left corner, matching the narrow (2.5m) back portion
 addConcreteFloor(-carportW, 0, cz0, cz1);                // under the carport
 addConcreteFloor(-carportW, 0, cz1, D);                  // connects the carport floor to the front concrete extension
