@@ -52,7 +52,7 @@
 <!-- ================= GROUND FLOOR ================= -->
 <div class="plan-block">
   <div class="plan-title">Ground Floor — 9m x 12m footprint</div>
-  <svg viewBox="0 0 690 495" xmlns="http://www.w3.org/2000/svg">
+  <svg viewBox="0 0 780 650" xmlns="http://www.w3.org/2000/svg">
   <g transform="translate(70,0)">
   <!-- Carport: 6m x 7m, attached flush to the house's left wall, starting 2m up from the bottom of the floor plan -->
   <rect x="60" y="180" width="180" height="210" fill="#f1ede1" stroke="#1a1a1a" stroke-width="1.6" stroke-dasharray="6,3"/>
@@ -203,25 +203,50 @@
     <text x="127" y="355" class="dim-text" font-size="12" font-weight="600">Living</text>
     <text x="127" y="369" class="dim-text" font-size="10">4.5m x 6m</text>
 
-    <line x1="60" y1="465" x2="195" y2="465" class="dim-line"/>
-    <line x1="60" y1="460" x2="60" y2="470" class="dim-line"/>
-    <line x1="195" y1="460" x2="195" y2="470" class="dim-line"/>
-    <text x="127" y="478" class="dim-text" font-size="9">4.5 m</text>
+    <line x1="60" y1="590" x2="195" y2="590" class="dim-line"/>
+    <line x1="60" y1="585" x2="60" y2="595" class="dim-line"/>
+    <line x1="195" y1="585" x2="195" y2="595" class="dim-line"/>
+    <text x="127" y="603" class="dim-text" font-size="9">4.5 m</text>
 
     <!-- Dining: open area below the stairs -->
     <text x="262" y="385" class="dim-text" font-size="12" font-weight="600">Dining</text>
     <text x="262" y="399" class="dim-text" font-size="10">4.5m x 4.5m</text>
 
-    <!-- Dining dimensions -->
-    <line x1="345" y1="315" x2="345" y2="450" class="dim-line"/>
-    <line x1="340" y1="315" x2="350" y2="315" class="dim-line"/>
-    <line x1="340" y1="450" x2="350" y2="450" class="dim-line"/>
-    <text x="358" y="386" class="dim-text" font-size="9" transform="rotate(-90 358,386)">4.5 m</text>
+    <!-- Dining dimensions (moved outward, past the new right-side canopy) -->
+    <line x1="415" y1="315" x2="415" y2="450" class="dim-line"/>
+    <line x1="410" y1="315" x2="420" y2="315" class="dim-line"/>
+    <line x1="410" y1="450" x2="420" y2="450" class="dim-line"/>
+    <text x="428" y="386" class="dim-text" font-size="9" transform="rotate(-90 428,386)">4.5 m</text>
 
-    <line x1="195" y1="465" x2="330" y2="465" class="dim-line"/>
-    <line x1="195" y1="460" x2="195" y2="470" class="dim-line"/>
-    <line x1="330" y1="460" x2="330" y2="470" class="dim-line"/>
-    <text x="262" y="478" class="dim-text" font-size="9">4.5 m</text>
+    <line x1="195" y1="590" x2="330" y2="590" class="dim-line"/>
+    <line x1="195" y1="585" x2="195" y2="595" class="dim-line"/>
+    <line x1="330" y1="585" x2="330" y2="595" class="dim-line"/>
+    <text x="262" y="603" class="dim-text" font-size="9">4.5 m</text>
+
+    <!-- Paved front patio: 4m deep, full 9m width, extends past the shorter 3m roofline (matching the 3D model / site plan) -->
+    <rect x="60" y="450" width="270" height="120" fill="#e5e2d8" stroke="#a39a89" stroke-width="1" stroke-dasharray="3,2"/>
+    <text x="195" y="558" text-anchor="middle" style="font-size:6.5px; fill:#8a8371; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">paved patio, uncovered past roofline</text>
+
+    <!-- Ground floor shade roof, front side: 3m deep (shortened from 4m), full 9m width, matching the 3D model's wraparound canopy -->
+    <rect x="60" y="450" width="270" height="90" fill="none" stroke="#1a1a1a" stroke-width="1.4" stroke-dasharray="6,3"/>
+    <circle cx="63" cy="453" r="2.5" fill="#8a8371"/>
+    <circle cx="327" cy="453" r="2.5" fill="#8a8371"/>
+    <circle cx="63" cy="537" r="2.5" fill="#8a8371"/>
+    <circle cx="327" cy="537" r="2.5" fill="#8a8371"/>
+    <text x="195" y="490" text-anchor="middle" style="font-size:7.9px; fill:#6b6558; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Shade roof (front)</text>
+    <text x="195" y="502" text-anchor="middle" style="font-size:7px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">3m deep x 9m wide</text>
+
+    <!-- front canopy projection dimension (3m) -->
+    <line x1="45" y1="450" x2="45" y2="540" class="dim-line"/>
+    <line x1="40" y1="450" x2="50" y2="450" class="dim-line"/>
+    <line x1="40" y1="540" x2="50" y2="540" class="dim-line"/>
+    <text x="30" y="495" class="dim-text" font-size="9" transform="rotate(-90 30,495)">3 m</text>
+
+    <!-- paved patio projection dimension (4m) -->
+    <line x1="20" y1="450" x2="20" y2="570" class="dim-line"/>
+    <line x1="15" y1="450" x2="25" y2="450" class="dim-line"/>
+    <line x1="15" y1="570" x2="25" y2="570" class="dim-line"/>
+    <text x="8" y="510" class="dim-text" font-size="9" transform="rotate(-90 8,510)">4 m</text>
 
     <!-- Front door: left outer wall, just below bathroom's bottom wall, inswinging into house, 1.2m wide -->
     <line x1="60" y1="274.5" x2="60" y2="310.5" stroke="#fbf9f3" stroke-width="3"/>
@@ -234,17 +259,28 @@
     <text x="277" y="170" class="dim-text" font-size="12" font-weight="600">Kitchen</text>
     <text x="277" y="184" class="dim-text" font-size="10">5m x 4.8m</text>
 
-    <!-- depth dimension (12m total) - right side of house, outer line -->
-    <line x1="375" y1="90" x2="375" y2="450" class="dim-line"/>
-    <line x1="370" y1="90" x2="380" y2="90" class="dim-line"/>
-    <line x1="370" y1="450" x2="380" y2="450" class="dim-line"/>
-    <text x="388" y="270" class="dim-text" transform="rotate(-90 388,270)">12 m</text>
+    <!-- Ground floor shade roof, right side: 2.5m deep, full 12m length, matching the 3D model's wraparound canopy -->
+    <rect x="330" y="90" width="75" height="360" fill="none" stroke="#1a1a1a" stroke-width="1.4" stroke-dasharray="6,3"/>
+    <circle cx="333" cy="93" r="2.5" fill="#8a8371"/>
+    <circle cx="333" cy="447" r="2.5" fill="#8a8371"/>
+    <circle cx="402" cy="93" r="2.5" fill="#8a8371"/>
+    <circle cx="402" cy="447" r="2.5" fill="#8a8371"/>
+    <text x="367.5" y="270" text-anchor="middle" transform="rotate(-90 367.5,270)" style="font-size:7.4px; fill:#6b6558; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Shade roof (right side) — 2.5m deep x 12m long</text>
+    <!-- mitered hip-corner lines, matching the 3D model's hip-style canopy corners -->
+    <line x1="330" y1="15" x2="405" y2="90" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="330" y1="540" x2="405" y2="450" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="3,2"/>
 
-    <!-- Kitchen depth dimension, close to right exterior wall -->
-    <line x1="345" y1="90" x2="345" y2="234" class="dim-line"/>
-    <line x1="340" y1="90" x2="350" y2="90" class="dim-line"/>
-    <line x1="340" y1="234" x2="350" y2="234" class="dim-line"/>
-    <text x="358" y="162" class="dim-text" font-size="9" transform="rotate(-90 358,162)">4.8 m</text>
+    <!-- Kitchen depth dimension, close to right exterior wall (moved outward, past the new right-side canopy) -->
+    <line x1="415" y1="90" x2="415" y2="234" class="dim-line"/>
+    <line x1="410" y1="90" x2="420" y2="90" class="dim-line"/>
+    <line x1="410" y1="234" x2="420" y2="234" class="dim-line"/>
+    <text x="428" y="162" class="dim-text" font-size="9" transform="rotate(-90 428,162)">4.8 m</text>
+
+    <!-- depth dimension (12m total) - right side of house, outer line -->
+    <line x1="465" y1="90" x2="465" y2="450" class="dim-line"/>
+    <line x1="460" y1="90" x2="470" y2="90" class="dim-line"/>
+    <line x1="460" y1="450" x2="470" y2="450" class="dim-line"/>
+    <text x="478" y="270" class="dim-text" transform="rotate(-90 478,270)">12 m</text>
 
     <!-- Door: kitchen, top-left point, on exterior top wall, inswinging into kitchen -->
     <line x1="183" y1="90" x2="210" y2="90" stroke="#fbf9f3" stroke-width="3"/>
@@ -268,11 +304,11 @@
     <path d="M312,312 L312,273" fill="none" stroke="#555" stroke-width="1.2"/>
     <path d="M306,281 L312,273 L318,281" fill="none" stroke="#555" stroke-width="1.2"/>
 
-    <!-- short flight length dimension, close to right exterior wall -->
-    <line x1="345" y1="270" x2="345" y2="315" class="dim-line"/>
-    <line x1="340" y1="270" x2="350" y2="270" class="dim-line"/>
-    <line x1="340" y1="315" x2="350" y2="315" class="dim-line"/>
-    <text x="358" y="296" class="dim-text" font-size="9" transform="rotate(-90 358,296)">1.5 m</text>
+    <!-- short flight length dimension, close to right exterior wall (moved outward, past the new right-side canopy) -->
+    <line x1="415" y1="270" x2="415" y2="315" class="dim-line"/>
+    <line x1="410" y1="270" x2="420" y2="270" class="dim-line"/>
+    <line x1="410" y1="315" x2="420" y2="315" class="dim-line"/>
+    <text x="428" y="296" class="dim-text" font-size="9" transform="rotate(-90 428,296)">1.5 m</text>
 
     <!-- landing: full 1.2m x 1.2m, where the short flight meets the kitchen's bottom wall -->
     <rect x="294" y="234" width="36" height="36" fill="none" stroke="#1a1a1a" stroke-width="1"/>
@@ -351,6 +387,18 @@
     <path d="M333,368 L333,375 M330,371 L333,375 L336,371" fill="none" stroke="#6b6558" stroke-width="0.8"/>
     <text x="318" y="355.5" text-anchor="middle" transform="rotate(-90 318,355.5)" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">1.5m x 1.2m</text>
 
+  </g>
+
+  <!-- Canopy bridge: connects the back shade roof down to the carport, matching the 3D model's stepped bridge piece.
+       Sits directly above the carport's back-right 2.5m x 3m corner, flush against the house's left wall. Absolute coords (no group transform). -->
+  <g>
+    <rect x="235" y="90" width="75" height="90" fill="none" stroke="#1a1a1a" stroke-width="1.4" stroke-dasharray="6,3"/>
+    <circle cx="238" cy="93" r="2.5" fill="#8a8371"/>
+    <circle cx="307" cy="93" r="2.5" fill="#8a8371"/>
+    <circle cx="238" cy="177" r="2.5" fill="#8a8371"/>
+    <text x="272" y="138" text-anchor="middle" transform="rotate(-90 272,138)" style="font-size:6.3px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">canopy bridge to carport</text>
+    <!-- mitered hip-corner line at the back-left, matching the 3D model's hip corner between the back shade and the bridge -->
+    <line x1="310" y1="15" x2="235" y2="90" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="3,2"/>
   </g>
 
   </svg>
@@ -532,6 +580,10 @@
     <text x="170" y="390" text-anchor="middle" style="font-size:6.75px; fill:#2b2b2b; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Master Bedroom</text>
     <text x="170" y="403" text-anchor="middle" style="font-size:6.75px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">approx. 5.3m x 3.7-4m</text>
 
+    <!-- Cupboard: along the ensuite-side (top) wall, 1.2m wide x 0.5m deep, 0.5m clear of the ensuite door -->
+    <rect x="84" y="330" width="36" height="15" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <text x="102" y="339.5" text-anchor="middle" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Cupboard</text>
+
     <!-- King bed: headboard flush with left exterior wall, 1.9m x 2.0m -->
     <rect x="60" y="364.5" width="60" height="57" fill="#e7e2d3" stroke="#1a1a1a" stroke-width="1"/>
     <rect x="60" y="364.5" width="8" height="57" fill="#d8d2c2" stroke="#1a1a1a" stroke-width="1"/>
@@ -542,6 +594,14 @@
     <!-- Bedside tables, flanking the head of the bed -->
     <rect x="60" y="353" width="10" height="10" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
     <rect x="60" y="421.5" width="10" height="10" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+
+    <!-- Window: left wall, matching the ground floor Living window's edge closest to the front wall (y=435), narrowed to 0.6m -->
+    <line x1="60" y1="417" x2="60" y2="435" stroke="#fbf9f3" stroke-width="5"/>
+    <line x1="57" y1="417" x2="57" y2="426" stroke="#1a1a1a" stroke-width="1.4"/>
+    <line x1="63" y1="426" x2="63" y2="435" stroke="#1a1a1a" stroke-width="1.4"/>
+    <path d="M57,422 L57,418 M54,420 L57,418 L60,420" fill="none" stroke="#6b6558" stroke-width="0.8"/>
+    <path d="M63,430 L63,434 M60,432 L63,434 L66,432" fill="none" stroke="#6b6558" stroke-width="0.8"/>
+    <text x="72" y="426" text-anchor="middle" transform="rotate(-90 72,426)" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">0.6m x 1.2m</text>
 
     <!-- Door: master bedroom, short top wall segment (x165-219, y339), inswinging into bedroom -->
     <line x1="178.5" y1="339" x2="205.5" y2="339" stroke="#fbf9f3" stroke-width="3"/>
@@ -630,7 +690,7 @@
     <line x1="219" y1="270" x2="330" y2="234" stroke="#1a1a1a" stroke-width="0.8" stroke-dasharray="2,2"/>
     <text x="274" y="255" text-anchor="middle" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">stair opening — up from ground floor</text>
 
-    <!-- Stairs continuing up to rooftop: leg heading east (parallel to incoming stairs), landing near right wall, then turn north toward the roof -->
+    <!-- Stairs continuing up to rooftop: leg heading toward the right/west wall (parallel to incoming stairs), landing near right wall, then turn north toward the roof -->
     <rect x="219" y="270" width="75" height="36" fill="none" stroke="#1a1a1a" stroke-width="1"/>
     <g stroke="#555" stroke-width="1">
       <line x1="226.5" y1="270" x2="226.5" y2="306"/>
@@ -670,91 +730,6 @@
 </div>
 
 <!-- ================= STAIR DETAILS ================= -->
-<div class="plan-block">
-  <div class="plan-title">Ground Floor Stair — Dimensions</div>
-  <table style="width:100%; max-width:400px; margin:10px auto; border-collapse:collapse; font-size:14px;">
-    <tr style="border-bottom:1px solid #d8d2c2;">
-      <td style="padding:8px 6px; color:#6b6558;">Ceiling height (floor-to-floor)</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">3.0 m</td>
-    </tr>
-    <tr style="border-bottom:1px solid #d8d2c2;">
-      <td style="padding:8px 6px; color:#6b6558;">Stair width</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">1.2 m</td>
-    </tr>
-    <tr style="border-bottom:1px solid #d8d2c2;">
-      <td style="padding:8px 6px; color:#6b6558;">Short flight (parallel to right outer wall)</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">1.5 m — 6 treads</td>
-    </tr>
-    <tr style="border-bottom:1px solid #d8d2c2;">
-      <td style="padding:8px 6px; color:#6b6558;">Landing</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">1.2 m x 1.2 m</td>
-    </tr>
-    <tr style="border-bottom:1px solid #d8d2c2;">
-      <td style="padding:8px 6px; color:#6b6558;">Long flight (along kitchen's lower wall)</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">2.5 m — 10 treads</td>
-    </tr>
-    <tr style="border-bottom:1px solid #d8d2c2;">
-      <td style="padding:8px 6px; color:#6b6558;">Total run</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">4.0 m</td>
-    </tr>
-    <tr style="border-bottom:1px solid #d8d2c2;">
-      <td style="padding:8px 6px; color:#6b6558;">Riser height</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">176 mm x 17 risers</td>
-    </tr>
-    <tr style="border-bottom:1px solid #d8d2c2;">
-      <td style="padding:8px 6px; color:#6b6558;">Tread depth (going)</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">250 mm x 16 treads</td>
-    </tr>
-    <tr>
-      <td style="padding:8px 6px; color:#6b6558;">Comfort check (2×riser + going)</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">602 mm (ideal: 600–640mm)</td>
-    </tr>
-  </table>
-</div>
-
-<!-- ================= ROOFTOP STAIR DETAILS ================= -->
-<div class="plan-block">
-  <div class="plan-title">First Floor → Rooftop Stair — Dimensions</div>
-  <table style="width:100%; max-width:400px; margin:10px auto; border-collapse:collapse; font-size:14px;">
-    <tr style="border-bottom:1px solid #d8d2c2;">
-      <td style="padding:8px 6px; color:#6b6558;">Ceiling height (floor-to-floor)</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">3.0 m</td>
-    </tr>
-    <tr style="border-bottom:1px solid #d8d2c2;">
-      <td style="padding:8px 6px; color:#6b6558;">Stair width</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">1.2 m</td>
-    </tr>
-    <tr style="border-bottom:1px solid #d8d2c2;">
-      <td style="padding:8px 6px; color:#6b6558;">Leg 1 (parallel to incoming stairs)</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">2.5 m — 10 treads</td>
-    </tr>
-    <tr style="border-bottom:1px solid #d8d2c2;">
-      <td style="padding:8px 6px; color:#6b6558;">Landing</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">1.2 m x 1.2 m</td>
-    </tr>
-    <tr style="border-bottom:1px solid #d8d2c2;">
-      <td style="padding:8px 6px; color:#6b6558;">Leg 2 (turns north, extends into bedroom's ceiling space)</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">1.5 m — 6 treads</td>
-    </tr>
-    <tr style="border-bottom:1px solid #d8d2c2;">
-      <td style="padding:8px 6px; color:#6b6558;">Total run</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">4.0 m</td>
-    </tr>
-    <tr style="border-bottom:1px solid #d8d2c2;">
-      <td style="padding:8px 6px; color:#6b6558;">Riser height</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">176 mm x 17 risers (matches ground floor)</td>
-    </tr>
-    <tr style="border-bottom:1px solid #d8d2c2;">
-      <td style="padding:8px 6px; color:#6b6558;">Tread depth (going)</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">250 mm x 16 treads (matches ground floor)</td>
-    </tr>
-    <tr>
-      <td style="padding:8px 6px; color:#6b6558;">Comfort check (2×riser + going)</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">602 mm (ideal: 600–640mm)</td>
-    </tr>
-  </table>
-</div>
-
 <!-- ================= ELEVATIONS ================= -->
 <div class="plan-block">
   <div class="plan-title">Front Elevation (road-facing / south wall)</div>
@@ -815,7 +790,7 @@
 </div>
 
 <div class="plan-block">
-  <div class="plan-title">Right Elevation (east wall, viewed from outside)</div>
+  <div class="plan-title">Right Elevation (west wall, viewed from outside)</div>
   <svg viewBox="0 0 520 340" xmlns="http://www.w3.org/2000/svg">
     <rect x="72" y="40" width="376" height="20" rx="3" fill="#e7e2d3" stroke="#1a1a1a" stroke-width="1"/>
     <rect x="80" y="60" width="360" height="240" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
@@ -839,7 +814,7 @@
 </div>
 
 <div class="plan-block">
-  <div class="plan-title">Left Elevation (west wall, viewed from outside)</div>
+  <div class="plan-title">Left Elevation (east wall, viewed from outside)</div>
   <svg viewBox="0 0 520 340" xmlns="http://www.w3.org/2000/svg">
     <rect x="72" y="40" width="376" height="20" rx="3" fill="#e7e2d3" stroke="#1a1a1a" stroke-width="1"/>
     <rect x="80" y="60" width="360" height="240" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
@@ -898,7 +873,7 @@
     <circle cx="640" cy="117.5" r="3" fill="#3a352c"/>
     <text x="672" y="110" text-anchor="middle" class="dim-text" font-size="8" transform="rotate(-90 672,110)">1m gate</text>
 
-    <!-- grass, front yard zone between the driveway and the gate (right of the driveway path only), inset 2m from the front and right walls, top edge aligned with the front canopy's actual edge -->
+    <!-- grass, front yard zone between the driveway and the gate (right of the driveway path only), inset 2m from the front and right walls, top edge aligned with the paved patio's actual edge (4m, not the shorter 3m roofline) -->
     <rect x="377.5" y="385" width="232.5" height="120" fill="#a8c98f"/>
 
     <!-- mango tree, right wall, below the gate, moved down 1m, painted after the grass so it shows on top -->
@@ -966,7 +941,7 @@
       <circle cx="615" cy="325" r="9" fill="#3f6b3a" opacity="0.92"/>
       <circle cx="623" cy="325" r="8.7" fill="#5a8c4c" opacity="0.92"/>
 
-      <circle cx="623" cy="371.5" r="30" fill="#e08ab0" stroke="#b0567f" stroke-width="1"/>
+      <circle cx="623" cy="371.5" r="30" fill="#8a6fb0" stroke="#5c4a80" stroke-width="1"/>
       <text x="676" y="371.5" text-anchor="middle" font-size="6.5" fill="#4a4536" transform="rotate(-90 676,371.5)">Flowering Tree</text>
 
       <circle cx="623" cy="434" r="30" fill="#5a7a2f" stroke="#3d5420" stroke-width="1"/>
@@ -1095,10 +1070,10 @@
     <circle cx="62.5" cy="435" r="30" fill="#5a7a2f" stroke="#3d5420" stroke-width="1"/>
     <text x="20" y="435" text-anchor="middle" class="dim-text" font-size="6.5" transform="rotate(-90 20,435)">Durian</text>
 
-    <!-- driveway (paved): straight 5m-wide strip from the gate, single 90-degree widen at the front canopy's edge, then apron under the carport/canopy -->
+    <!-- driveway (paved): straight 5m-wide strip from the gate, single 90-degree widen at the paved patio's edge (4m, not the shorter 3m roofline), then apron under the carport/canopy -->
     <rect x="302.5" y="385" width="75" height="150" fill="#c7c2b4"/>
     <rect x="302.5" y="190" width="157.5" height="195" fill="#c7c2b4"/>
-    <!-- extra 2m driveway width on the left (post side), from the carport's front edge to the canopy's edge, for turning room -->
+    <!-- extra 2m driveway width on the left (post side), from the carport's front edge to the patio's paved edge, for turning room -->
     <rect x="265" y="295" width="37.5" height="90" fill="#c7c2b4"/>
     <!-- triangular taper at the top of the extension, matching the bottom taper's dimensions, flaring up into the main apron instead of a straight L-angle -->
     <polygon points="265,295 302.5,295 302.5,270" fill="#c7c2b4"/>
@@ -1131,15 +1106,22 @@
     <line x1="302.5" y1="215" x2="415" y2="215" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
     <text x="358.75" y="208" text-anchor="middle" class="dim-text" font-size="7">7.5 m</text>
 
-    <!-- ground floor shade roof extension: back (2.5m), right (2.5m), front (4m) - matching the 3D model - not left, where the carport attaches -->
+    <!-- paved front patio: 4m deep, uncovered past the 3m roofline, drawn first so the shorter canopy outline sits on top of it -->
+    <rect x="415" y="325" width="172.5" height="60" fill="#c7c2b4" stroke="#a39a89" stroke-width="1" stroke-dasharray="3,2"/>
+
+    <!-- ground floor shade roof extension: back (2.5m), right (2.5m), front (3m, shortened from 4m so a level sofa gaze clears under it) - not left, where the carport attaches -->
     <rect x="415" y="107.5" width="135" height="37.5" fill="#a39a89" stroke="#6d6556" stroke-width="1.2" stroke-dasharray="5,3"/>
     <rect x="550" y="107.5" width="37.5" height="255" fill="#a39a89" stroke="#6d6556" stroke-width="1.2" stroke-dasharray="5,3"/>
-    <rect x="415" y="325" width="172.5" height="60" fill="#a39a89" stroke="#6d6556" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <rect x="415" y="325" width="172.5" height="45" fill="#a39a89" stroke="#6d6556" stroke-width="1.2" stroke-dasharray="5,3"/>
     <text x="566" y="235" text-anchor="middle" class="dim-text" font-size="7" transform="rotate(-90 566,235)">shade roof extension</text>
 
-    <!-- dimension: front canopy projection width (4m), from the house wall to the canopy edge -->
-    <line x1="440" y1="325" x2="440" y2="385" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
-    <text x="452" y="358" text-anchor="middle" class="dim-text" font-size="7" transform="rotate(-90 452,358)">4 m</text>
+    <!-- dimension: front canopy projection depth (3m), from the house wall to the roof edge -->
+    <line x1="425" y1="325" x2="425" y2="370" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
+    <text x="437" y="347.5" text-anchor="middle" class="dim-text" font-size="7" transform="rotate(-90 437,347.5)">3 m roof</text>
+
+    <!-- dimension: paved patio depth (4m), from the house wall to the paving edge -->
+    <line x1="495" y1="325" x2="495" y2="385" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
+    <text x="507" y="355" text-anchor="middle" class="dim-text" font-size="7" transform="rotate(-90 507,355)">4 m paved</text>
 
     <!-- dimension: side (right) canopy projection width (2.5m), from the house wall to the canopy edge -->
     <line x1="550" y1="155" x2="587.5" y2="155" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
@@ -1155,7 +1137,7 @@
     <line x1="356.25" y1="112" x2="356.25" y2="178" stroke="#6b5540" stroke-width="0.8"/>
     <text x="342.5" y="148" text-anchor="middle" style="font-size:6px; fill:#f1ede1; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Herb Garden</text>
 
-    <!-- paved section where the left palm/fern cluster used to sit: triangle from the canopy's bottom-left corner down to the driveway edge, extended further down for a more gradual transition -->
+    <!-- paved section where the left palm/fern cluster used to sit: triangle from the patio's paved corner down to the driveway edge, extended further down for a more gradual transition -->
     <polygon points="415,385 377.5,385 377.5,460" fill="#c7c2b4"/>
 
     <!-- passion fruit vine, starting top-left of the carport, running along its top edge, then turning up the connecting canopy extension instead of continuing toward the house -->
@@ -1271,7 +1253,7 @@
     <rect x="96.25" y="351.25" width="120" height="150" fill="#e7e2d3" stroke="#1a1a1a" stroke-width="1.8" stroke-dasharray="4,3"/>
 
     <!-- flowering tree, next to the top-right corner of the bottom house, moved up 0.5m -->
-    <circle cx="240" cy="382.5" r="30" fill="#e08ab0" stroke="#b0567f" stroke-width="1"/>
+    <circle cx="240" cy="382.5" r="30" fill="#8a6fb0" stroke="#5c4a80" stroke-width="1"/>
     <text x="240" y="408.5" text-anchor="middle" class="dim-text" font-size="6.5">Flowering Tree</text>
 
     <!-- jackfruit tree, bottom block, moved 1m left -->
@@ -1313,7 +1295,7 @@
     <line x1="302.5" y1="245" x2="325" y2="245" stroke="#4a4536" stroke-width="1.2" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
     <text x="313.5" y="238" text-anchor="middle" class="dim-text" font-size="6.5">1.5 m</text>
 
-    <!-- dimension: grass area length (15.5m) and width (8m), measured from the driveway's right edge and the front canopy's edge -->
+    <!-- dimension: grass area length (15.5m) and width (8m), measured from the driveway's right edge and the paved patio's edge -->
     <line x1="377.5" y1="450" x2="610" y2="450" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
     <text x="494" y="443" text-anchor="middle" class="dim-text" font-size="9">15.5 m</text>
     <line x1="530" y1="385" x2="530" y2="505" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
@@ -1360,5 +1342,175 @@
 
 </div>
 
+<!-- ================= CANOPY SPECS ================= -->
+<div class="plan-block">
+  <div class="plan-title">Ground Floor Canopy — Dimensions</div>
+  <table style="width:100%; max-width:400px; margin:10px auto; border-collapse:collapse; font-size:14px;">
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Slope angle (uniform, all sides)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">5.06°</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Eave / wall attach height</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">2.95 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Back (2.5m projection)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">drop 0.221 m — outer edge 2.73 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Right (2.5m projection)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">drop 0.221 m — outer edge 2.73 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Front (3.0m projection)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">drop 0.266 m — outer edge 2.68 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Carport (6.0m span)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">drop 0.531 m — outer edge 2.42 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Back-left bridge (2.5m projection)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">drop 0.221 m — outer edge 2.73 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Front paving (uncovered past roofline)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">4.0 m total</td>
+    </tr>
+    <tr>
+      <td style="padding:8px 6px; color:#6b6558;">Roofing note</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600; font-size:12px;">below the no-sealant minimum (~3:12 / 14°) for exposed-fastener corrugated panels — spec lap sealant at every seam, generous end-laps (8-10"+), laps oriented away from prevailing wind</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ================= FIRST FLOOR WINDOW CANOPY SPECS ================= -->
+<div class="plan-block">
+  <div class="plan-title">First Floor Window Canopies — Dimensions</div>
+  <table style="width:100%; max-width:400px; margin:10px auto; border-collapse:collapse; font-size:14px;">
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Slope angle (uniform, all windows)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">16.70°</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Wall attach height</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">5.05 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Projection (all windows)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">1.00 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Drop</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">0.30 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Outer edge height</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">4.75 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Back wall (2 bedroom + ensuite windows)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">one connected canopy, 4.4 m wide</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Right wall (chill room + bedroom windows)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">two canopies, 2.1 m wide each</td>
+    </tr>
+    <tr>
+      <td style="padding:8px 6px; color:#6b6558;">Left wall (bedroom + bathroom/ensuite windows)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">two canopies, 2.1 m and 3.37 m wide</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ================= GROUND FLOOR STAIR DETAILS ================= -->
+<div class="plan-block">
+  <div class="plan-title">Ground Floor Stair — Dimensions</div>
+  <table style="width:100%; max-width:400px; margin:10px auto; border-collapse:collapse; font-size:14px;">
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Ceiling height (floor-to-floor)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">3.0 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Stair width</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">1.2 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Short flight (parallel to right outer wall)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">1.5 m — 6 treads</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Landing</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">1.2 m x 1.2 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Long flight (along kitchen's lower wall)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">2.5 m — 10 treads</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Total run</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">4.0 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Riser height</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">176 mm x 17 risers</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Tread depth (going)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">250 mm x 16 treads</td>
+    </tr>
+    <tr>
+      <td style="padding:8px 6px; color:#6b6558;">Comfort check (2×riser + going)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">602 mm (ideal: 600–640mm)</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ================= ROOFTOP STAIR DETAILS ================= -->
+<div class="plan-block">
+  <div class="plan-title">First Floor → Rooftop Stair — Dimensions</div>
+  <table style="width:100%; max-width:400px; margin:10px auto; border-collapse:collapse; font-size:14px;">
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Ceiling height (floor-to-floor)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">3.0 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Stair width</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">1.2 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Leg 1 (parallel to incoming stairs)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">2.5 m — 10 treads</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Landing</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">1.2 m x 1.2 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Leg 2 (turns north, extends into bedroom's ceiling space)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">1.5 m — 6 treads</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Total run</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">4.0 m</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Riser height</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">176 mm x 17 risers (matches ground floor)</td>
+    </tr>
+    <tr style="border-bottom:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Tread depth (going)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">250 mm x 16 treads (matches ground floor)</td>
+    </tr>
+    <tr>
+      <td style="padding:8px 6px; color:#6b6558;">Comfort check (2×riser + going)</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">602 mm (ideal: 600–640mm)</td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>
 </body>
 </html>
