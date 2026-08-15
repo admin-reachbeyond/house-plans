@@ -197,60 +197,44 @@ const p4 = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.4, roofD), parapetMat);
 p4.position.set(W + ohRight, H + 0.5, roofCenterZ);
 group.add(p4);
 
-// ---- Split-level roof over the rooftop terrace: both sections sloped, shorter/lower at front, longer/higher at back ----
-const splitZ = 9; // meters from back wall (z=0); front section covers z=splitZ..D, back section covers z=0..splitZ
+// ---- Rooftop terrace roof: single flat (very gently sloped) panel spanning the full terrace footprint.
+// Replaces the earlier split-level design, which left most of the back half of the terrace under 2m clearance
+// (dropping to 1.3m at the back wall) - unusable for a terrace meant for moving around, relaxing, eating, drinking.
+// A flat roof also matches the house's established style (flat main roof deck, parapets, shallow-slope canopies
+// throughout) rather than introducing a mismatched pitched/gable form. ----
 const deckY = H + 0.3; // sits on top of the existing flat roof deck
-const roofMat2 = new THREE.MeshStandardMaterial({ color: ROOF, roughness: 0.85, side: THREE.DoubleSide });
-const postMat2 = new THREE.MeshStandardMaterial({ color: TRIM });
-const bandMat = new THREE.MeshStandardMaterial({ color: WALL_DARK, roughness: 0.9 });
+const terraceRoofMat = new THREE.MeshStandardMaterial({ color: ROOF, roughness: 0.85, side: THREE.DoubleSide });
+const terracePostMat = new THREE.MeshStandardMaterial({ color: TRIM });
 
-// height (above deckY) at each key point along the depth, both sections sloping down toward the front (+z)
-const backRidgeH = 1.4;   // at z=0 (back wall) - matches front eave height
-const backEaveH = 2.4;    // at z=splitZ (top of the step)
-const frontRidgeH = 2.0;  // at z=splitZ (bottom of the step, start of front section)
-const frontEaveH = 1.4;   // at z=D (front wall)
+const terraceZ0 = -ohBack, terraceZ1 = D + ohFront; // full depth including both overhangs
+const terraceRoofBackH = 2.4;  // clearance at the back edge
+const terraceRoofFrontH = 2.2; // clearance at the front edge - very slight drop (0.2m over 14.6m, <1 degree) for drainage only
+const terraceRoofDrop = terraceRoofBackH - terraceRoofFrontH;
+const terraceRoofDepth = terraceZ1 - terraceZ0;
 
-function slopedPanel(z0, z1, h0, h1, extendStart, extendEnd) {
-  const rate = (h1 - h0) / (z1 - z0);
-  const zA = z0 - extendStart, zB = z1 + extendEnd;
-  const hA = h0 - rate * extendStart, hB = h1 + rate * extendEnd;
-  const depth = zB - zA;
-  const geo = new THREE.BoxGeometry(W + ohLeft + ohRight, 0.15, depth);
-  const mesh = new THREE.Mesh(geo, roofMat2);
-  mesh.rotation.x = -Math.atan2(hB - hA, depth);
-  mesh.position.set(W / 2, deckY + (hA + hB) / 2, (zA + zB) / 2);
-  mesh.castShadow = true;
-  return mesh;
-}
-
-// back (longer/higher) sloped panel: z=0 (ridge) -> z=splitZ (eave), overhangs past the back wall
-group.add(slopedPanel(0, splitZ, backRidgeH, backEaveH, ohBack, 0));
-// front (shorter/lower) sloped panel: z=splitZ (ridge) -> z=D (eave), overhangs past the front wall to match the balcony coverage below
-group.add(slopedPanel(splitZ, D, frontRidgeH, frontEaveH, 0, ohFront));
-
-// vertical clerestory band connecting the two heights, running the full width at z = splitZ
-const band = new THREE.Mesh(
-  new THREE.BoxGeometry(W + ohLeft + ohRight, backEaveH - frontRidgeH, 0.12),
-  bandMat
+const terraceRoof = new THREE.Mesh(
+  new THREE.BoxGeometry(roofW, 0.15, terraceRoofDepth),
+  terraceRoofMat
 );
-band.position.set(W / 2, deckY + frontRidgeH + (backEaveH - frontRidgeH) / 2, splitZ);
-group.add(band);
+terraceRoof.rotation.x = Math.atan2(terraceRoofDrop, terraceRoofDepth);
+terraceRoof.position.set(roofCenterX, deckY + (terraceRoofBackH + terraceRoofFrontH) / 2, (terraceZ0 + terraceZ1) / 2);
+terraceRoof.castShadow = true;
+group.add(terraceRoof);
 
-// support posts, height interpolated to match the slope at each post's position
-function heightAt(z) {
-  if (z <= splitZ) return backRidgeH + (backEaveH - backRidgeH) * (z / splitZ);
-  return frontRidgeH + (frontEaveH - frontRidgeH) * ((z - splitZ) / (D - splitZ));
+function terraceHeightAt(z) {
+  const t = (z - terraceZ0) / terraceRoofDepth;
+  return terraceRoofBackH - terraceRoofDrop * t;
 }
-[
-  [0.3, -ohBack + 0.3], [W - 0.3, -ohBack + 0.3],
-  [0.3, splitZ - 0.3], [W - 0.3, splitZ - 0.3],
-  [0.3, splitZ + 0.3], [W - 0.3, splitZ + 0.3],
-  [0.3, D + ohFront - 0.3], [W - 0.3, D + ohFront - 0.3],
-].forEach(([px, pz]) => {
-  const pclear = heightAt(pz);
-  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, pclear, 8), postMat2);
-  post.position.set(px, deckY + pclear / 2, pz);
-  group.add(post);
+
+// support posts along both long edges only, spaced every ~3.6m, keeping the terrace open in the middle
+const terracePostZs = [terraceZ0 + 0.3, 3, 6.5, 10, terraceZ1 - 0.3];
+[-ohLeft + 0.3, W + ohRight - 0.3].forEach((px) => {
+  terracePostZs.forEach((pz) => {
+    const pclear = terraceHeightAt(pz);
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, pclear, 8), terracePostMat);
+    post.position.set(px, deckY + pclear / 2, pz);
+    group.add(post);
+  });
 });
 
 openings.forEach((o) => {
