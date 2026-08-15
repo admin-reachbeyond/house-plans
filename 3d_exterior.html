@@ -172,7 +172,7 @@ const trim = new THREE.Mesh(trimGeo, trimMat);
 trim.position.set(W / 2, FLOOR_H, D / 2);
 group.add(trim);
 
-const ohFront = 1.8, ohBack = 0.8, ohLeft = 0.8, ohRight = 0.8;
+const ohFront = 1.6, ohBack = 0.8, ohLeft = 0.8, ohRight = 0.8;
 const roofW = W + ohLeft + ohRight, roofD = D + ohFront + ohBack;
 const roofCenterX = W / 2 + (ohRight - ohLeft) / 2;
 const roofCenterZ = D / 2 + (ohFront - ohBack) / 2;
@@ -203,7 +203,7 @@ group.add(p4);
 // flat-roof-era value +0.6m, a uniform vertical shift that keeps the original slope angles and step proportions
 // identical but raises the two lowest points - the back wall and the front wall - to exactly 2m clearance
 // (previously 1.4m at both, which was too low to stand near comfortably). ----
-const splitZ = 9; // meters from back wall (z=0); front section covers z=splitZ..D, back section covers z=0..splitZ
+const splitZ = 8.0; // meters from back wall (z=0); matches tankBoxZ1, the utility room's front wall, so the roof step lines up cleanly with it. front section covers z=splitZ..D, back section covers z=0..splitZ
 const deckY = H + 0.3; // sits on top of the existing flat roof deck
 const roofMat2 = new THREE.MeshStandardMaterial({ color: ROOF, roughness: 0.85, side: THREE.DoubleSide });
 const postMat2 = new THREE.MeshStandardMaterial({ color: TRIM });
@@ -246,12 +246,40 @@ function heightAt(z) {
   if (z <= splitZ) return backRidgeH + (backEaveH - backRidgeH) * (z / splitZ);
   return frontRidgeH + (frontEaveH - frontRidgeH) * ((z - splitZ) / (D - splitZ));
 }
-[
-  [0.3, -ohBack + 0.3], [W - 0.3, -ohBack + 0.3],
-  [0.3, splitZ - 0.3], [W - 0.3, splitZ - 0.3],
-  [0.3, splitZ + 0.3], [W - 0.3, splitZ + 0.3],
-  [0.3, D + ohFront - 0.3], [W - 0.3, D + ohFront - 0.3],
-].forEach(([px, pz]) => {
+// Left/east edge (x=0.3): 7 posts, evenly spaced across the full depth
+const edgeInset = 0.3;
+const postZStart = -ohBack + edgeInset;
+const postZEnd = D + ohFront - edgeInset;
+// First post is the back corner; next 3 are evenly spaced between it and the clerestory-aligned post;
+// that post lines up with the utility room's front wall; last is the front corner, with the middle
+// post lined up with the right edge's middle post
+const backSpan = splitZ - postZStart;
+const leftEdgePosts = [
+  [0.3, postZStart],
+  [0.3, postZStart + (1 / 4) * backSpan],
+  [0.3, postZStart + (2 / 4) * backSpan],
+  [0.3, postZStart + (3 / 4) * backSpan],
+  [0.3, splitZ], // lines up with the utility room's front wall
+  [0.3, (splitZ + postZEnd) / 2], // lines up with the right edge's middle post
+  [0.3, postZEnd],
+];
+// Right/west edge (x=W-0.3): 4 posts. Skips z=3.5-8.0 (utility room footprint) entirely, including the
+// two corner points, since the room's own wall runs straight up to meet the roof there with no gap.
+// One fills the gap between the back corner and the room's north wall; the other is centered between
+// the room's front wall and the front corner post.
+const rightEdgePosts = [
+  [W - 0.3, postZStart], [W - 0.3, (postZStart + (3.5 - edgeInset)) / 2],
+  [W - 0.3, (splitZ + postZEnd) / 2], [W - 0.3, postZEnd],
+];
+// Intermediate posts along the back/front edges
+const intermediatePosts = [
+  [3.1, postZStart], [5.9, postZStart], [3.1, postZEnd], [5.9, postZEnd],
+];
+// Centerline posts, at the clerestory step
+const centerlinePosts = [
+  [W / 2, 4.1], [W / 2, splitZ],
+];
+[...leftEdgePosts, ...rightEdgePosts, ...intermediatePosts, ...centerlinePosts].forEach(([px, pz]) => {
   const pclear = heightAt(pz);
   const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, pclear, 8), postMat2);
   post.position.set(px, deckY + pclear / 2, pz);
@@ -873,6 +901,48 @@ for (let i = 0; i <= 5; i++) {
   const bR = new THREE.Mesh(new THREE.BoxGeometry(0.03, railH, 0.03), railMat);
   bR.position.set(balX1, railY, balZ0 + (i / 5) * balDepth);
   group.add(bR);
+}
+
+// ---- Rooftop terrace balustrade: wraps all 4 sides atop the 0.4m parapet, same bar + top rail design as the balcony ----
+const terraceRailMat = new THREE.MeshStandardMaterial({ color: TRIM });
+const terraceRailH = 0.7; // bar height above the parapet top
+const terraceParapetTopY = H + 0.7; // top of the 0.4m parapet
+const terraceRailTopY = terraceParapetTopY + terraceRailH; // 1.1m total above the deck
+
+// top rails, all 4 sides
+const trFront = new THREE.Mesh(new THREE.BoxGeometry(roofW, 0.05, 0.05), terraceRailMat);
+trFront.position.set(roofCenterX, terraceRailTopY, D + ohFront);
+group.add(trFront);
+const trBack = new THREE.Mesh(new THREE.BoxGeometry(roofW, 0.05, 0.05), terraceRailMat);
+trBack.position.set(roofCenterX, terraceRailTopY, -ohBack);
+group.add(trBack);
+const trLeft = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, roofD), terraceRailMat);
+trLeft.position.set(-ohLeft, terraceRailTopY, roofCenterZ);
+group.add(trLeft);
+const trRight = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, roofD), terraceRailMat);
+trRight.position.set(W + ohRight, terraceRailTopY, roofCenterZ);
+group.add(trRight);
+
+// bars, evenly spaced along all 4 sides
+const nFrontBack = Math.round(roofW / 0.4);
+const nLeftRight = Math.round(roofD / 0.4);
+for (let i = 0; i <= nFrontBack; i++) {
+  const bx = -ohLeft + (i / nFrontBack) * roofW;
+  const barF = new THREE.Mesh(new THREE.BoxGeometry(0.03, terraceRailH, 0.03), terraceRailMat);
+  barF.position.set(bx, terraceParapetTopY + terraceRailH / 2, D + ohFront);
+  group.add(barF);
+  const barB = new THREE.Mesh(new THREE.BoxGeometry(0.03, terraceRailH, 0.03), terraceRailMat);
+  barB.position.set(bx, terraceParapetTopY + terraceRailH / 2, -ohBack);
+  group.add(barB);
+}
+for (let i = 0; i <= nLeftRight; i++) {
+  const bz = -ohBack + (i / nLeftRight) * roofD;
+  const barL = new THREE.Mesh(new THREE.BoxGeometry(0.03, terraceRailH, 0.03), terraceRailMat);
+  barL.position.set(-ohLeft, terraceParapetTopY + terraceRailH / 2, bz);
+  group.add(barL);
+  const barR = new THREE.Mesh(new THREE.BoxGeometry(0.03, terraceRailH, 0.03), terraceRailMat);
+  barR.position.set(W + ohRight, terraceParapetTopY + terraceRailH / 2, bz);
+  group.add(barR);
 }
 
 
