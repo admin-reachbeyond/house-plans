@@ -197,45 +197,181 @@ const p4 = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.4, roofD), parapetMat);
 p4.position.set(W + ohRight, H + 0.5, roofCenterZ);
 group.add(p4);
 
-// ---- Rooftop terrace roof: single flat (very gently sloped) panel spanning the full terrace footprint.
-// Replaces the earlier split-level design, which left most of the back half of the terrace under 2m clearance
-// (dropping to 1.3m at the back wall) - unusable for a terrace meant for moving around, relaxing, eating, drinking.
-// A flat roof also matches the house's established style (flat main roof deck, parapets, shallow-slope canopies
-// throughout) rather than introducing a mismatched pitched/gable form. ----
+// ---- Split-level roof over the rooftop terrace: both sections sloped, shorter/lower at front, longer/higher at back.
+// Restored per user request (preferred the look over the flat-roof alternative). Every height below is the
+// flat-roof-era value +0.6m, a uniform vertical shift that keeps the original slope angles and step proportions
+// identical but raises the two lowest points - the back wall and the front wall - to exactly 2m clearance
+// (previously 1.4m at both, which was too low to stand near comfortably). ----
+const splitZ = 9; // meters from back wall (z=0); front section covers z=splitZ..D, back section covers z=0..splitZ
 const deckY = H + 0.3; // sits on top of the existing flat roof deck
-const terraceRoofMat = new THREE.MeshStandardMaterial({ color: ROOF, roughness: 0.85, side: THREE.DoubleSide });
-const terracePostMat = new THREE.MeshStandardMaterial({ color: TRIM });
+const roofMat2 = new THREE.MeshStandardMaterial({ color: ROOF, roughness: 0.85, side: THREE.DoubleSide });
+const postMat2 = new THREE.MeshStandardMaterial({ color: TRIM });
+const bandMat = new THREE.MeshStandardMaterial({ color: WALL_DARK, roughness: 0.9 });
 
-const terraceZ0 = -ohBack, terraceZ1 = D + ohFront; // full depth including both overhangs
-const terraceRoofBackH = 2.4;  // clearance at the back edge
-const terraceRoofFrontH = 2.2; // clearance at the front edge - very slight drop (0.2m over 14.6m, <1 degree) for drainage only
-const terraceRoofDrop = terraceRoofBackH - terraceRoofFrontH;
-const terraceRoofDepth = terraceZ1 - terraceZ0;
+// height (above deckY) at each key point along the depth, both sections sloping down toward the front (+z)
+const backRidgeH = 2.0;   // at z=0 (back wall) - the lowest point of the back section, 2m clear
+const backEaveH = 2.5;    // at z=splitZ (top of the step) - dropped 0.5m from the first pass (was 3.0)
+const frontRidgeH = 2.1;  // at z=splitZ (bottom of the step, start of front section) - dropped 0.5m (was 2.6)
+const frontEaveH = 2.0;   // at z=D (front wall) - the lowest point of the front section, 2m clear
 
-const terraceRoof = new THREE.Mesh(
-  new THREE.BoxGeometry(roofW, 0.15, terraceRoofDepth),
-  terraceRoofMat
-);
-terraceRoof.rotation.x = Math.atan2(terraceRoofDrop, terraceRoofDepth);
-terraceRoof.position.set(roofCenterX, deckY + (terraceRoofBackH + terraceRoofFrontH) / 2, (terraceZ0 + terraceZ1) / 2);
-terraceRoof.castShadow = true;
-group.add(terraceRoof);
-
-function terraceHeightAt(z) {
-  const t = (z - terraceZ0) / terraceRoofDepth;
-  return terraceRoofBackH - terraceRoofDrop * t;
+function slopedPanel(z0, z1, h0, h1, extendStart, extendEnd) {
+  const rate = (h1 - h0) / (z1 - z0);
+  const zA = z0 - extendStart, zB = z1 + extendEnd;
+  const hA = h0 - rate * extendStart, hB = h1 + rate * extendEnd;
+  const depth = zB - zA;
+  const geo = new THREE.BoxGeometry(W + ohLeft + ohRight, 0.15, depth);
+  const mesh = new THREE.Mesh(geo, roofMat2);
+  mesh.rotation.x = -Math.atan2(hB - hA, depth);
+  mesh.position.set(W / 2, deckY + (hA + hB) / 2, (zA + zB) / 2);
+  mesh.castShadow = true;
+  return mesh;
 }
 
-// support posts along both long edges only, spaced every ~3.6m, keeping the terrace open in the middle
-const terracePostZs = [terraceZ0 + 0.3, 3, 6.5, 10, terraceZ1 - 0.3];
-[-ohLeft + 0.3, W + ohRight - 0.3].forEach((px) => {
-  terracePostZs.forEach((pz) => {
-    const pclear = terraceHeightAt(pz);
-    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, pclear, 8), terracePostMat);
-    post.position.set(px, deckY + pclear / 2, pz);
-    group.add(post);
-  });
+// back (longer/higher) sloped panel: z=0 (ridge) -> z=splitZ (eave), overhangs past the back wall
+group.add(slopedPanel(0, splitZ, backRidgeH, backEaveH, ohBack, 0));
+// front (shorter/lower) sloped panel: z=splitZ (ridge) -> z=D (eave), overhangs past the front wall to match the balcony coverage below
+group.add(slopedPanel(splitZ, D, frontRidgeH, frontEaveH, 0, ohFront));
+
+// vertical clerestory band connecting the two heights, running the full width at z = splitZ
+const band = new THREE.Mesh(
+  new THREE.BoxGeometry(W + ohLeft + ohRight, backEaveH - frontRidgeH, 0.12),
+  bandMat
+);
+band.position.set(W / 2, deckY + frontRidgeH + (backEaveH - frontRidgeH) / 2, splitZ);
+group.add(band);
+
+// support posts, height interpolated to match the slope at each post's position
+function heightAt(z) {
+  if (z <= splitZ) return backRidgeH + (backEaveH - backRidgeH) * (z / splitZ);
+  return frontRidgeH + (frontEaveH - frontRidgeH) * ((z - splitZ) / (D - splitZ));
+}
+[
+  [0.3, -ohBack + 0.3], [W - 0.3, -ohBack + 0.3],
+  [0.3, splitZ - 0.3], [W - 0.3, splitZ - 0.3],
+  [0.3, splitZ + 0.3], [W - 0.3, splitZ + 0.3],
+  [0.3, D + ohFront - 0.3], [W - 0.3, D + ohFront - 0.3],
+].forEach(([px, pz]) => {
+  const pclear = heightAt(pz);
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, pclear, 8), postMat2);
+  post.position.set(px, deckY + pclear / 2, pz);
+  group.add(post);
 });
+
+// ---- Rooftop stair access enclosure: fully enclosed box housing the top of the first-floor -> rooftop stairs.
+// Positioned to match the actual stair arrival point from the floor plan (index.html): against the right/west
+// wall (x=W=9), about 4.5m down from the back-right corner (z=0 at the back wall), under the back section of
+// the terrace roof. Walls now run all the way up to meet the sloped roof underside (rather than stopping flat
+// partway up), using a custom sloped-top wall geometry that tracks heightAt(z) exactly along their length, so
+// there's no gap between the walls and the roof. Door faces east (-x), opening directly onto the open terrace. ----
+const stairBoxX0 = 6.6, stairBoxX1 = W;       // extended 0.4m further left/east (was 7.0)
+const stairBoxZ0 = 3.5, stairBoxZ1 = 6.0;     // extended 1m further north (was z=4.5) - the second flight runs
+                                               // parallel to the right wall and arrives at z=4.5 facing north,
+                                               // so this gives 1m of turning space to reach the door on the left (east)
+const stairBoxCenterX = (stairBoxX0 + stairBoxX1) / 2;
+const stairBoxCenterZ = (stairBoxZ0 + stairBoxZ1) / 2;
+const stairBoxWidth = stairBoxX1 - stairBoxX0;
+const stairBoxDepth = stairBoxZ1 - stairBoxZ0;
+
+const stairWallMat = new THREE.MeshStandardMaterial({ color: WALL, roughness: 0.9, side: THREE.DoubleSide });
+const stairDoorMat = new THREE.MeshStandardMaterial({ color: DOOR_SOLID, roughness: 0.6 });
+
+// Builds a wall running along Z (from z0 to z1) at a fixed X, whose top edge follows heightAt(z) exactly -
+// i.e. it meets the sloped roof underside with no gap, instead of a flat top. baseH is the wall's starting
+// height above the deck (0 for a full wall, doorH for a header sitting above a doorway).
+function slopedWallAlongZ(centerX, thickness, z0, z1, baseH, mat) {
+  const b = deckY + baseH;
+  const h0 = deckY + heightAt(z0), h1 = deckY + heightAt(z1);
+  const x0 = centerX - thickness / 2, x1 = centerX + thickness / 2;
+  const A = [x0, b, z0], B = [x1, b, z0], C = [x1, b, z1], D = [x0, b, z1];
+  const E = [x0, h0, z0], F = [x1, h0, z0], G = [x1, h1, z1], H = [x0, h1, z1];
+  const pos = [];
+  const quad = (p1, p2, p3, p4) => { pos.push(...p1, ...p2, ...p3, ...p1, ...p3, ...p4); };
+  quad(A, D, C, B); // bottom
+  quad(E, F, G, H); // sloped top
+  quad(A, B, F, E); // z0 end face
+  quad(D, H, G, C); // z1 end face
+  quad(A, E, H, D); // x0 side face
+  quad(B, C, G, F); // x1 side face
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  geo.computeVertexNormals();
+  return new THREE.Mesh(geo, mat);
+}
+
+// north wall (z = stairBoxZ0) - flat top, since height only depends on z and z is constant along this wall
+const stairWallNH = heightAt(stairBoxZ0);
+const stairWallN = new THREE.Mesh(new THREE.BoxGeometry(stairBoxWidth, stairWallNH, 0.12), stairWallMat);
+stairWallN.position.set(stairBoxCenterX, deckY + stairWallNH / 2, stairBoxZ0);
+group.add(stairWallN);
+
+// (no interior south wall here anymore - merged with the tank compartment below into one room)
+
+// west wall (x = stairBoxX1 = W): sloped top, running the full depth of the merged room (stair + tank)
+const stairWallW = slopedWallAlongZ(stairBoxX1, 0.12, stairBoxZ0, stairBoxZ1 + 2.0, 0, stairWallMat);
+group.add(stairWallW);
+
+// east wall (x = stairBoxX0), with a 0.9m x 2.0m door opening centered on it, built from two sloped-top side
+// panels + a sloped-top header panel above the door rather than a single solid wall
+const doorW = 0.9, doorH = 2.0;
+const sidePanelDepth = (stairBoxDepth - doorW) / 2;
+if (sidePanelDepth > 0) {
+  group.add(slopedWallAlongZ(stairBoxX0, 0.12, stairBoxZ0, stairBoxZ0 + sidePanelDepth, 0, stairWallMat));
+  group.add(slopedWallAlongZ(stairBoxX0, 0.12, stairBoxZ1 - sidePanelDepth, stairBoxZ1, 0, stairWallMat));
+}
+// header above the door - sloped top too, though the roof barely changes height across the door's 0.9m width
+group.add(slopedWallAlongZ(stairBoxX0, 0.12, stairBoxCenterZ - doorW / 2, stairBoxCenterZ + doorW / 2, doorH, stairWallMat));
+// the door itself
+const stairDoor = new THREE.Mesh(new THREE.BoxGeometry(0.06, doorH, doorW - 0.05), stairDoorMat);
+stairDoor.position.set(stairBoxX0, deckY + doorH / 2, stairBoxCenterZ);
+group.add(stairDoor);
+
+// ---- Water tank compartment: merged with the stair box above into one continuous enclosed room (no wall
+// between them anymore). Sized for a large (~3000L+) rooftop tank: 1.6m diameter x 1.8m tall poly tank, with
+// clearance to move around it for maintenance/pipework. Walls here also run up to meet the sloped roof. ----
+const tankBoxX0 = 6.6, tankBoxX1 = W;         // extended 0.4m further left/east, flush with the stair box above
+const tankBoxZ0 = stairBoxZ1, tankBoxZ1 = stairBoxZ1 + 2.0; // 2.0m deep, immediately south of the stair box
+const tankBoxCenterX = (tankBoxX0 + tankBoxX1) / 2;
+const tankBoxCenterZ = (tankBoxZ0 + tankBoxZ1) / 2;
+const tankBoxWidth = tankBoxX1 - tankBoxX0;
+const tankBoxDepth = tankBoxZ1 - tankBoxZ0;
+
+// (no north wall here - merged with the stair box above into one room)
+// south wall - flat top (fixed z)
+const tankWallSH = heightAt(tankBoxZ1);
+const tankWallS = new THREE.Mesh(new THREE.BoxGeometry(tankBoxWidth, tankWallSH, 0.12), stairWallMat);
+tankWallS.position.set(tankBoxCenterX, deckY + tankWallSH / 2, tankBoxZ1);
+group.add(tankWallS);
+// east wall: solid, no door (tank room is accessed via the stair box's door/interior, not its own opening) -
+// sloped top, with a 0.9m wide window centered in the wall space south of the door, top aligned exactly with
+// the door's top (both at doorH = 2.0m above the floor)
+const winW = 0.9, winTop = doorH, winH = 1.0, winSillH = winTop - winH;
+const doorZ1 = stairBoxCenterZ + doorW / 2;
+const winCenterZ = (doorZ1 + tankBoxZ1) / 2;
+const winZ0 = winCenterZ - winW / 2, winZ1 = winCenterZ + winW / 2;
+group.add(slopedWallAlongZ(tankBoxX0, 0.12, tankBoxZ0, winZ0, 0, stairWallMat));           // wall segment left of window
+group.add(slopedWallAlongZ(tankBoxX0, 0.12, winZ1, tankBoxZ1, 0, stairWallMat));           // wall segment right of window
+const winSill = new THREE.Mesh(new THREE.BoxGeometry(0.12, winSillH, winW), stairWallMat);  // solid sill below window
+winSill.position.set(tankBoxX0, deckY + winSillH / 2, winCenterZ);
+group.add(winSill);
+group.add(slopedWallAlongZ(tankBoxX0, 0.12, winZ0, winZ1, winTop, stairWallMat));           // header above window, sloped top to meet roof
+
+const winGlassMat = new THREE.MeshBasicMaterial({ color: GLASS });
+const winFrameMat = new THREE.MeshStandardMaterial({ color: TRIM });
+const winFramePad = 0.03; // small pad on sides/bottom only, so the top stays flush with winTop (matching the door)
+const winFrame = new THREE.Mesh(new THREE.BoxGeometry(0.12, winH + winFramePad, winW + winFramePad * 2), winFrameMat);
+winFrame.position.set(tankBoxX0, deckY + winTop - (winH + winFramePad) / 2, winCenterZ);
+group.add(winFrame);
+const winGlass = new THREE.Mesh(new THREE.BoxGeometry(0.05, winH, winW - 0.05), winGlassMat);
+winGlass.position.set(tankBoxX0 - 0.04, deckY + winSillH + winH / 2, winCenterZ); // nudged outward (-x, toward the terrace) so it isn't swallowed inside the frame
+group.add(winGlass);
+
+// the tank itself: 1.6m diameter x 1.8m tall cylinder, centered in the compartment
+const tankMat = new THREE.MeshStandardMaterial({ color: "#2f6690", roughness: 0.5 });
+const waterTank = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 1.8, 24), tankMat);
+waterTank.position.set(tankBoxCenterX, deckY + 0.9, tankBoxCenterZ);
+waterTank.castShadow = true;
+group.add(waterTank);
+
 
 openings.forEach((o) => {
   const { size, pos } = wallToWorld(o);
