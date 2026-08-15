@@ -733,6 +733,94 @@
   </svg>
 </div>
 
+<!-- ================= ROOFTOP TERRACE ================= -->
+<div class="plan-block">
+  <div class="plan-title">Rooftop Terrace — 9m x 12m footprint (+ roof overhangs)</div>
+  <svg viewBox="0 0 420 560" xmlns="http://www.w3.org/2000/svg">
+
+    <!-- true compass rose: matches ground/first floor orientation -->
+    <g transform="translate(385,55)">
+      <line x1="-14.1" y1="-14.1" x2="14.1" y2="14.1" stroke="#8a2f23" stroke-width="1.5"/>
+      <line x1="14.1" y1="-14.1" x2="-14.1" y2="14.1" stroke="#8a2f23" stroke-width="1.5"/>
+      <path d="M14.1,14.1 L4,10 L9,15 L4,18 Z" fill="#8a2f23"/>
+      <text x="22" y="26" class="compass-label" text-anchor="middle">N</text>
+      <text x="-22" y="-18" class="compass-label" text-anchor="middle">S</text>
+      <text x="-24" y="20" class="compass-label" text-anchor="middle">E</text>
+      <text x="24" y="-16" class="compass-label" text-anchor="middle">W</text>
+    </g>
+
+    <!-- roof overhang outline (dashed) - full roof extent including back/front/side overhangs -->
+    <rect x="36" y="66" width="318" height="438" fill="none" stroke="#9a9484" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="45" y="60" style="font-size:6px; fill:#9a9484; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">roof / overhang edge</text>
+
+    <!-- outer wall: 9m wide x 12m deep, same footprint as floors below -->
+    <rect x="60" y="90" width="270" height="360" class="wall room-fill"/>
+
+    <!-- width dimension (9m, wall only) - outside, above the wall -->
+    <line x1="60" y1="40" x2="330" y2="40" class="dim-line"/>
+    <line x1="60" y1="35" x2="60" y2="45" class="dim-line"/>
+    <line x1="330" y1="35" x2="330" y2="45" class="dim-line"/>
+    <text x="195" y="33" class="dim-text">9 m</text>
+
+    <!-- depth dimension (12m, wall only) - outside, right side -->
+    <line x1="367" y1="90" x2="367" y2="450" class="dim-line"/>
+    <line x1="362" y1="90" x2="372" y2="90" class="dim-line"/>
+    <line x1="362" y1="450" x2="372" y2="450" class="dim-line"/>
+    <text x="380" y="270" class="dim-text" transform="rotate(-90 380,270)">12 m</text>
+
+    <!-- clerestory step: divides the split-level roof into back (taller) and front (lower) sections -->
+    <line x1="36" y1="360" x2="354" y2="360" stroke="#8a2f23" stroke-width="1.3" stroke-dasharray="6,3"/>
+    <text x="45" y="356" style="font-size:6.5px; fill:#8a2f23; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">clerestory step</text>
+    <text x="195" y="230" text-anchor="middle" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Back roof section — 2.0m (back wall) to 2.5m (step) clearance</text>
+    <text x="195" y="400" text-anchor="middle" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Front roof section — 2.1m (step) to 2.0m (front wall) clearance</text>
+    <text x="195" y="270" text-anchor="middle" style="font-size:7.5px; fill:#2b2b2b; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Open Terrace</text>
+
+    <!-- Stair access + water tank room: merged, no interior wall, single door -->
+    <rect x="258" y="195" width="72" height="135" class="room-fill" stroke="#1a1a1a" stroke-width="1.6"/>
+    <text x="276" y="203" text-anchor="middle" style="font-size:5.5px; fill:#2b2b2b; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Utility</text>
+    <text x="276" y="210" text-anchor="middle" style="font-size:5.5px; fill:#2b2b2b; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Room</text>
+
+    <!-- door: west face of the room, 0.9m wide, centered near the stair arrival -->
+    <line x1="258" y1="195" x2="258" y2="219" stroke="#1a1a1a" stroke-width="1.6"/>
+    <line x1="258" y1="219" x2="258" y2="246" stroke="#fbf9f3" stroke-width="3"/>
+    <path d="M258,246 A27,27 0 0 0 285,219" fill="none" stroke="#b0a890" stroke-width="1" stroke-dasharray="2,2"/>
+    <line x1="258" y1="246" x2="258" y2="330" stroke="#1a1a1a" stroke-width="1.6"/>
+    <text x="245" y="235" text-anchor="middle" transform="rotate(-90 245,235)" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">0.9m door</text>
+
+    <!-- actual stair footprint within the room, dotted reference -->
+    <rect x="294" y="225" width="36" height="45" fill="none" stroke="#c99a3a" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="312" y="245" text-anchor="middle" style="font-size:4.5px; fill:#a97e1f; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">stairs up</text>
+    <text x="312" y="252" text-anchor="middle" style="font-size:4.5px; fill:#a97e1f; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">from 1st fl.</text>
+
+    <text x="294" y="338" text-anchor="middle" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">2.4m x 4.5m</text>
+
+    <!-- water tank -->
+    <circle cx="294" cy="300" r="24" fill="#dde8ee" stroke="#2f6690" stroke-width="1.4"/>
+    <text x="294" y="298" text-anchor="middle" style="font-size:5.5px; fill:#2f6690; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Tank</text>
+    <text x="294" y="306" text-anchor="middle" style="font-size:5px; fill:#2f6690; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Ø1.6m</text>
+
+    <!-- 4.5m dimension: back-right corner down to where the stairs actually reach the roof -->
+    <line x1="345" y1="90" x2="345" y2="225" class="dim-line"/>
+    <line x1="340" y1="90" x2="350" y2="90" class="dim-line"/>
+    <line x1="340" y1="225" x2="350" y2="225" class="dim-line"/>
+    <text x="358" y="157" class="dim-text" transform="rotate(-90 358,157)" style="font-size:6px;">4.5m</text>
+
+    <!-- support posts along both long edges of the terrace roof (~3.6m spacing) -->
+    <g fill="#3a352c">
+      <circle cx="69" cy="75" r="3"/>
+      <circle cx="321" cy="75" r="3"/>
+      <circle cx="69" cy="351" r="3"/>
+      <circle cx="321" cy="351" r="3"/>
+      <circle cx="69" cy="369" r="3"/>
+      <circle cx="321" cy="369" r="3"/>
+      <circle cx="69" cy="495" r="3"/>
+      <circle cx="321" cy="495" r="3"/>
+    </g>
+    <text x="80" y="70" style="font-size:5px; fill:#3a352c; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">support post (x8, both long edges)</text>
+
+  </svg>
+</div>
+
 <!-- ================= STAIR DETAILS ================= -->
 <!-- ================= ELEVATIONS ================= -->
 <div class="plan-block">
