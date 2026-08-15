@@ -47,7 +47,7 @@ const openings = [
   // FRONT (south, z = D)
   { wall: "front", x0: 1.05, x1: 3.45, y0: 0, y1: 2, type: "door", label: "Living sliding 2.4x2" },
   { wall: "front", x0: 5.55, x1: 7.95, y0: 0, y1: 2, type: "door", label: "Dining sliding 2.4x2" },
-  { wall: "front", x0: 1.25, x1: 3.25, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Master 2x1.2" },
+  { wall: "front", x0: 3.75, x1: 4.65, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Master 0.9x1.2" },
   { wall: "front", x0: 5.85, x1: 7.65, y0: FLOOR_H, y1: FLOOR_H + 2, type: "door", label: "Balcony sliding 1.8x2" },
   // BACK (north, z = 0)
   { wall: "back", x0: 4.1, x1: 5.0, y0: 0, y1: 2, type: "door", label: "Kitchen door" },
@@ -67,6 +67,7 @@ const openings = [
   { wall: "left", x0: D - 10.75, x1: D - 9.25, y0: 0.75, y1: 1.95, type: "window", label: "Bed 1.5x1.2" },
   { wall: "left", x0: D - 10.75, x1: D - 9.25, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Bed 1.5x1.2" },
   { wall: "left", x0: D - 7.37, x1: D - 6.47, y0: FLOOR_H + 1.35, y1: FLOOR_H + 1.95, type: "window", label: "Bathroom 0.9x0.6" },
+  { wall: "left", x0: D - 2.75, x1: D - 1.25, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Master 1.5x1.2" },
   { wall: "left", x0: D - 5.5, x1: D - 4.6, y0: FLOOR_H + 1.35, y1: FLOOR_H + 1.95, type: "window", label: "Ensuite 0.9x0.6" },
 ];
 
@@ -714,6 +715,7 @@ addCanopy("right", D - 10.65, D - 8.55, ffCanopyTopY, ffProjection);
 // Left wall: Bedroom window widened, and one connected canopy over the bathroom + ensuite windows
 addCanopy("left", D - 11.05, D - 8.95, ffCanopyTopY, ffProjection);
 addCanopy("left", D - 7.67, D - 4.3, ffCanopyTopY, ffProjection); // connected: bathroom + ensuite, tops now aligned
+addCanopy("left", 8.95, 11.05, ffCanopyTopY, ffProjection); // Master bedroom window, widened 0.3m each side to match the rest
 
 // ---- Wraparound concrete floor, matching the extent of the shade canopy above (back, right, front) ----
 const concreteMat = new THREE.MeshStandardMaterial({ color: "#b7b3a8", roughness: 0.95 });
