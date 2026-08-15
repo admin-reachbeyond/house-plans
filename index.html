@@ -212,11 +212,11 @@
     <text x="262" y="385" class="dim-text" font-size="12" font-weight="600">Dining</text>
     <text x="262" y="399" class="dim-text" font-size="10">4.5m x 4.5m</text>
 
-    <!-- Dining dimensions (moved outward, past the new right-side canopy) -->
-    <line x1="415" y1="315" x2="415" y2="450" class="dim-line"/>
-    <line x1="410" y1="315" x2="420" y2="315" class="dim-line"/>
-    <line x1="410" y1="450" x2="420" y2="450" class="dim-line"/>
-    <text x="428" y="386" class="dim-text" font-size="9" transform="rotate(-90 428,386)">4.5 m</text>
+    <!-- Dining dimensions, right next to the house's right wall -->
+    <line x1="335" y1="315" x2="335" y2="450" class="dim-line"/>
+    <line x1="330" y1="315" x2="340" y2="315" class="dim-line"/>
+    <line x1="330" y1="450" x2="340" y2="450" class="dim-line"/>
+    <text x="348" y="386" class="dim-text" font-size="9" transform="rotate(-90 348,386)">4.5 m</text>
 
     <line x1="195" y1="590" x2="330" y2="590" class="dim-line"/>
     <line x1="195" y1="585" x2="195" y2="595" class="dim-line"/>
@@ -265,22 +265,25 @@
     <circle cx="333" cy="447" r="2.5" fill="#8a8371"/>
     <circle cx="402" cy="93" r="2.5" fill="#8a8371"/>
     <circle cx="402" cy="447" r="2.5" fill="#8a8371"/>
-    <text x="367.5" y="270" text-anchor="middle" transform="rotate(-90 367.5,270)" style="font-size:7.4px; fill:#6b6558; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Shade roof (right side) — 2.5m deep x 12m long</text>
-    <!-- mitered hip-corner lines, matching the 3D model's hip-style canopy corners -->
-    <line x1="330" y1="15" x2="405" y2="90" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="3,2"/>
-    <line x1="330" y1="540" x2="405" y2="450" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="3,2"/>
+    <text x="390" y="270" text-anchor="middle" transform="rotate(-90 390,270)" style="font-size:7.4px; fill:#6b6558; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Shade roof (right side) — 2.5m deep x 12m long</text>
+    <!-- square corner piece, back-right: fills the corner where the back and right canopies meet, matching the 3D model's square (90 degree) hip-ridge corner -->
+    <rect x="330" y="15" width="75" height="75" fill="none" stroke="#1a1a1a" stroke-width="1.4" stroke-dasharray="6,3"/>
+    <circle cx="402" cy="18" r="2.5" fill="#8a8371"/>
+    <!-- square corner piece, front-right: fills the corner where the front and right canopies meet -->
+    <rect x="330" y="450" width="75" height="90" fill="none" stroke="#1a1a1a" stroke-width="1.4" stroke-dasharray="6,3"/>
+    <circle cx="402" cy="537" r="2.5" fill="#8a8371"/>
 
-    <!-- Kitchen depth dimension, close to right exterior wall (moved outward, past the new right-side canopy) -->
-    <line x1="415" y1="90" x2="415" y2="234" class="dim-line"/>
-    <line x1="410" y1="90" x2="420" y2="90" class="dim-line"/>
-    <line x1="410" y1="234" x2="420" y2="234" class="dim-line"/>
-    <text x="428" y="162" class="dim-text" font-size="9" transform="rotate(-90 428,162)">4.8 m</text>
+    <!-- Kitchen depth dimension, right next to the house's right wall -->
+    <line x1="335" y1="90" x2="335" y2="234" class="dim-line"/>
+    <line x1="330" y1="90" x2="340" y2="90" class="dim-line"/>
+    <line x1="330" y1="234" x2="340" y2="234" class="dim-line"/>
+    <text x="348" y="162" class="dim-text" font-size="9" transform="rotate(-90 348,162)">4.8 m</text>
 
-    <!-- depth dimension (12m total) - right side of house, outer line -->
-    <line x1="465" y1="90" x2="465" y2="450" class="dim-line"/>
-    <line x1="460" y1="90" x2="470" y2="90" class="dim-line"/>
-    <line x1="460" y1="450" x2="470" y2="450" class="dim-line"/>
-    <text x="478" y="270" class="dim-text" transform="rotate(-90 478,270)">12 m</text>
+    <!-- depth dimension (12m total) - right side of house -->
+    <line x1="360" y1="90" x2="360" y2="450" class="dim-line"/>
+    <line x1="355" y1="90" x2="365" y2="90" class="dim-line"/>
+    <line x1="355" y1="450" x2="365" y2="450" class="dim-line"/>
+    <text x="373" y="270" class="dim-text" transform="rotate(-90 373,270)">12 m</text>
 
     <!-- Door: kitchen, top-left point, on exterior top wall, inswinging into kitchen -->
     <line x1="183" y1="90" x2="210" y2="90" stroke="#fbf9f3" stroke-width="3"/>
@@ -304,11 +307,11 @@
     <path d="M312,312 L312,273" fill="none" stroke="#555" stroke-width="1.2"/>
     <path d="M306,281 L312,273 L318,281" fill="none" stroke="#555" stroke-width="1.2"/>
 
-    <!-- short flight length dimension, close to right exterior wall (moved outward, past the new right-side canopy) -->
-    <line x1="415" y1="270" x2="415" y2="315" class="dim-line"/>
-    <line x1="410" y1="270" x2="420" y2="270" class="dim-line"/>
-    <line x1="410" y1="315" x2="420" y2="315" class="dim-line"/>
-    <text x="428" y="296" class="dim-text" font-size="9" transform="rotate(-90 428,296)">1.5 m</text>
+    <!-- short flight length dimension, right next to the house's right wall -->
+    <line x1="335" y1="270" x2="335" y2="315" class="dim-line"/>
+    <line x1="330" y1="270" x2="340" y2="270" class="dim-line"/>
+    <line x1="330" y1="315" x2="340" y2="315" class="dim-line"/>
+    <text x="348" y="296" class="dim-text" font-size="9" transform="rotate(-90 348,296)">1.5 m</text>
 
     <!-- landing: full 1.2m x 1.2m, where the short flight meets the kitchen's bottom wall -->
     <rect x="294" y="234" width="36" height="36" fill="none" stroke="#1a1a1a" stroke-width="1"/>
@@ -397,8 +400,9 @@
     <circle cx="307" cy="93" r="2.5" fill="#8a8371"/>
     <circle cx="238" cy="177" r="2.5" fill="#8a8371"/>
     <text x="272" y="138" text-anchor="middle" transform="rotate(-90 272,138)" style="font-size:6.3px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">canopy bridge to carport</text>
-    <!-- mitered hip-corner line at the back-left, matching the 3D model's hip corner between the back shade and the bridge -->
-    <line x1="310" y1="15" x2="235" y2="90" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="3,2"/>
+    <!-- square corner piece, back-left: fills the corner where the back canopy and bridge meet -->
+    <rect x="235" y="15" width="75" height="75" fill="none" stroke="#1a1a1a" stroke-width="1.4" stroke-dasharray="6,3"/>
+    <circle cx="238" cy="18" r="2.5" fill="#8a8371"/>
   </g>
 
   </svg>
@@ -1391,7 +1395,7 @@
   <table style="width:100%; max-width:400px; margin:10px auto; border-collapse:collapse; font-size:14px;">
     <tr style="border-bottom:1px solid #d8d2c2;">
       <td style="padding:8px 6px; color:#6b6558;">Slope angle (uniform, all windows)</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">16.70°</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">5.06°</td>
     </tr>
     <tr style="border-bottom:1px solid #d8d2c2;">
       <td style="padding:8px 6px; color:#6b6558;">Wall attach height</td>
@@ -1403,11 +1407,11 @@
     </tr>
     <tr style="border-bottom:1px solid #d8d2c2;">
       <td style="padding:8px 6px; color:#6b6558;">Drop</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">0.30 m</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">0.09 m</td>
     </tr>
     <tr style="border-bottom:1px solid #d8d2c2;">
       <td style="padding:8px 6px; color:#6b6558;">Outer edge height</td>
-      <td style="padding:8px 6px; text-align:right; font-weight:600;">4.75 m</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">4.96 m</td>
     </tr>
     <tr style="border-bottom:1px solid #d8d2c2;">
       <td style="padding:8px 6px; color:#6b6558;">Back wall (2 bedroom + ensuite windows)</td>
@@ -1510,7 +1514,5 @@
   </table>
 </div>
 
-</body>
-</html>
 </body>
 </html>
