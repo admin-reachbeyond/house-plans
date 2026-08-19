@@ -58,7 +58,9 @@ const openings = [
   // RIGHT (east, x = W) -- distance measured from front (south)
   { wall: "right", x0: D - 8.25, x1: D - 7.35, y0: 0, y1: 2, type: "door", label: "Kitchen side door" },
   { wall: "right", x0: D - 3.9, x1: D - 2.4, y0: 0.75, y1: 1.95, type: "window", label: "Dining 1.5x1.2" },
+  { wall: "right", x0: 5.1, x1: 5.7, y0: 3.45, y1: 4.65, type: "window", label: "Stair void feature window 0.6x1.2" },
   { wall: "right", x0: D - 3.9, x1: D - 2.4, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Chill room 1.5x1.2" },
+  { wall: "right", x0: 6.2, x1: 6.8, y0: FLOOR_H + 2.23, y1: FLOOR_H + 2.53, type: "window", label: "FF stair landing 0.6x0.3" },
   { wall: "right", x0: D - 10.35, x1: D - 8.85, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Bed 1.5x1.2" },
   // LEFT (west, x = 0)
   { wall: "left", x0: D - 1.4, x1: D - 0.5, y0: 0.75, y1: 1.95, type: "window", label: "Living 0.9x1.2" },
@@ -740,6 +742,7 @@ addCanopy("back", 2.2, 6.6, ffCanopyTopY, ffProjection);
 // Right wall: Chill room window + Bedroom window, widened 0.3m each side to match the back extension
 addCanopy("right", D - 4.2, D - 2.1, ffCanopyTopY, ffProjection);
 addCanopy("right", D - 10.65, D - 8.55, ffCanopyTopY, ffProjection);
+// Stair landing window: no canopy - small 0.3x0.9m slot window, left uncovered per Sandor's request
 // Left wall: Bedroom window widened, and one connected canopy over the bathroom + ensuite windows
 addCanopy("left", D - 11.05, D - 8.95, ffCanopyTopY, ffProjection);
 addCanopy("left", D - 7.67, D - 4.3, ffCanopyTopY, ffProjection); // connected: bathroom + ensuite, tops now aligned
