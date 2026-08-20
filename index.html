@@ -1004,15 +1004,35 @@
     <!-- grass, front yard zone between the driveway and the gate (right of the driveway path only), inset 2m from the front and right walls, top edge aligned with the paved patio's actual edge (4m, not the shorter 3m roofline) -->
     <rect x="377.5" y="385" width="232.5" height="120" fill="#a8c98f"/>
 
-    <!-- mango tree, right wall, below the gate, moved down 1m, painted after the grass so it shows on top -->
-    <circle cx="617.5" cy="165" r="30" fill="#8fc17a" stroke="#6a9a55" stroke-width="1"/>
-    <text x="656" y="165" text-anchor="middle" class="dim-text" font-size="6.5" transform="rotate(-90 656,165)">Mango</text>
+    <!-- mango tree, right wall - final position, clears both the ground-floor roof canopy (2.5m projection) and the block's right boundary, with 0.25m margin on each side. Requires canopy kept pruned to ~3m diameter long-term (mature mango naturally exceeds this gap) -->
+    <circle cx="613.8" cy="154.1" r="22.5" fill="#8fc17a" stroke="#6a9a55" stroke-width="1"/>
+    <text x="645.5" y="154" text-anchor="middle" class="dim-text" font-size="6.5" transform="rotate(-90 645.5,154)">Mango</text>
+    <text x="613.8" y="177" text-anchor="middle" font-size="5.5" fill="#4a4536">keep pruned to ~3m</text>
 
-    <!-- papaya cluster, right wall, filling the empty stretch between the mango and the fern cluster - 3 total, 2 moved here from the driveway/flowering-tree spot -->
+    <!-- distances shown after the gate path, below, so they render on top of it -->
+
+    <!-- papaya cluster, right wall, filling the empty stretch between the mango and the fern cluster - reduced to 2 (middle one replaced by new shade tree below, resolving the "3 papayas look repetitive" flag) -->
     <circle cx="617.5" cy="210" r="12" fill="#e8892e" stroke="#b56a1f" stroke-width="1"/>
-    <circle cx="617.5" cy="231" r="12" fill="#e8892e" stroke="#b56a1f" stroke-width="1"/>
     <circle cx="617.5" cy="257" r="12" fill="#e8892e" stroke="#b56a1f" stroke-width="1"/>
-    <text x="650" y="231" text-anchor="middle" class="dim-text" font-size="6.5" transform="rotate(-90 650,231)">Papaya</text>
+    <text x="650" y="233.5" text-anchor="middle" class="dim-text" font-size="6.5" transform="rotate(-90 650,233.5)">Papaya</text>
+
+    <!-- ================= PROPOSED SHADE TREE — west-wall late-afternoon sun protection ================= -->
+    <!-- Position calculated from solar geometry (Siem Reap, 13.36N 103.86E): late-afternoon sun (~4:30pm-sunset, alt 25 deg down to 0 deg) arrives from ~276 deg compass bearing on this ~309 deg-facing wall. Positioned 3.8m out from the wall, shifted toward the back relative to the Chill Room window it's shading, along the sun's bearing line. Replaces the middle papaya (same spot). -->
+    <g stroke="#c23b2a" stroke-width="2.2" stroke-linecap="round">
+      <line x1="600" y1="230" x2="614" y2="244"/>
+      <line x1="614" y1="230" x2="600" y2="244"/>
+    </g>
+    <circle cx="607" cy="237" r="16" fill="none" stroke="#c23b2a" stroke-width="0.8" stroke-dasharray="2,2"/>
+    <text x="607" y="196" text-anchor="middle" font-size="6.5" font-weight="600" fill="#c23b2a">New shade tree</text>
+    <text x="607" y="204" text-anchor="middle" font-size="6" fill="#8a2f1f">approx. 7.3m tall</text>
+    <text x="607" y="211" text-anchor="middle" font-size="6" fill="#8a2f1f">4-5m canopy spread</text>
+    <text x="607" y="271" text-anchor="middle" font-size="6" fill="#8a2f1f">shades Chill Room window</text>
+
+    <!-- dimension: shade tree offset from right wall (3.8m) -->
+    <line x1="550" y1="237" x2="600" y2="237" stroke="#c23b2a" stroke-width="1" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
+    <text x="575" y="230" text-anchor="middle" font-size="6" fill="#8a2f1f">3.8m</text>
+
+    <!-- Existing gate mango tree (below), once mature, sits close enough to the calculated shade position for Window A + Bedroom window to likely cover that role too - no new tree needed there, see landscape notes -->
 
     <!-- planted clusters along the front and right walls (4 each), not a continuous bar -->
     <g>
@@ -1159,6 +1179,8 @@
     <!-- continuous path from the right-wall gate to the top-right corner of the house -->
     <line x1="640" y1="110" x2="550" y2="145" stroke="#c7c2b4" stroke-width="15" stroke-linecap="round"/>
 
+    <!-- mango distance labels added after the shade roof extension rect below, so they render on top of it -->
+
     <!-- existing panama berry tree, top-left corner, ~4m canopy, trunk 1.5m in from the walls -->
     <circle cx="62.5" cy="62.5" r="30" fill="#7a2f2f" stroke="#4f1a1a" stroke-width="1"/>
     <text x="35" y="25" text-anchor="start" class="dim-text" font-size="7">Panama berry</text>
@@ -1242,6 +1264,16 @@
     <rect x="550" y="107.5" width="37.5" height="255" fill="#a39a89" stroke="#6d6556" stroke-width="1.2" stroke-dasharray="5,3"/>
     <rect x="415" y="325" width="172.5" height="45" fill="#a39a89" stroke="#6d6556" stroke-width="1.2" stroke-dasharray="5,3"/>
     <text x="566" y="235" text-anchor="middle" class="dim-text" font-size="7" transform="rotate(-90 566,235)">shade roof extension</text>
+
+    <!-- dimension: mango trunk to right wall (4.25m from house, 1.75m from block boundary) -->
+    <line x1="550" y1="97" x2="613.8" y2="97" stroke="#4a4536" stroke-width="1.2" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
+    <text x="594" y="83" text-anchor="middle" font-size="6" fill="#4a4536">4.25m from house wall</text>
+    <text x="594" y="90" text-anchor="middle" font-size="6" fill="#4a4536">1.75m from block wall</text>
+
+    <!-- dimension: mango trunk to back wall (0.61m from house, 7.61m from block boundary) -->
+    <line x1="562" y1="145" x2="562" y2="154.1" stroke="#4a4536" stroke-width="1.2" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
+    <text x="598" y="146" text-anchor="middle" font-size="6" fill="#4a4536">0.61m from house wall</text>
+    <text x="598" y="153" text-anchor="middle" font-size="6" fill="#4a4536">7.61m from block wall</text>
 
     <!-- dimension: front canopy projection depth (3m), from the house wall to the roof edge -->
     <line x1="425" y1="325" x2="425" y2="370" stroke="#4a4536" stroke-width="1.4" marker-start="url(#sitePlanArrow)" marker-end="url(#sitePlanArrow)"/>
