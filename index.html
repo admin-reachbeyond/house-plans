@@ -130,32 +130,44 @@
     <!-- outer wall: 9m wide x 12m deep, scale 30px/m -->
     <rect x="60" y="90" width="270" height="360" class="wall room-fill"/>
 
-    <!-- Shade structure above bedroom (laundry area): 2.5m deep, matching kitchen's shade, and bedroom's 4m width -->
+    <!-- Shade structure above bedroom (now outdoor kitchen area): 2.5m deep, matching kitchen's shade, and bedroom's 4m width -->
     <path d="M180,15 L60,15 L60,90 L180,90" fill="none" stroke="#1a1a1a" stroke-width="1.4" stroke-dasharray="6,3"/>
     <circle cx="63" cy="18" r="2.5" fill="#8a8371"/>
     <circle cx="177" cy="18" r="2.5" fill="#8a8371"/>
-    <text x="120" y="33" text-anchor="middle" style="font-size:7.9px; fill:#6b6558; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Shade roof (laundry)</text>
+    <text x="120" y="33" text-anchor="middle" style="font-size:7.9px; fill:#6b6558; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Shade roof (outdoor kitchen)</text>
     <text x="120" y="45" text-anchor="middle" style="font-size:7px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">2.5m deep x 4m wide</text>
-    <!-- washing machine icon -->
-    <rect x="95" y="58" width="24" height="24" rx="2" fill="#e3ded0" stroke="#1a1a1a" stroke-width="1"/>
-    <circle cx="107" cy="70" r="8" fill="none" stroke="#1a1a1a" stroke-width="1"/>
-    <text x="120" y="70" text-anchor="start" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">washing machine</text>
+
+    <!-- Outdoor kitchen: stove and bench (no sink), 0.5m added to the right of the cooktop, whole unit centered on the wall -->
+    <rect x="93.75" y="72" width="52.5" height="18" fill="#e3ded0" stroke="#1a1a1a" stroke-width="1"/>
+    <rect x="115.25" y="73" width="16" height="16" fill="#3a3a3a" stroke="#1a1a1a" stroke-width="0.8"/>
+    <circle cx="119.75" cy="77.5" r="2" fill="none" stroke="#cfcac0" stroke-width="0.7"/>
+    <circle cx="126.75" cy="77.5" r="2" fill="none" stroke="#cfcac0" stroke-width="0.7"/>
+    <circle cx="119.75" cy="84.5" r="2" fill="none" stroke="#cfcac0" stroke-width="0.7"/>
+    <circle cx="126.75" cy="84.5" r="2" fill="none" stroke="#cfcac0" stroke-width="0.7"/>
+    <text x="123.25" y="90.5" text-anchor="middle" style="font-size:4px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">stove</text>
+    <text x="104.5" y="80" text-anchor="middle" style="font-size:4px; fill:#4a4638; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">bench</text>
+    <text x="120" y="65" text-anchor="middle" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Outdoor kitchen</text>
 
     <line x1="35" y1="15" x2="35" y2="90" class="dim-line"/>
     <line x1="30" y1="15" x2="40" y2="15" class="dim-line"/>
     <line x1="30" y1="90" x2="40" y2="90" class="dim-line"/>
     <text x="22" y="52" class="dim-text" font-size="8" transform="rotate(-90 22,52)">2.5 m</text>
 
-    <!-- Shade structure above kitchen (outdoor kitchen roof): 2.5m deep, matching kitchen's 5m width -->
+    <!-- Shade structure above kitchen (now laundry area): 2.5m deep, matching kitchen's 5m width -->
     <rect x="180" y="15" width="150" height="75" fill="none" stroke="#1a1a1a" stroke-width="1.4" stroke-dasharray="6,3"/>
     <circle cx="183" cy="18" r="2.5" fill="#8a8371"/>
     <circle cx="327" cy="18" r="2.5" fill="#8a8371"/>
-    <text x="255" y="35" text-anchor="middle" style="font-size:7.9px; fill:#6b6558; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Shade roof (outdoor kitchen)</text>
+    <text x="255" y="35" text-anchor="middle" style="font-size:7.9px; fill:#6b6558; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Shade roof (laundry)</text>
     <text x="255" y="47" text-anchor="middle" style="font-size:7px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">2.5m deep x 5m wide</text>
     <line x1="345" y1="15" x2="345" y2="90" class="dim-line"/>
     <line x1="340" y1="15" x2="350" y2="15" class="dim-line"/>
     <line x1="340" y1="90" x2="350" y2="90" class="dim-line"/>
     <text x="358" y="55" class="dim-text" font-size="8" transform="rotate(-90 358,55)">2.5 m</text>
+
+    <!-- washing machine icon: flush against the back (exterior) wall, near the top-right corner where it meets the right exterior wall -->
+    <rect x="300" y="66" width="24" height="24" rx="2" fill="#e3ded0" stroke="#1a1a1a" stroke-width="1"/>
+    <circle cx="312" cy="78" r="8" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+    <text x="312" y="63" text-anchor="middle" style="font-size:6px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">washing machine</text>
 
     <!-- width dimension (9m) -->
     <line x1="60" y1="75" x2="330" y2="75" class="dim-line"/>
@@ -175,8 +187,8 @@
 
     <!-- Bedroom: 4m x 4m, top-left corner -->
     <rect x="60" y="90" width="120" height="120" class="room-fill" stroke="#1a1a1a" stroke-width="1.6"/>
-    <text x="120" y="150" class="dim-text" font-size="12" font-weight="600">Bedroom</text>
-    <text x="120" y="164" class="dim-text" font-size="10">4m x 4m</text>
+    <text x="123" y="163" class="dim-text" font-size="12" font-weight="600">Bedroom</text>
+    <text x="123" y="173" class="dim-text" font-size="10">4m x 4m</text>
 
     <!-- Door: right wall of bedroom, near bottom, inswinging (opens into the room) -->
     <line x1="180" y1="178" x2="180" y2="205" stroke="#fbf9f3" stroke-width="3"/>
@@ -185,8 +197,25 @@
 
     <!-- Bathroom: 4m x 2m, below bedroom, full width -->
     <rect x="60" y="210" width="120" height="60" class="room-fill" stroke="#1a1a1a" stroke-width="1.6"/>
-    <text x="120" y="235" class="dim-text" font-size="12" font-weight="600">Bathroom</text>
-    <text x="120" y="249" class="dim-text" font-size="10">4m x 2m</text>
+    <text x="148" y="257" class="dim-text" font-size="12" font-weight="600">Bathroom</text>
+    <text x="148" y="267" class="dim-text" font-size="10">4m x 2m</text>
+
+    <!-- Basin: widened to 1m, flush against the right wall -->
+    <rect x="150" y="210" width="30" height="20" rx="2" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+    <ellipse cx="165" cy="220" rx="11.5" ry="5.6" fill="none" stroke="#1a1a1a" stroke-width="0.8"/>
+    <text x="165" y="217" text-anchor="middle" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">basin</text>
+
+    <!-- Toilet: flush against the top wall, between basin and shower -->
+    <rect x="124.5" y="210" width="16" height="8" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+    <ellipse cx="132.5" cy="222" rx="8" ry="9" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+    <text x="132.5" y="219" text-anchor="middle" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">WC</text>
+
+    <!-- Shower: 1m x 1m, moved 1m right of the exterior wall to clear the bathroom window -->
+    <rect x="90" y="240" width="30" height="30" fill="#e3ded0" stroke="#1a1a1a" stroke-width="1"/>
+    <circle cx="105" cy="255" r="2.2" fill="none" stroke="#1a1a1a" stroke-width="0.8"/>
+    <line x1="90" y1="240" x2="120" y2="270" stroke="#1a1a1a" stroke-width="0.6"/>
+    <text x="105" y="252" text-anchor="middle" style="font-size:5px; fill:#4a4638; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">shower</text>
+    <text x="105" y="260" text-anchor="middle" style="font-size:5px; fill:#4a4638; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">1m x 1m</text>
 
     <!-- Door: bathroom right wall, near bottom (same style as bedroom door) -->
     <line x1="180" y1="238" x2="180" y2="265" stroke="#fbf9f3" stroke-width="3"/>
@@ -209,8 +238,8 @@
     <text x="127" y="603" class="dim-text" font-size="9">4.5 m</text>
 
     <!-- Dining: open area below the stairs -->
-    <text x="262" y="385" class="dim-text" font-size="12" font-weight="600">Dining</text>
-    <text x="262" y="399" class="dim-text" font-size="10">4.5m x 4.5m</text>
+    <text x="262" y="340" class="dim-text" font-size="12" font-weight="600">Dining</text>
+    <text x="262" y="352" class="dim-text" font-size="10">4.5m x 4.5m</text>
 
     <!-- Dining dimensions, right next to the house's right wall -->
     <line x1="335" y1="315" x2="335" y2="450" class="dim-line"/>
@@ -223,6 +252,42 @@
     <line x1="330" y1="585" x2="330" y2="595" class="dim-line"/>
     <text x="262" y="603" class="dim-text" font-size="9">4.5 m</text>
 
+    <!-- L-shaped sofa: legs swapped from prior version - long end (2.45m) now vertical, running flush along the west exterior wall (parallel to the shared bathroom/living wall); short end (1.8m) horizontal, attached at the top. Top edge sits exactly on the front door's hinge line (y=310.5), right where the door opens into the room. -->
+    <path d="M135,310.5 L189,310.5 L189,384 L162,384 L162,337.5 L135,337.5 Z" fill="#c9b7a0" stroke="#1a1a1a" stroke-width="1"/>
+    <text x="162" y="327" text-anchor="middle" style="font-size:5px; fill:#4a4638; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">1.8m</text>
+    <text x="175.5" y="349" text-anchor="middle" transform="rotate(-90 175.5,349)" style="font-size:5px; fill:#4a4638; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">2.45m</text>
+    <text x="227" y="400" text-anchor="middle" style="font-size:5.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">L-shaped sofa</text>
+
+    <!-- Chair: bottom-left corner of Living, tucked diagonally into the corner, now 0.5m further into the room and doubled in size -->
+    <g transform="translate(85.6,424.4) rotate(45)">
+      <rect x="-12" y="-12" width="24" height="24" rx="6" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    </g>
+
+    <!-- Chair: near the Living sliding door, in line with the sofa, now 0.5m further into the room, doubled in size, and angled to match the corner chair -->
+    <g transform="translate(162,420) rotate(45)">
+      <rect x="-13.5" y="-13.5" width="27" height="27" rx="6" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    </g>
+
+    <!-- Coffee table: 0.5m x 0.88m, tucked into the sofa's notch, right in front of the seating -->
+    <rect x="126" y="347.55" width="15" height="26.4" fill="#d8d2c2" stroke="#1a1a1a" stroke-width="0.8"/>
+    <text x="133.5" y="362" text-anchor="middle" transform="rotate(-90 133.5,362)" style="font-size:4px; fill:#4a4638; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">0.5x0.88m</text>
+
+    <!-- TV cabinet + TV: left (west) wall of Living, 1.2m long x 0.4m deep, centered in the wall run between the front door (ends y=310.5) and the small window (starts y=408) -->
+    <rect x="60" y="341.25" width="12" height="36" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <rect x="60" y="345" width="4" height="29" fill="#2b2b2b" stroke="#1a1a1a" stroke-width="0.6"/>
+    <text x="79" y="359.25" text-anchor="middle" transform="rotate(-90 79,359.25)" style="font-size:4.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">TV + cabinet</text>
+
+    <!-- Dining table: 1.6m x 0.81m, centered in the dining area, clear of the stairs above and the sliding door below. 6 chairs: 2 per long side, 1 per short end. -->
+    <rect x="238" y="372.85" width="48" height="24.3" fill="#e3ded0" stroke="#1a1a1a" stroke-width="1"/>
+    <text x="262" y="387.5" text-anchor="middle" style="font-size:4.5px; fill:#4a4638; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">1.6m x 0.81m</text>
+
+    <rect x="243.25" y="354.85" width="13.5" height="13.5" rx="3" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <rect x="267.25" y="354.85" width="13.5" height="13.5" rx="3" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <rect x="243.25" y="401.65" width="13.5" height="13.5" rx="3" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <rect x="267.25" y="401.65" width="13.5" height="13.5" rx="3" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <rect x="220" y="378.25" width="13.5" height="13.5" rx="3" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <rect x="290.5" y="378.25" width="13.5" height="13.5" rx="3" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+
     <!-- Paved front patio: 4m deep, full 9m width, extends past the shorter 3m roofline (matching the 3D model / site plan) -->
     <rect x="60" y="450" width="270" height="120" fill="#e5e2d8" stroke="#a39a89" stroke-width="1" stroke-dasharray="3,2"/>
     <text x="195" y="558" text-anchor="middle" style="font-size:6.5px; fill:#8a8371; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">paved patio, uncovered past roofline</text>
@@ -233,8 +298,23 @@
     <circle cx="327" cy="453" r="2.5" fill="#8a8371"/>
     <circle cx="63" cy="537" r="2.5" fill="#8a8371"/>
     <circle cx="327" cy="537" r="2.5" fill="#8a8371"/>
-    <text x="195" y="490" text-anchor="middle" style="font-size:7.9px; fill:#6b6558; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Shade roof (front)</text>
-    <text x="195" y="502" text-anchor="middle" style="font-size:7px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">3m deep x 9m wide</text>
+    <text x="100" y="465" text-anchor="middle" style="font-size:7.9px; fill:#6b6558; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Shade roof (front)</text>
+    <text x="100" y="477" text-anchor="middle" style="font-size:7px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">3m deep x 9m wide</text>
+
+    <!-- Outdoor entertaining: 2-seater sofa against the wall, small table in front, 2 chairs further out angled inward toward the grouping -->
+    <rect x="174" y="454" width="42" height="24" rx="2" fill="#c9b7a0" stroke="#1a1a1a" stroke-width="1"/>
+    <rect x="177" y="457" width="36" height="6" fill="#b7a48c" stroke="none"/>
+    <text x="195" y="473" text-anchor="middle" style="font-size:4.5px; fill:#4a4638; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">2-seater sofa</text>
+
+    <rect x="187" y="490" width="16" height="16" rx="1" fill="#d8d2c2" stroke="#1a1a1a" stroke-width="0.7"/>
+
+    <g transform="translate(159.5,510) rotate(20)">
+      <rect x="-10.5" y="-10.5" width="21" height="21" rx="3" fill="#c9b7a0" stroke="#1a1a1a" stroke-width="0.8"/>
+    </g>
+    <g transform="translate(230.5,510) rotate(-20)">
+      <rect x="-10.5" y="-10.5" width="21" height="21" rx="3" fill="#c9b7a0" stroke="#1a1a1a" stroke-width="0.8"/>
+    </g>
+    <text x="195" y="530" text-anchor="middle" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">outdoor entertaining</text>
 
     <!-- front canopy projection dimension (3m) -->
     <line x1="45" y1="450" x2="45" y2="540" class="dim-line"/>
@@ -343,6 +423,28 @@
     <path d="M63,162 L63,170 M60,166 L63,170 L66,166" fill="none" stroke="#6b6558" stroke-width="0.8"/>
     <text x="72" y="150" text-anchor="middle" transform="rotate(-90 72,150)" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">1.5m x 1.2m</text>
 
+    <!-- Queen bed: headboard flush with the top (back) exterior wall, 1.5m wide x 2.0m deep, 0.5m right of center, clear of the right-wall door swing and the bathroom doorway below -->
+    <rect x="112.5" y="90" width="45" height="60" fill="#e7e2d3" stroke="#1a1a1a" stroke-width="1"/>
+    <rect x="112.5" y="90" width="45" height="8" fill="#d8d2c2" stroke="#1a1a1a" stroke-width="1"/>
+    <rect x="119" y="98" width="14" height="12" rx="3" fill="#fff" stroke="#a8a18e" stroke-width="0.6"/>
+    <rect x="137" y="98" width="14" height="12" rx="3" fill="#fff" stroke="#a8a18e" stroke-width="0.6"/>
+    <text x="135" y="128" text-anchor="middle" style="font-size:5.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">queen bed</text>
+
+    <!-- Bedside tables, flanking the bed, flush against the top wall -->
+    <rect x="100.5" y="90" width="12" height="12" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <rect x="157.5" y="90" width="12" height="12" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+
+    <!-- Cupboard: 1.2m, centered on the bottom wall, clear of the bathroom doorway (x=64.5-91.5) and the right-wall door swing (x=153-180) -->
+    <rect x="102" y="195" width="36" height="15" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <text x="120" y="204.5" text-anchor="middle" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Cupboard 1.2m</text>
+
+    <!-- Desk: flush against the left wall, top corner (now open since the bed moved right), well clear of the bathroom doorway -->
+    <rect x="60" y="90" width="18" height="30" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <text x="69" y="105" text-anchor="middle" transform="rotate(-90 69,105)" style="font-size:4.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">desk</text>
+
+    <!-- Chair: in front of the desk -->
+    <rect x="82" y="99" width="12" height="12" rx="3" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+
     <!-- Bathroom window: left wall, 0.9m wide x 0.6m tall, matching first floor bathroom/ensuite windows -->
     <line x1="60" y1="226.5" x2="60" y2="253.5" stroke="#fbf9f3" stroke-width="5"/>
     <line x1="57" y1="226.5" x2="57" y2="240" stroke="#1a1a1a" stroke-width="1.4"/>
@@ -356,6 +458,35 @@
     <path d="M256,87 L264,87 M260,84 L264,87 L260,90" fill="none" stroke="#6b6558" stroke-width="0.8"/>
     <path d="M284,93 L277,93 M280,90 L277,93 L280,96" fill="none" stroke="#6b6558" stroke-width="0.8"/>
     <text x="270" y="106" text-anchor="middle" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">sink / window — 1.5m x 1.2m</text>
+
+    <!-- Kitchen L-counter: 0.6m deep bench along the top wall (clear of the entrance door) turning down the right wall (clear of the landing door). Continuous bench space between fridge, sink and stove. -->
+    <path d="M216,90 L330,90 L330,196.5 L312,196.5 L312,108 L216,108 Z" fill="#e3ded0" stroke="#1a1a1a" stroke-width="1"/>
+
+    <!-- Sink: centered under the kitchen window -->
+    <rect x="250" y="93" width="40" height="12" rx="2" fill="#c7ccd3" stroke="#1a1a1a" stroke-width="0.8"/>
+    <path d="M270,93 L270,89.5 M267,90.5 L270,89.5 L273,90.5" fill="none" stroke="#6b6558" stroke-width="0.7"/>
+    <text x="270" y="102" text-anchor="middle" style="font-size:4.5px; fill:#3a3a3a; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Sink</text>
+
+    <!-- Stove: right wall, right at the counter corner, freeing up a long clear bench run down to the fridge -->
+    <rect x="312" y="123" width="18" height="18" fill="#3a3a3a" stroke="#1a1a1a" stroke-width="0.8"/>
+    <circle cx="318" cy="129" r="2.3" fill="none" stroke="#cfcac0" stroke-width="0.8"/>
+    <circle cx="324" cy="129" r="2.3" fill="none" stroke="#cfcac0" stroke-width="0.8"/>
+    <circle cx="318" cy="135.5" r="2.3" fill="none" stroke="#cfcac0" stroke-width="0.8"/>
+    <circle cx="324" cy="135.5" r="2.3" fill="none" stroke="#cfcac0" stroke-width="0.8"/>
+    <text x="321" y="132" text-anchor="middle" transform="rotate(-90 321,132)" style="font-size:4.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Stove</text>
+
+    <!-- Fridge: right wall, tucked in right above the landing door - handy on the way in from the stairs, with a clear bench run up to the stove -->
+    <rect x="312" y="175.5" width="18" height="21" rx="2" fill="#dcdfe3" stroke="#1a1a1a" stroke-width="0.8"/>
+    <text x="321" y="186" text-anchor="middle" transform="rotate(-90 321,186)" style="font-size:4.5px; fill:#3a3a3a; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Fridge</text>
+
+    <!-- Appliance cupboard: bottom (partition) wall, 1.8m x 0.6m. The partition wall only runs x=225-330 (the rest is open to the landing), so this sits clear of that open threshold on the left and clear of the landing door's swing/open-leaf on the right. -->
+    <rect x="235.5" y="216" width="54" height="18" fill="#e3ded0" stroke="#1a1a1a" stroke-width="1"/>
+    <line x1="253.5" y1="216" x2="253.5" y2="234" stroke="#1a1a1a" stroke-width="0.6"/>
+    <line x1="271.5" y1="216" x2="271.5" y2="234" stroke="#1a1a1a" stroke-width="0.6"/>
+    <rect x="274.5" y="219" width="12" height="12" fill="none" stroke="#1a1a1a" stroke-width="0.6"/>
+    <text x="244.5" y="225" text-anchor="middle" transform="rotate(-90 244.5,225)" style="font-size:4px; fill:#4a4638; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">cupboard</text>
+    <text x="262.5" y="225" text-anchor="middle" transform="rotate(-90 262.5,225)" style="font-size:4px; fill:#4a4638; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">microwave</text>
+    <text x="280.5" y="225" text-anchor="middle" transform="rotate(-90 280.5,225)" style="font-size:4px; fill:#4a4638; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">oven</text>
 
     <!-- Living: sliding door (swapped with dining), bottom wall, 2.4m wide -->
     <line x1="91.5" y1="450" x2="163.5" y2="450" stroke="#fbf9f3" stroke-width="5"/>
