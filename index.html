@@ -134,19 +134,19 @@
     <path d="M180,15 L60,15 L60,90 L180,90" fill="none" stroke="#1a1a1a" stroke-width="1.4" stroke-dasharray="6,3"/>
     <circle cx="63" cy="18" r="2.5" fill="#8a8371"/>
     <circle cx="177" cy="18" r="2.5" fill="#8a8371"/>
-    <text x="120" y="33" text-anchor="middle" style="font-size:7.9px; fill:#6b6558; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Shade roof (outdoor kitchen)</text>
+    <text x="120" y="33" text-anchor="middle" style="font-size:7.9px; fill:#6b6558; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Shade roof (laundry)</text>
     <text x="120" y="45" text-anchor="middle" style="font-size:7px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">2.5m deep x 4m wide</text>
 
-    <!-- Outdoor kitchen: stove and bench (no sink), 0.5m added to the right of the cooktop, whole unit centered on the wall -->
-    <rect x="93.75" y="72" width="52.5" height="18" fill="#e3ded0" stroke="#1a1a1a" stroke-width="1"/>
-    <rect x="115.25" y="73" width="16" height="16" fill="#3a3a3a" stroke="#1a1a1a" stroke-width="0.8"/>
-    <circle cx="119.75" cy="77.5" r="2" fill="none" stroke="#cfcac0" stroke-width="0.7"/>
-    <circle cx="126.75" cy="77.5" r="2" fill="none" stroke="#cfcac0" stroke-width="0.7"/>
-    <circle cx="119.75" cy="84.5" r="2" fill="none" stroke="#cfcac0" stroke-width="0.7"/>
-    <circle cx="126.75" cy="84.5" r="2" fill="none" stroke="#cfcac0" stroke-width="0.7"/>
-    <text x="123.25" y="90.5" text-anchor="middle" style="font-size:4px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">stove</text>
-    <text x="104.5" y="80" text-anchor="middle" style="font-size:4px; fill:#4a4638; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">bench</text>
-    <text x="120" y="65" text-anchor="middle" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Outdoor kitchen</text>
+    <!-- Washing machine: moved here (was outdoor kitchen spot), 1m closer to the kitchen back door (x183-210) -->
+    <rect x="138" y="66" width="24" height="24" rx="2" fill="#e3ded0" stroke="#1a1a1a" stroke-width="1"/>
+    <circle cx="150" cy="78" r="8" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+    <text x="150" y="63" text-anchor="middle" style="font-size:6px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">washing machine</text>
+
+    <!-- Shelves: left of the washing machine, 20cm gap between them -->
+    <rect x="96" y="66" width="36" height="24" fill="#e3ded0" stroke="#1a1a1a" stroke-width="1"/>
+    <line x1="96" y1="74" x2="132" y2="74" stroke="#a8a18e" stroke-width="0.7"/>
+    <line x1="96" y1="82" x2="132" y2="82" stroke="#a8a18e" stroke-width="0.7"/>
+    <text x="108" y="63" text-anchor="middle" style="font-size:6px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">shelves</text>
 
     <line x1="35" y1="15" x2="35" y2="90" class="dim-line"/>
     <line x1="30" y1="15" x2="40" y2="15" class="dim-line"/>
@@ -157,17 +157,27 @@
     <rect x="180" y="15" width="150" height="75" fill="none" stroke="#1a1a1a" stroke-width="1.4" stroke-dasharray="6,3"/>
     <circle cx="183" cy="18" r="2.5" fill="#8a8371"/>
     <circle cx="327" cy="18" r="2.5" fill="#8a8371"/>
-    <text x="255" y="35" text-anchor="middle" style="font-size:7.9px; fill:#6b6558; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Shade roof (laundry)</text>
+    <text x="255" y="35" text-anchor="middle" style="font-size:7.9px; fill:#6b6558; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Shade roof (outdoor kitchen)</text>
     <text x="255" y="47" text-anchor="middle" style="font-size:7px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">2.5m deep x 5m wide</text>
     <line x1="345" y1="15" x2="345" y2="90" class="dim-line"/>
     <line x1="340" y1="15" x2="350" y2="15" class="dim-line"/>
     <line x1="340" y1="90" x2="350" y2="90" class="dim-line"/>
     <text x="358" y="55" class="dim-text" font-size="8" transform="rotate(-90 358,55)">2.5 m</text>
 
-    <!-- washing machine icon: flush against the back (exterior) wall, near the top-right corner where it meets the right exterior wall -->
-    <rect x="300" y="66" width="24" height="24" rx="2" fill="#e3ded0" stroke="#1a1a1a" stroke-width="1"/>
-    <circle cx="312" cy="78" r="8" fill="none" stroke="#1a1a1a" stroke-width="1"/>
-    <text x="312" y="63" text-anchor="middle" style="font-size:6px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">washing machine</text>
+    <!-- Outdoor kitchen: moved here (was washing machine spot), then shifted 1.5m right, then extended 1m on the left for a small sink -->
+    <rect x="243.75" y="72" width="82.5" height="18" fill="#e3ded0" stroke="#1a1a1a" stroke-width="1"/>
+    <!-- Small sink, in the new left extension -->
+    <rect x="248" y="76" width="20" height="10" rx="2" fill="#c7ccd3" stroke="#1a1a1a" stroke-width="0.8"/>
+    <path d="M258,76 L258,73.5 M255.5,74.5 L258,73.5 L260.5,74.5" fill="none" stroke="#6b6558" stroke-width="0.6"/>
+    <text x="258" y="90.5" text-anchor="middle" style="font-size:4px; fill:#3a3a3a; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">sink</text>
+    <rect x="295.25" y="73" width="16" height="16" fill="#3a3a3a" stroke="#1a1a1a" stroke-width="0.8"/>
+    <circle cx="299.75" cy="77.5" r="2" fill="none" stroke="#cfcac0" stroke-width="0.7"/>
+    <circle cx="306.75" cy="77.5" r="2" fill="none" stroke="#cfcac0" stroke-width="0.7"/>
+    <circle cx="299.75" cy="84.5" r="2" fill="none" stroke="#cfcac0" stroke-width="0.7"/>
+    <circle cx="306.75" cy="84.5" r="2" fill="none" stroke="#cfcac0" stroke-width="0.7"/>
+    <text x="303.25" y="90.5" text-anchor="middle" style="font-size:4px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">stove</text>
+    <text x="284.5" y="80" text-anchor="middle" style="font-size:4px; fill:#4a4638; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">bench</text>
+    <text x="300" y="65" text-anchor="middle" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Outdoor kitchen</text>
 
     <!-- width dimension (9m) -->
     <line x1="60" y1="75" x2="330" y2="75" class="dim-line"/>
@@ -452,6 +462,7 @@
     <text x="72" y="240" text-anchor="middle" transform="rotate(-90 72,240)" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">0.9m x 0.6m</text>
 
     <!-- Kitchen window: top wall, 1.5m wide x 1.2m tall, above the sink -->
+    <rect x="246" y="83" width="48" height="11" fill="#dce8ec" fill-opacity="0.65" stroke="#1a1a1a" stroke-width="1.8"/>
     <line x1="247.5" y1="90" x2="292.5" y2="90" stroke="#fbf9f3" stroke-width="5"/>
     <line x1="247.5" y1="87" x2="270" y2="87" stroke="#1a1a1a" stroke-width="1.4"/>
     <line x1="270" y1="93" x2="292.5" y2="93" stroke="#1a1a1a" stroke-width="1.4"/>
@@ -631,6 +642,22 @@
     <path d="M165,179.5 A27,27 0 0 0 138,206.5" fill="none" stroke="#b0a890" stroke-width="1" stroke-dasharray="2,2"/>
     <line x1="165" y1="206.5" x2="138" y2="206.5" stroke="#1a1a1a" stroke-width="1.4"/>
 
+    <!-- Furniture: twin bed 1, flush top-left corner, headboard against left/window wall -->
+    <rect x="60" y="90" width="60" height="30" fill="#e7e2d3" stroke="#1a1a1a" stroke-width="1"/>
+    <rect x="60" y="90" width="8" height="30" fill="#d8d2c2" stroke="#1a1a1a" stroke-width="1"/>
+    <rect x="66" y="94" width="12" height="10" rx="3" fill="#fff" stroke="#a8a18e" stroke-width="0.6"/>
+    <text x="94" y="108" text-anchor="middle" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">single bed</text>
+
+    <!-- Furniture: wardrobe, right wall, clear of the door swing below and the small top window -->
+    <rect x="147" y="120" width="18" height="45" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <text x="156" y="142.5" text-anchor="middle" transform="rotate(-90 156,142.5)" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Wardrobe</text>
+
+    <!-- Furniture: twin bed 2, flush bottom-left corner, headboard against left/window wall -->
+    <rect x="60" y="180" width="60" height="30" fill="#e7e2d3" stroke="#1a1a1a" stroke-width="1"/>
+    <rect x="60" y="180" width="8" height="30" fill="#d8d2c2" stroke="#1a1a1a" stroke-width="1"/>
+    <rect x="66" y="196" width="12" height="10" rx="3" fill="#fff" stroke="#a8a18e" stroke-width="0.6"/>
+    <text x="94" y="198" text-anchor="middle" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">single bed</text>
+
     <!-- Bedroom depth (4m) - outside, left wall is free since 12m total moved to the right -->
     <line x1="45" y1="90" x2="45" y2="210" class="dim-line"/>
     <line x1="40" y1="90" x2="50" y2="90" class="dim-line"/>
@@ -773,9 +800,8 @@
 
     <!-- Chill Room / Office / Gym: remaining space, bottom right, top wall moved up 0.2m to close the gap freed by the narrower rooftop stair (now flush with it again), 1.5m taken for balcony -->
     <rect x="219" y="300" width="111" height="105" class="room-fill" stroke="#1a1a1a" stroke-width="1.6"/>
-    <text x="274.5" y="346" text-anchor="middle" style="font-size:6.75px; fill:#2b2b2b; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Chill Room /</text>
-    <text x="274.5" y="356" text-anchor="middle" style="font-size:6.75px; fill:#2b2b2b; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Office / Gym</text>
-    <text x="274.5" y="369" text-anchor="middle" style="font-size:6.75px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">3.7m x 3.5m</text>
+    <text x="274.5" y="342" text-anchor="middle" style="font-size:5.5px; fill:#2b2b2b; font-weight:600; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Chill Room / Office / Gym</text>
+    <text x="274.5" y="349.5" text-anchor="middle" style="font-size:5.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">3.7m x 3.5m</text>
 
     <!-- Door: chill room, top-left wall (0.9m, standard size), inswinging into the room, parallel with the stairs when open. Moved down 0.2m. -->
     <line x1="219" y1="309" x2="219" y2="336" stroke="#fbf9f3" stroke-width="3"/>
@@ -793,7 +819,7 @@
     <line x1="333" y1="355.5" x2="333" y2="378" stroke="#1a1a1a" stroke-width="1.4"/>
     <path d="M327,343 L327,336 M324,340 L327,336 L330,340" fill="none" stroke="#6b6558" stroke-width="0.8"/>
     <path d="M333,368 L333,375 M330,371 L333,375 L336,371" fill="none" stroke="#6b6558" stroke-width="0.8"/>
-    <text x="318" y="355.5" text-anchor="middle" transform="rotate(-90 318,355.5)" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">1.5m x 1.2m</text>
+    <text x="340" y="355.5" text-anchor="middle" transform="rotate(-90 340,355.5)" style="font-size:4.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">1.5m x 1.2m</text>
 
     <!-- Sliding door: chill room to balcony, aligned directly above the dining sliding door on ground floor (center=262.5), 1.8m wide -->
     <line x1="235.5" y1="405" x2="289.5" y2="405" stroke="#fbf9f3" stroke-width="5"/>
@@ -802,6 +828,41 @@
     <path d="M242,402 L250,402 M246,399 L250,402 L246,405" fill="none" stroke="#6b6558" stroke-width="0.8"/>
     <path d="M283,408 L275,408 M279,405 L275,408 L279,411" fill="none" stroke="#6b6558" stroke-width="0.8"/>
     <text x="262.5" y="416" text-anchor="middle" style="font-size:6px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">1.8m x 2m sliding door</text>
+
+    <!-- Furniture: two armchairs, angled toward each other, "chill" reading nook - pulled up close to the top wall -->
+    <g transform="translate(263,317) rotate(-20)">
+      <rect x="-12" y="-10" width="24" height="20" rx="4" fill="#7fa8ab" stroke="#1a1a1a" stroke-width="0.8"/>
+    </g>
+    <g transform="translate(293,317) rotate(20)">
+      <rect x="-12" y="-10" width="24" height="20" rx="4" fill="#7fa8ab" stroke="#1a1a1a" stroke-width="0.8"/>
+    </g>
+
+    <!-- Furniture: small fridge, top-right corner -->
+    <rect x="310" y="300" width="18" height="18" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <text x="319" y="311" text-anchor="middle" style="font-size:4.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Fridge</text>
+
+    <!-- Furniture: desk, right wall, under the window -->
+    <rect x="312" y="337.5" width="18" height="36" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <text x="321" y="355.5" text-anchor="middle" transform="rotate(-90 321,355.5)" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Desk</text>
+
+    <!-- Furniture: desk chair -->
+    <rect x="300" y="349.5" width="12" height="12" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+
+    <!-- Open floor, right of desk, in front of window - reserved for gym/exercise use (mat, light equipment); a full-length treadmill doesn't comfortably fit here alongside the desk, cupboard and armchairs, so leaving this flexible/open for now -->
+    <!-- Furniture: small TV stand + TV, bottom-right corner, below the window -->
+    <rect x="300" y="393" width="30" height="12" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <rect x="306" y="400" width="18" height="5" fill="#3a3a3a" stroke="#1a1a1a" stroke-width="0.6"/>
+    <text x="315" y="398" text-anchor="middle" style="font-size:4.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">TV</text>
+
+    <!-- Furniture: treadmill, parallel to the rower, moved over 0.2m further from the wall. 0.75m x 1.54m -->
+    <rect x="237.6" y="354" width="22.5" height="46.2" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <line x1="248.85" y1="358" x2="248.85" y2="396.2" stroke="#a8a18e" stroke-width="0.8"/>
+    <text x="248.85" y="377.1" text-anchor="middle" transform="rotate(-90 248.85,377.1)" style="font-size:4.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Treadmill</text>
+
+    <!-- Furniture: rower, flush against the left wall, moved down flush with the balcony wall below. Tapered: 32cm at the back (near the door, top), 42cm at the front (bottom), 1.90m long. Centerline kept straight/parallel to the wall. -->
+    <polygon points="222,345 231.6,345 234.6,402 222,402" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <line x1="227.5" y1="349" x2="227.5" y2="398" stroke="#a8a18e" stroke-width="0.8"/>
+    <text x="227.5" y="373.5" text-anchor="middle" transform="rotate(-90 227.5,373.5)" style="font-size:4.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Rower</text>
 
     <!-- Bedroom: 3.7m x 4.8m, top-right corner (stairs come up below) -->
     <rect x="219" y="90" width="111" height="144" class="room-fill" stroke="#1a1a1a" stroke-width="1.6"/>
@@ -814,7 +875,7 @@
     <line x1="333" y1="162" x2="333" y2="184.5" stroke="#1a1a1a" stroke-width="1.4"/>
     <path d="M327,150 L327,142 M324,146 L327,142 L330,146" fill="none" stroke="#6b6558" stroke-width="0.8"/>
     <path d="M333,174 L333,182 M330,178 L333,182 L336,178" fill="none" stroke="#6b6558" stroke-width="0.8"/>
-    <text x="318" y="162" text-anchor="middle" transform="rotate(-90 318,162)" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">1.5m x 1.2m</text>
+    <text x="340" y="162" text-anchor="middle" transform="rotate(-90 340,162)" style="font-size:4.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">1.5m x 1.2m</text>
 
     <!-- Window: top wall, small cross-breeze window, 0.6m, 40cm gap from ensuite wall -->
     <line x1="231" y1="90" x2="249" y2="90" stroke="#fbf9f3" stroke-width="5"/>
@@ -833,6 +894,32 @@
     <line x1="219" y1="93" x2="219" y2="120" stroke="#fbf9f3" stroke-width="3"/>
     <path d="M219,120 A27,27 0 0 1 192,93" fill="none" stroke="#b0a890" stroke-width="1" stroke-dasharray="2,2"/>
     <line x1="219" y1="93" x2="192" y2="93" stroke="#1a1a1a" stroke-width="1.4"/>
+
+    <!-- Furniture: twin bed 1, flush top-right corner, headboard against right/window wall -->
+    <rect x="270" y="90" width="60" height="30" fill="#e7e2d3" stroke="#1a1a1a" stroke-width="1"/>
+    <rect x="322" y="90" width="8" height="30" fill="#d8d2c2" stroke="#1a1a1a" stroke-width="1"/>
+    <rect x="308" y="94" width="12" height="10" rx="3" fill="#fff" stroke="#a8a18e" stroke-width="0.6"/>
+    <text x="296" y="108" text-anchor="middle" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">single bed</text>
+
+    <!-- Furniture: desk, right wall, under the window - sits cleanly in the gap between the two beds -->
+    <rect x="312" y="144" width="18" height="36" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <text x="321" y="162" text-anchor="middle" transform="rotate(-90 321,162)" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Desk</text>
+
+    <!-- Furniture: desk chair -->
+    <rect x="294" y="156" width="12" height="12" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+
+    <!-- Furniture: two wardrobes, 1.2m each, flush against each other, left wall, clear of both door swings -->
+    <rect x="219" y="126" width="18" height="36" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <line x1="219" y1="162" x2="237" y2="162" stroke="#1a1a1a" stroke-width="0.6"/>
+    <rect x="219" y="162" width="18" height="36" fill="#e3ded0" stroke="#1a1a1a" stroke-width="0.8"/>
+    <text x="228" y="144" text-anchor="middle" transform="rotate(-90 228,144)" style="font-size:4.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Wardrobe</text>
+    <text x="228" y="180" text-anchor="middle" transform="rotate(-90 228,180)" style="font-size:4.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">Wardrobe</text>
+
+    <!-- Furniture: twin bed 2, flush bottom-right corner, headboard against right/exterior wall, mirroring bed 1 -->
+    <rect x="270" y="204" width="60" height="30" fill="#e7e2d3" stroke="#1a1a1a" stroke-width="1"/>
+    <rect x="322" y="204" width="8" height="30" fill="#d8d2c2" stroke="#1a1a1a" stroke-width="1"/>
+    <rect x="308" y="208" width="12" height="10" rx="3" fill="#fff" stroke="#a8a18e" stroke-width="0.6"/>
+    <text x="290" y="200" text-anchor="middle" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">single bed</text>
 
     <!-- Stairwell opening: where the stairs from ground floor arrive (void in the floor, matches ground floor landing + long flight footprint - tightened to the actual 9-tread flight's edge, 0.07m narrower than before; that sliver is now solid corridor floor) -->
     <rect x="221.1" y="234" width="108.9" height="36" fill="none" stroke="#1a1a1a" stroke-width="1.4" stroke-dasharray="4,3"/>
@@ -874,7 +961,7 @@
     <path d="M315,266 L315,225.4" fill="none" stroke="#555" stroke-width="1.2"/>
     <path d="M309,233.4 L315,225.4 L321,233.4" fill="none" stroke="#555" stroke-width="1.2"/>
     <text x="315" y="215.4" text-anchor="middle" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">up to rooftop</text>
-    <text x="315" y="207.4" text-anchor="middle" style="font-size:5.5px; fill:#8a2f23; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">dashed = ceiling cut only, bedroom wall/floor intact</text>
+    <text x="315" y="204" text-anchor="middle" style="font-size:4px; fill:#8a2f23; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">ceiling cut only</text>
 
   </svg>
 </div>
@@ -1002,13 +1089,21 @@
     <!-- FF Balcony door 1.8m x2m, aligned above dining door -->
     <rect x="314" y="100" width="72" height="80" fill="#dce8ec" stroke="#1a1a1a" stroke-width="0.8"/>
     <line x1="350" y1="100" x2="350" y2="180" stroke="#1a1a1a" stroke-width="0.5"/>
-    <line x1="308" y1="152" x2="386" y2="152" stroke="#1a1a1a" stroke-width="1.2"/>
-    <line x1="316" y1="152" x2="316" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
-    <line x1="328" y1="152" x2="328" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
-    <line x1="340" y1="152" x2="340" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
-    <line x1="352" y1="152" x2="352" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
-    <line x1="364" y1="152" x2="364" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
-    <line x1="376" y1="152" x2="376" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
+    <!-- Balcony balustrade, widened to match the full 3.7m first-floor Balcony/Chill Room width (plan x=219-330 -> elevation x=292-440), not just the width around the door -->
+    <line x1="292" y1="152" x2="440" y2="152" stroke="#1a1a1a" stroke-width="1.2"/>
+    <line x1="292" y1="152" x2="292" y2="180" stroke="#1a1a1a" stroke-width="1.2"/>
+    <line x1="296" y1="152" x2="296" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
+    <line x1="309" y1="152" x2="309" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
+    <line x1="322" y1="152" x2="322" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
+    <line x1="335" y1="152" x2="335" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
+    <line x1="348" y1="152" x2="348" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
+    <line x1="361" y1="152" x2="361" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
+    <line x1="374" y1="152" x2="374" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
+    <line x1="387" y1="152" x2="387" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
+    <line x1="400" y1="152" x2="400" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
+    <line x1="413" y1="152" x2="413" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
+    <line x1="426" y1="152" x2="426" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
+    <line x1="440" y1="152" x2="440" y2="180" stroke="#1a1a1a" stroke-width="1.2"/>
     <line x1="80" y1="300" x2="440" y2="300" stroke="#1a1a1a" stroke-width="1.5"/>
     <text x="170" y="325" text-anchor="middle" class="dim-text" font-size="8">Living door</text>
     <text x="170" y="316" text-anchor="middle" class="dim-text" font-size="6.5">Master window</text>
