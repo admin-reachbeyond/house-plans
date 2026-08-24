@@ -1855,7 +1855,7 @@
 <!-- ================= GROUND FLOOR STAIR 3D DETAIL ================= -->
 <div class="plan-block">
   <div class="plan-title">Ground Floor Stair — 3D Detail (Closed Stringer, Version A)</div>
-  <p style="text-align:center; color:#6b6558; font-size:13px; margin:-4px 0 12px 0;">Solid wall to floor under both flights, handrail and small storage-access door on the dining-facing side, the exterior right wall with the stair-void feature window, and the kitchen's back wall behind the long flight. The void extends 1.2m out from the back wall (landing + long flight) plus an added 1.0m into the short flight (Leg 1's own width) - Leg 1 (first floor &rarr; its own landing) passes overhead in that extended zone, climbing the opposite way. The translucent panel shows the remaining solid slab. Drag to orbit, scroll to zoom.</p>
+  <p style="text-align:center; color:#6b6558; font-size:13px; margin:-4px 0 12px 0;">Solid wall to floor under both flights, handrail and small storage-access door on the dining-facing side, the exterior right wall with the stair-void feature window, and the kitchen's back wall behind the long flight. The void extends 1.2m out from the back wall (landing + long flight) plus an added 1.0m into the short flight (Leg 1's own width) - Leg 1 (first floor &rarr; its own landing) passes overhead in that extended zone, climbing the opposite way. The translucent panel over the short flight shows the remaining solid GF ceiling slab; the solid slab under Leg 1 supports its landing near the external wall. Drag to orbit, scroll to zoom.</p>
   <div id="gf-stair-3d" style="width:100%; max-width:720px; height:480px; margin:0 auto; background:#f4f1ea; border-radius:8px; overflow:hidden; position:relative;"></div>
 </div>
 
@@ -2073,7 +2073,7 @@
     const longRun = LONG_TREADS * GOING;
     const thickness = 0.1;
     const zPos = shortRun + LANDING;
-    const wallHeight = 6.0;
+    const wallHeight = 3.0; // capped at GF ceiling height - the full-height version clipped through Leg 2
     const xMin = 0, xMax = WIDTH + longRun;
 
     const geo = new THREE.BoxGeometry(xMax - xMin, wallHeight, thickness);
@@ -2144,17 +2144,46 @@
     const legRise10 = LEG1_TREADS * LEG1_RISER;
     const legRun10 = LEG1_TREADS * LEG1_GOING;
 
-    // Leg 1's own landing at the far end
-    const landGeo = new THREE.BoxGeometry(LEG1_GOING*1.3, 0.05, LEG1_WIDTH);
+    // Leg 1's own landing at the far end - a proper 1.0 x 1.0m platform
+    const leg1EndX = startX - legRun10;
+    const landingSize = 0.6; // keep landing within the wall, not overlapping it
+    const landGeo = new THREE.BoxGeometry(landingSize, 0.05, LEG1_WIDTH);
     const land = new THREE.Mesh(landGeo, treadMat);
-    land.position.set(startX - legRun10 - LEG1_GOING*0.15, ceilingH + legRise10, zCenter);
+    land.position.set(leg1EndX - landingSize/2, ceilingH + legRise10, zCenter);
     group.add(land);
+    group.add((() => { const e = edges(landGeo, 0x3a3a3a); e.position.copy(land.position); return e; })());
+
+    // Leg 2: turns 90 degrees from Leg 1's landing, continues up to the
+    // rooftop. 1.0m wide, 6 treads, 270mm going/176mm riser (matches the
+    // First Floor -> Rooftop Stair table). Turns toward decreasing Z - the
+    // left side as you climb Leg 1.
+    const LEG2_TREADS = 6;
+    const leg2Rise = LEG2_TREADS * LEG1_RISER;
+    const leg2LandingHeight = ceilingH + legRise10;
+    const leg2X0 = 0, leg2X1 = LEG1_WIDTH; // full width, touching the exterior wall at X=0
+    const leg2ZStart = zCenter + LEG1_WIDTH/2; // matches the real plan: Leg 2 climbs toward the kitchen side
+    for (let i = 0; i < LEG2_TREADS; i++) {
+      const z0 = leg2ZStart + i*LEG1_GOING, z1 = leg2ZStart + (i+1)*LEG1_GOING;
+      const y = leg2LandingHeight + (i+1)*LEG1_RISER;
+      const geo = new THREE.BoxGeometry(leg2X1 - leg2X0, 0.04, LEG1_GOING);
+      const mesh = new THREE.Mesh(geo, treadMat);
+      mesh.position.set((leg2X0+leg2X1)/2, y, (z0+z1)/2);
+      group.add(mesh);
+      group.add((() => { const e = edges(geo, 0x3a3a3a); e.position.copy(mesh.position); return e; })());
+    }
+    // small landing/arrival platform at the top of Leg 2 (rooftop level)
+    const leg2TopZ = leg2ZStart + LEG2_TREADS*LEG1_GOING;
+    const leg2LandGeo = new THREE.BoxGeometry(leg2X1-leg2X0, 0.05, LEG1_GOING*1.3);
+    const leg2Land = new THREE.Mesh(leg2LandGeo, treadMat);
+    leg2Land.position.set((leg2X0+leg2X1)/2, leg2LandingHeight + leg2Rise, leg2TopZ + LEG1_GOING*0.15);
+    group.add(leg2Land);
 
     // Solid slab under Leg 1, from the external wall out to 1.2m away -
     // supports Leg 1's own landing at that end
     const legSlabX0 = 1.2, legSlabX1 = corridorX0; // starts 1.2m in from the external wall
     const legSlabGeo = new THREE.PlaneGeometry(legSlabX1 - legSlabX0, LEG1_WIDTH);
-    const legSlab = new THREE.Mesh(legSlabGeo, slabMat);
+    const legSlabMat = new THREE.MeshLambertMaterial({ color: 0xcac4b5, side: THREE.DoubleSide });
+    const legSlab = new THREE.Mesh(legSlabGeo, legSlabMat);
     legSlab.rotation.x = -Math.PI / 2;
     legSlab.position.set((legSlabX0 + legSlabX1) / 2, ceilingH, zCenter);
     group.add(legSlab);
@@ -2162,6 +2191,49 @@
     lse.rotation.x = -Math.PI / 2;
     lse.position.copy(legSlab.position);
     group.add(lse);
+
+    // Handrail on the left side of Leg 1 (opposite the wall side), following
+    // the treads up, continuing across the landing and up Leg 2
+    const railMat2 = new THREE.MeshLambertMaterial({ color: 0x6b6558 });
+    const postMat2 = new THREE.MeshLambertMaterial({ color: 0x8f8a7a });
+    const railZ = zCenter + LEG1_WIDTH/2;
+    const railHeight2 = 0.9;
+    function railSeg2(a, b) {
+      const dir = new THREE.Vector3().subVectors(b, a);
+      const len = dir.length();
+      const geo = new THREE.CylinderGeometry(0.02, 0.02, len, 10);
+      const mesh = new THREE.Mesh(geo, railMat2);
+      mesh.position.copy(a).addScaledVector(dir, 0.5);
+      mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir.clone().normalize());
+      group.add(mesh);
+    }
+    function post2(x, y, z, h) {
+      if (h <= 0.02) return;
+      const geo = new THREE.CylinderGeometry(0.015, 0.015, h, 8);
+      const mesh = new THREE.Mesh(geo, postMat2);
+      mesh.position.set(x, y + h/2, z);
+      group.add(mesh);
+    }
+    const railP0 = new THREE.Vector3(startX, ceilingH + railHeight2, railZ);
+    const railP1 = new THREE.Vector3(leg1EndX, leg2LandingHeight + railHeight2, railZ);
+    railSeg2(railP0, railP1);
+    for (let i = 0; i <= LEG1_TREADS; i++) {
+      const x = startX - i*LEG1_GOING;
+      const treadY = ceilingH + Math.min(i, LEG1_TREADS)*LEG1_RISER;
+      const railY = railP0.y + (railP1.y-railP0.y) * (i/LEG1_TREADS);
+      post2(x, treadY, railZ, railY - treadY);
+    }
+    // continue rail along the landing edge, then up Leg 2 on its open side
+    const railP2 = new THREE.Vector3(leg1EndX - landingSize, leg2LandingHeight + railHeight2, railZ);
+    railSeg2(railP1, railP2);
+    const railP3 = new THREE.Vector3(leg2X1, leg2LandingHeight + leg2Rise + railHeight2, leg2TopZ + LEG1_GOING*0.8); // extends to the landing's far edge
+    railSeg2(railP2, railP3);
+    for (let i = 0; i <= LEG2_TREADS; i++) {
+      const z = leg2ZStart + i*LEG1_GOING;
+      const treadY = leg2LandingHeight + Math.min(i, LEG2_TREADS)*LEG1_RISER;
+      const railY = railP2.y + (railP3.y-railP2.y) * (i/LEG2_TREADS);
+      post2(leg2X1, treadY, z, railY - treadY);
+    }
 
     // Solid wall on the right side of Leg 1, running its full length, floor
     // (first floor level) up to the first-floor's own ceiling height
