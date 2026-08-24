@@ -424,6 +424,21 @@
     <path d="M233,246 L225,252 L233,258" fill="none" stroke="#555" stroke-width="1.2"/>
     <text x="257.5" y="231" text-anchor="middle" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">up to 1st floor</text>
 
+    <!-- Storage door: closed-stringer stair (Version A) encloses the void under the long flight -
+         solid wall to floor, small access door on the open/dining-facing side (bottom edge of the
+         long flight), positioned toward the taller end near the first-floor stairwell opening -->
+    <line x1="228" y1="270" x2="249" y2="270" stroke="#fbf9f3" stroke-width="3"/>
+    <path d="M249,270 A21,21 0 0 1 228,249" fill="none" stroke="#b0a890" stroke-width="1" stroke-dasharray="2,2"/>
+    <line x1="228" y1="270" x2="228" y2="249" stroke="#1a1a1a" stroke-width="1.4"/>
+    <text x="238.5" y="279" text-anchor="middle" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">storage access</text>
+
+    <!-- Handrail: open/dining-facing side of the stair (same side as the storage door below it) -
+         short flight edge (x=291, inset 0.1m into the room), turns the corner at the landing,
+         continues along the long flight edge (y=273, inset 0.1m into the room) -->
+    <line x1="291" y1="273" x2="291" y2="326.7" stroke="#6b6558" stroke-width="1" stroke-dasharray="4,2"/>
+    <line x1="221.1" y1="273" x2="291" y2="273" stroke="#6b6558" stroke-width="1" stroke-dasharray="4,2"/>
+    <text x="256" y="266" text-anchor="middle" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">handrail</text>
+
     <!-- WINDOWS (sliding panels, matching dining door style) -->
     <!-- Bedroom window: left wall, 1.5m wide x 1.2m tall -->
     <line x1="60" y1="127.5" x2="60" y2="172.5" stroke="#fbf9f3" stroke-width="5"/>
@@ -1826,7 +1841,22 @@
       <td style="padding:8px 6px; color:#6b6558;">Comfort check (2×riser + going)</td>
       <td style="padding:8px 6px; text-align:right; font-weight:600;">622 mm (ideal: 600–640mm)</td>
     </tr>
+    <tr style="border-top:1px solid #d8d2c2;">
+      <td style="padding:8px 6px; color:#6b6558;">Understair construction</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">Closed stringer — solid to floor</td>
+    </tr>
+    <tr>
+      <td style="padding:8px 6px; color:#6b6558;">Storage access door</td>
+      <td style="padding:8px 6px; text-align:right; font-weight:600;">0.7 m, dining-facing side, long flight</td>
+    </tr>
   </table>
+</div>
+
+<!-- ================= GROUND FLOOR STAIR 3D DETAIL ================= -->
+<div class="plan-block">
+  <div class="plan-title">Ground Floor Stair — 3D Detail (Closed Stringer, Version A)</div>
+  <p style="text-align:center; color:#6b6558; font-size:13px; margin:-4px 0 12px 0;">Solid wall to floor under both flights, handrail and small storage-access door on the dining-facing side, the exterior right wall with the stair-void feature window, and the kitchen's back wall behind the long flight. The void extends 1.2m out from the back wall (landing + long flight) plus an added 1.0m into the short flight (Leg 1's own width) - Leg 1 (first floor &rarr; its own landing) passes overhead in that extended zone, climbing the opposite way. The translucent panel shows the remaining solid slab. Drag to orbit, scroll to zoom.</p>
+  <div id="gf-stair-3d" style="width:100%; max-width:720px; height:480px; margin:0 auto; background:#f4f1ea; border-radius:8px; overflow:hidden; position:relative;"></div>
 </div>
 
 <!-- ================= ROOFTOP STAIR DETAILS ================= -->
@@ -1871,6 +1901,379 @@
     </tr>
   </table>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function() {
+  const container = document.getElementById('gf-stair-3d');
+  if (!container || typeof THREE === 'undefined') return;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xf4f1ea);
+
+  const camera = new THREE.PerspectiveCamera(38, container.clientWidth / container.clientHeight, 0.1, 100);
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(renderer.domElement);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.95));
+  const fill1 = new THREE.DirectionalLight(0xffffff, 0.5);
+  fill1.position.set(5, 8, 6);
+  scene.add(fill1);
+  const fill2 = new THREE.DirectionalLight(0xffffff, 0.35);
+  fill2.position.set(-6, 5, -4);
+  scene.add(fill2);
+
+  const GOING = 0.27, RISER = 0.176, WIDTH = 1.2;
+  const SHORT_TREADS = 7, LONG_TREADS = 9, LANDING = 1.2;
+  const wallColor = 0x9a9891, treadColor = 0xc9c3b3, floorColor = 0xe8e4d8;
+
+  function edges(geo, color) {
+    const eg = new THREE.EdgesGeometry(geo, 20);
+    return new THREE.LineSegments(eg, new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.35 }));
+  }
+
+  function addFloor(group) {
+    const floorGeo = new THREE.BoxGeometry(5.6, 0.06, 5.2);
+    const floor = new THREE.Mesh(floorGeo, new THREE.MeshLambertMaterial({ color: floorColor }));
+    floor.position.set(1.8, -0.03, 1.5);
+    group.add(floor);
+  }
+
+  function makeWedgeZ(width, run, rise) {
+    const p = [0,0,0, 0,0,run, 0,rise,run, width,0,0, width,0,run, width,rise,run];
+    const idx = [0,3,4, 0,4,1, 1,4,5, 1,5,2, 0,2,5, 0,5,3, 0,1,2, 3,5,4];
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(p, 3));
+    geo.setIndex(idx);
+    geo.computeVertexNormals();
+    return geo;
+  }
+
+  function makeTrapezoidWedgeX(run, riseStart, riseEnd, width) {
+    const q = [0,0,0, 0,riseStart,0, run,riseEnd,0, run,0,0, 0,0,width, 0,riseStart,width, run,riseEnd,width, run,0,width];
+    const idx = [0,3,7, 0,7,4, 0,1,5, 0,5,4, 3,2,6, 3,6,7, 1,2,6, 1,6,5, 0,1,2, 0,2,3, 4,7,6, 4,6,5];
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(q, 3));
+    geo.setIndex(idx);
+    geo.computeVertexNormals();
+    return geo;
+  }
+
+  function addRailing(group) {
+    const railColor = 0x6b6558, postColor = 0x8f8a7a;
+    const railRadius = 0.02, postRadius = 0.015, railHeight = 0.9;
+    const shortRun = SHORT_TREADS*GOING, shortRise = SHORT_TREADS*RISER;
+    const landingHeight = shortRise;
+    const longRun = LONG_TREADS*GOING, longRise = LONG_TREADS*RISER;
+
+    const P0 = new THREE.Vector3(WIDTH, railHeight, 0);
+    const P1 = new THREE.Vector3(WIDTH, shortRise+railHeight, shortRun);
+    const P2 = new THREE.Vector3(WIDTH+longRun, landingHeight+longRise+railHeight, shortRun);
+
+    const railMat = new THREE.MeshLambertMaterial({ color: railColor });
+    const postMat = new THREE.MeshLambertMaterial({ color: postColor });
+
+    function railSeg(a, b) {
+      const dir = new THREE.Vector3().subVectors(b, a);
+      const len = dir.length();
+      const geo = new THREE.CylinderGeometry(railRadius, railRadius, len, 10);
+      const mesh = new THREE.Mesh(geo, railMat);
+      mesh.position.copy(a).addScaledVector(dir, 0.5);
+      mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir.clone().normalize());
+      group.add(mesh);
+    }
+    [[P0,P1],[P1,P2]].forEach(([a,b]) => railSeg(a,b));
+
+    function post(x, y, z, h) {
+      if (h <= 0.02) return;
+      const geo = new THREE.CylinderGeometry(postRadius, postRadius, h, 8);
+      const mesh = new THREE.Mesh(geo, postMat);
+      mesh.position.set(x, y + h/2, z);
+      group.add(mesh);
+    }
+    for (let i = 0; i <= SHORT_TREADS; i++) {
+      const z = i * GOING;
+      const treadY = Math.min(i, SHORT_TREADS) * RISER;
+      const railY = P0.y + (P1.y - P0.y) * (z / shortRun);
+      post(WIDTH, treadY, z, railY - treadY);
+    }
+    for (let i = 0; i <= LONG_TREADS; i++) {
+      const x = WIDTH + i * GOING;
+      const treadY = landingHeight + Math.min(i, LONG_TREADS) * RISER;
+      const railY = P1.y + (P2.y - P1.y) * ((x - WIDTH) / longRun);
+      post(x, treadY, shortRun, railY - treadY);
+    }
+  }
+
+  function addDoor(group, x0, x1, y0, y1, z, sign) {
+    sign = sign || -1;
+    const w = x1 - x0, h = y1 - y0;
+    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    const openMesh = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: 0x2a2620 }));
+    openMesh.position.set(cx, cy, z + sign * 0.006);
+    group.add(openMesh);
+    const leaf = new THREE.Mesh(new THREE.BoxGeometry(w*0.94, h*0.96, 0.04), new THREE.MeshLambertMaterial({ color: 0xcbbd9a }));
+    leaf.position.set(cx, cy, z + sign * 0.045);
+    group.add(leaf);
+    const le = edges(leaf.geometry, 0x3a3a3a); le.position.copy(leaf.position); group.add(le);
+    const knob = new THREE.Mesh(new THREE.SphereGeometry(0.02, 8, 8), new THREE.MeshLambertMaterial({ color: 0x555045 }));
+    knob.position.set(x0 + w*0.85, cy, z + sign * 0.07);
+    group.add(knob);
+    const frameGeo = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(x0,y0,z+sign*0.004), new THREE.Vector3(x1,y0,z+sign*0.004),
+      new THREE.Vector3(x1,y1,z+sign*0.004), new THREE.Vector3(x0,y1,z+sign*0.004),
+      new THREE.Vector3(x0,y0,z+sign*0.004)
+    ]);
+    group.add(new THREE.Line(frameGeo, new THREE.LineBasicMaterial({ color: 0x3a3a3a })));
+  }
+
+  function addRightWall(group) {
+    // house's actual right/exterior wall, running alongside the short flight -
+    // opposite side from the rail/storage door. Includes the stair-void feature
+    // window already planned in 3d_exterior.html (0.6m x 1.2m, sill 3.45m).
+    const wallMat2 = new THREE.MeshLambertMaterial({ color: 0xada79a });
+    const shortRun = SHORT_TREADS * GOING;
+    const thickness = 0.1;
+    const zMin = -0.3, zMax = shortRun + LANDING;
+    const wallHeight = 6.0;
+    const winW = 0.6, winSill = 3.45, winTop = 4.65;
+    // centred on the landing, which is where the long leg begins and the
+    // real stairwell void (no slab between GF and FF) actually sits
+    const winZc = shortRun + LANDING / 2;
+    const winZ0 = winZc - winW/2, winZ1 = winZc + winW/2;
+
+    function seg(y0, y1, z0, z1) {
+      const h = y1 - y0, d = z1 - z0;
+      if (h <= 0.001 || d <= 0.001) return;
+      const geo = new THREE.BoxGeometry(thickness, h, d);
+      const mesh = new THREE.Mesh(geo, wallMat2);
+      mesh.position.set(-thickness/2, (y0+y1)/2, (z0+z1)/2);
+      group.add(mesh);
+      const e = edges(geo, 0x3a3a3a); e.position.copy(mesh.position); group.add(e);
+    }
+    seg(0, winSill, zMin, zMax);
+    seg(winTop, wallHeight, zMin, zMax);
+    seg(winSill, winTop, zMin, winZ0);
+    seg(winSill, winTop, winZ1, zMax);
+
+    const glassGeo = new THREE.BoxGeometry(0.02, winTop - winSill, winZ1 - winZ0);
+    const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xbfe0e8, transparent: true, opacity: 0.35, roughness: 0.1 });
+    const glass = new THREE.Mesh(glassGeo, glassMat);
+    glass.position.set(-thickness/2, (winSill+winTop)/2, winZc);
+    group.add(glass);
+  }
+
+  function addBackWall(group) {
+    // kitchen's lower partition wall, running behind the stairs (real plan: the
+    // solid wall the long flight runs along, no door/window on this segment)
+    const wallMat3 = new THREE.MeshLambertMaterial({ color: 0xb3ada0 });
+    const shortRun = SHORT_TREADS * GOING;
+    const longRun = LONG_TREADS * GOING;
+    const thickness = 0.1;
+    const zPos = shortRun + LANDING;
+    const wallHeight = 6.0;
+    const xMin = 0, xMax = WIDTH + longRun;
+
+    const geo = new THREE.BoxGeometry(xMax - xMin, wallHeight, thickness);
+    const mesh = new THREE.Mesh(geo, wallMat3);
+    mesh.position.set((xMin+xMax)/2, wallHeight/2, zPos + thickness/2);
+    group.add(mesh);
+    const e = edges(geo, 0x3a3a3a); e.position.copy(mesh.position); group.add(e);
+  }
+
+  function addFirstFloorSlabAndLegOne(group) {
+    // Void = back wall out to the current landing/long-flight depth (1.2m),
+    // PLUS an added 1.0m (Leg 1's own WIDTH) pushing the front edge further
+    // into the short flight - this is exactly the zone where headroom was
+    // short. The remaining short flight length keeps its ordinary slab.
+    //
+    // Leg 1's RUN direction matches the GF long flight's own X-axis (parallel
+    // to it), climbing the opposite way - real plan: long flight climbs as
+    // toy-X increases (arriving at the first floor), Leg 1 climbs as toy-X
+    // DECREASES, starting right above where the long flight arrives and
+    // ending at its own landing back near the short flight's corner. Leg 1's
+    // WIDTH (1.0m) occupies the new Z-band (slabZ1 to shortRun) - it does NOT
+    // run along Z the way the short flight below it does.
+    const shortRun = SHORT_TREADS * GOING;
+    const longRun = LONG_TREADS * GOING;
+    const ceilingH = 3.0;
+    const LEG1_WIDTH = 1.0;
+    const slabZ1 = shortRun - LEG1_WIDTH; // slab covers 0 .. slabZ1 only
+
+    const slabMat = new THREE.MeshLambertMaterial({ color: 0xcac4b5, transparent: true, opacity: 0.75, side: THREE.DoubleSide });
+    const slabGeo = new THREE.PlaneGeometry(WIDTH, slabZ1);
+    const slab = new THREE.Mesh(slabGeo, slabMat);
+    slab.rotation.x = -Math.PI / 2;
+    slab.position.set(WIDTH/2, ceilingH, slabZ1/2);
+    group.add(slab);
+    const se = edges(slabGeo, 0x6b6558);
+    se.rotation.x = -Math.PI / 2;
+    se.position.copy(slab.position);
+    group.add(se);
+
+    // Leg 1: 1.0m wide, 10 treads, 270mm going/176mm riser
+    const LEG1_GOING = 0.27, LEG1_RISER = 0.176, LEG1_TREADS = 10;
+    const treadMat = new THREE.MeshLambertMaterial({ color: 0xc9c3b3 });
+    const stringerMat = new THREE.MeshLambertMaterial({ color: 0x8f8a7a });
+    const zCenter = (slabZ1 + shortRun) / 2; // = 1.0m band, matches LEG1_WIDTH
+    const startX = WIDTH + longRun; // directly above where the long flight arrives
+
+    // small patch of first-floor corridor floor at the start, so the first
+    // riser reads as a normal step off solid ground rather than floating -
+    // extended in Z to reach the back wall, and in X toward the external
+    // (right) wall, stopping 1.2m short of it
+    const corridorZ0 = slabZ1, corridorZ1 = shortRun + LANDING;
+    const corridorX1 = startX + 0.6;
+    const corridorX0 = startX; // trimmed back - don't cover the long flight's void
+    const corridorGeo = new THREE.BoxGeometry(corridorX1 - corridorX0, 0.05, corridorZ1 - corridorZ0);
+    const corridorFloor = new THREE.Mesh(corridorGeo, treadMat);
+    corridorFloor.position.set((corridorX0 + corridorX1) / 2, ceilingH - 0.025, (corridorZ0 + corridorZ1) / 2);
+    group.add(corridorFloor);
+
+    for (let i = 0; i < LEG1_TREADS; i++) {
+      const x0 = startX - i*LEG1_GOING, x1 = startX - (i+1)*LEG1_GOING;
+      const y = ceilingH + (i+1)*LEG1_RISER;
+      const geo = new THREE.BoxGeometry(LEG1_GOING, 0.04, LEG1_WIDTH);
+      const mesh = new THREE.Mesh(geo, treadMat);
+      mesh.position.set((x0+x1)/2, y, zCenter);
+      group.add(mesh);
+      group.add((() => { const e = edges(geo, 0x3a3a3a); e.position.copy(mesh.position); return e; })());
+    }
+    const legRise10 = LEG1_TREADS * LEG1_RISER;
+    const legRun10 = LEG1_TREADS * LEG1_GOING;
+
+    // Leg 1's own landing at the far end
+    const landGeo = new THREE.BoxGeometry(LEG1_GOING*1.3, 0.05, LEG1_WIDTH);
+    const land = new THREE.Mesh(landGeo, treadMat);
+    land.position.set(startX - legRun10 - LEG1_GOING*0.15, ceilingH + legRise10, zCenter);
+    group.add(land);
+
+    // Solid slab under Leg 1, from the external wall out to 1.2m away -
+    // supports Leg 1's own landing at that end
+    const legSlabX0 = 1.2, legSlabX1 = corridorX0; // starts 1.2m in from the external wall
+    const legSlabGeo = new THREE.PlaneGeometry(legSlabX1 - legSlabX0, LEG1_WIDTH);
+    const legSlab = new THREE.Mesh(legSlabGeo, slabMat);
+    legSlab.rotation.x = -Math.PI / 2;
+    legSlab.position.set((legSlabX0 + legSlabX1) / 2, ceilingH, zCenter);
+    group.add(legSlab);
+    const lse = edges(legSlabGeo, 0x6b6558);
+    lse.rotation.x = -Math.PI / 2;
+    lse.position.copy(legSlab.position);
+    group.add(lse);
+
+    // Solid wall on the right side of Leg 1, running its full length, floor
+    // (first floor level) up to the first-floor's own ceiling height
+    const legWallMat = new THREE.MeshLambertMaterial({ color: 0xada79a, side: THREE.DoubleSide });
+    const legWallThickness = 0.1;
+    const legWallHeight = ceilingH + 3.0; // up to first floor's own ceiling
+    const legWallZ = zCenter - LEG1_WIDTH/2;
+    const legWallX0 = 0, legWallX1 = startX + 0.3; // extend to X=0 to connect with the external right wall
+    const legWallGeo = new THREE.BoxGeometry(legWallX1 - legWallX0, legWallHeight - ceilingH, legWallThickness);
+    const legWall = new THREE.Mesh(legWallGeo, legWallMat);
+    legWall.position.set((legWallX0+legWallX1)/2, ceilingH + (legWallHeight-ceilingH)/2, legWallZ - legWallThickness/2);
+    group.add(legWall);
+    const lwe = edges(legWallGeo, 0x3a3a3a); lwe.position.copy(legWall.position); group.add(lwe);
+  }
+
+  function buildClosedStair() {
+    const group = new THREE.Group();
+    addFloor(group);
+    const wallMat = new THREE.MeshLambertMaterial({ color: wallColor, side: THREE.DoubleSide });
+
+    const shortRun = SHORT_TREADS * GOING, shortRise = SHORT_TREADS * RISER;
+    const shortWedgeGeo = makeWedgeZ(WIDTH, shortRun, shortRise);
+    group.add(new THREE.Mesh(shortWedgeGeo, wallMat));
+    group.add(edges(shortWedgeGeo, 0x3a3a3a));
+
+    const landingHeight = shortRise;
+    const landingGeo = new THREE.BoxGeometry(WIDTH, landingHeight, LANDING);
+    const landingMesh = new THREE.Mesh(landingGeo, wallMat);
+    landingMesh.position.set(WIDTH/2, landingHeight/2, shortRun + LANDING/2);
+    group.add(landingMesh);
+    const le2 = edges(landingGeo, 0x3a3a3a); le2.position.copy(landingMesh.position); group.add(le2);
+
+    const longStartX = WIDTH, longStartZ = shortRun;
+    const longRun = LONG_TREADS * GOING, longRise = LONG_TREADS * RISER;
+    const longWedgeGeo = makeTrapezoidWedgeX(longRun, landingHeight, landingHeight + longRise, LANDING);
+    const longWedge = new THREE.Mesh(longWedgeGeo, wallMat);
+    longWedge.position.set(longStartX, 0, longStartZ);
+    group.add(longWedge);
+    const le3 = edges(longWedgeGeo, 0x3a3a3a); le3.position.copy(longWedge.position); group.add(le3);
+
+    addDoor(group, longStartX + 1.6, longStartX + 2.3, 0, 1.15, longStartZ, -1);
+
+    const noseMat = new THREE.MeshLambertMaterial({ color: treadColor });
+    for (let i = 0; i < SHORT_TREADS; i++) {
+      const z0 = i*GOING, z1 = (i+1)*GOING, y = (i+1)*RISER;
+      const mesh = new THREE.Mesh(new THREE.BoxGeometry(WIDTH, 0.03, GOING), noseMat);
+      mesh.position.set(WIDTH/2, y+0.015, (z0+z1)/2);
+      group.add(mesh);
+    }
+    for (let i = 0; i < LONG_TREADS; i++) {
+      const x0 = longStartX+i*GOING, x1 = longStartX+(i+1)*GOING;
+      const y = landingHeight + (i+1)*RISER;
+      const mesh = new THREE.Mesh(new THREE.BoxGeometry(GOING, 0.03, LANDING), noseMat);
+      mesh.position.set((x0+x1)/2, y+0.015, longStartZ+LANDING/2);
+      group.add(mesh);
+    }
+    const landNose = new THREE.Mesh(new THREE.BoxGeometry(WIDTH, 0.03, LANDING), noseMat);
+    landNose.position.set(WIDTH/2, landingHeight+0.015, shortRun+LANDING/2);
+    group.add(landNose);
+
+    addRailing(group);
+    addRightWall(group);
+    addBackWall(group);
+    addFirstFloorSlabAndLegOne(group);
+    return group;
+  }
+
+  const stair = buildClosedStair();
+  stair.position.x = -1.8;
+  scene.add(stair);
+
+  let target = new THREE.Vector3(0.9, 1.6, 1.6);
+  let radius = 8.5, theta = -Math.PI*0.3, phi = Math.PI*0.42;
+  function updateCamera() {
+    camera.position.x = target.x + radius * Math.sin(phi) * Math.cos(theta);
+    camera.position.z = target.z + radius * Math.sin(phi) * Math.sin(theta);
+    camera.position.y = target.y + radius * Math.cos(phi);
+    camera.lookAt(target);
+  }
+  updateCamera();
+
+  let dragging = false, lastX = 0, lastY = 0;
+  renderer.domElement.style.cursor = 'grab';
+  renderer.domElement.addEventListener('pointerdown', e => { dragging = true; lastX = e.clientX; lastY = e.clientY; renderer.domElement.style.cursor = 'grabbing'; });
+  window.addEventListener('pointerup', () => { dragging = false; renderer.domElement.style.cursor = 'grab'; });
+  window.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const dx = e.clientX - lastX, dy = e.clientY - lastY;
+    lastX = e.clientX; lastY = e.clientY;
+    theta -= dx * 0.006;
+    phi = Math.min(Math.PI*0.49, Math.max(0.15, phi - dy * 0.006));
+    updateCamera();
+  });
+  renderer.domElement.addEventListener('wheel', e => {
+    e.preventDefault();
+    radius = Math.min(12, Math.max(2.5, radius + e.deltaY * 0.01));
+    updateCamera();
+  }, { passive: false });
+
+  window.addEventListener('resize', () => {
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+</script>
 
 </body>
 </html>
