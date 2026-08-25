@@ -2260,7 +2260,7 @@
     // (legRise10) at the landing end down to 0 at the start of Leg 1, so it
     // only fills the space actually under the stairs - the corridor above
     // the stringer, alongside the exposed treads and handrail, stays open.
-    const legStringerMat = new THREE.MeshLambertMaterial({ color: wallColor, side: THREE.DoubleSide });
+    const legStringerMat = new THREE.MeshBasicMaterial({ color: wallColor, side: THREE.DoubleSide });
     // Trimmed back to align with the wall below (X=WIDTH=1.2, same as
     // longStartX) instead of running all the way to leg1EndX - that extra
     // 0.27m (one tread's worth) was overhanging past the wall's edge with
@@ -2330,7 +2330,7 @@
     // to first-floor height (matches ceilingH=3.0 used elsewhere) - this
     // replaces the previously open handrail-only side with a full vertical
     // wall, in front of the existing sloped closed-stringer and storage door
-    const longWallMat = new THREE.MeshLambertMaterial({ color: wallColor, side: THREE.DoubleSide });
+    const longWallMat = new THREE.MeshBasicMaterial({ color: wallColor, side: THREE.DoubleSide });
     const longWallThickness = 0.1;
     const longWallHeight = 3.0;
     // Back to the long flight's own extent - the extension into X=0.93-1.2
