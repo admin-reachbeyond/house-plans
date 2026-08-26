@@ -942,6 +942,11 @@
     <line x1="221.1" y1="270" x2="330" y2="234" stroke="#1a1a1a" stroke-width="0.8" stroke-dasharray="2,2"/>
     <text x="275.5" y="255" text-anchor="middle" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">stair opening — up from ground floor</text>
 
+    <!-- Stairwell void extension: an added 1.0m pushed into the ground-floor short flight (matches Leg 1's own width), flush against the west wall - fixes a headroom violation found under Leg 1's rising treads. No ceiling/floor slab between ground and first floor here either, same as the void above (the two form one continuous L-shaped opening). -->
+    <rect x="294" y="270" width="36" height="30" fill="none" stroke="#1a1a1a" stroke-width="1.4" stroke-dasharray="4,3"/>
+    <line x1="294" y1="270" x2="330" y2="300" stroke="#1a1a1a" stroke-width="0.8" stroke-dasharray="2,2"/>
+    <line x1="294" y1="300" x2="330" y2="270" stroke="#1a1a1a" stroke-width="0.8" stroke-dasharray="2,2"/>
+
     <!-- Stairs continuing up to rooftop: leg heading toward the right/west wall (parallel to incoming stairs), landing near right wall, then turn north toward the roof. Width 1.0m (was 1.2m). Run extended from 2.5m to 2.7m so it still meets the landing, now that landing+leg2 are pulled back flush against the outer wall (going grows from 250mm to 270mm - still within the 600-640mm comfort range, in fact more centered in it). Leg 2 also updated 250mm -> 270mm going (see below), matching Leg 1 and the ground floor stair. -->
     <rect x="219" y="270" width="81" height="30" fill="none" stroke="#1a1a1a" stroke-width="1"/>
     <g stroke="#555" stroke-width="1">
@@ -2144,9 +2149,15 @@
     const legRise10 = LEG1_TREADS * LEG1_RISER;
     const legRun10 = LEG1_TREADS * LEG1_GOING;
 
-    // Leg 1's own landing at the far end - a proper 1.0 x 1.0m platform
+    // Leg 1's own landing at the far end - runs all the way to the exterior
+    // wall at X=0 (matches Leg 2, which already touches the wall there, and
+    // the 2D First Floor plan, where the landing is flush against the west
+    // wall). Previously this platform was a fixed 0.6m plank measured
+    // backward from leg1EndX, leaving a ~0.33m gap of nothing between the
+    // landing and the wall - fixed by sizing it to span the full remaining
+    // distance instead.
     const leg1EndX = startX - legRun10;
-    const landingSize = 0.6; // keep landing within the wall, not overlapping it
+    const landingSize = leg1EndX; // spans from the wall (X=0) to leg1EndX
     const landGeo = new THREE.BoxGeometry(landingSize, 0.05, LEG1_WIDTH);
     const land = new THREE.Mesh(landGeo, treadMat);
     land.position.set(leg1EndX - landingSize/2, ceilingH + legRise10, zCenter);
