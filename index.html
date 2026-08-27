@@ -426,10 +426,11 @@
 
     <!-- Storage door: closed-stringer stair (Version A) encloses the void under the long flight -
          solid wall to floor, small access door on the open/dining-facing side (bottom edge of the
-         long flight), positioned toward the taller end near the first-floor stairwell opening -->
-    <line x1="228" y1="270" x2="249" y2="270" stroke="#fbf9f3" stroke-width="3"/>
-    <path d="M249,270 A21,21 0 0 1 228,249" fill="none" stroke="#b0a890" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="228" y1="270" x2="228" y2="249" stroke="#1a1a1a" stroke-width="1.4"/>
+         long flight), positioned toward the taller end near the first-floor stairwell opening.
+         0.8m wide x 1.6m tall - available slope clearance there is ~2.2-2.8m, so this fits easily. -->
+    <line x1="226.5" y1="270" x2="250.5" y2="270" stroke="#fbf9f3" stroke-width="3"/>
+    <path d="M250.5,270 A24,24 0 0 1 226.5,246" fill="none" stroke="#b0a890" stroke-width="1" stroke-dasharray="2,2"/>
+    <line x1="226.5" y1="270" x2="226.5" y2="246" stroke="#1a1a1a" stroke-width="1.4"/>
     <text x="238.5" y="279" text-anchor="middle" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">storage access</text>
 
     <!-- Handrail: open/dining-facing side of the stair (same side as the storage door below it) -
@@ -2145,6 +2146,15 @@
       mesh.position.set((x0+x1)/2, y, zCenter);
       group.add(mesh);
       group.add((() => { const e = edges(geo, 0x3a3a3a); e.position.copy(mesh.position); return e; })());
+
+      // closed riser: vertical face at the back of this tread, from the
+      // previous tread's level (or the floor, for the first step) up to
+      // this tread's own surface
+      const riserGeo = new THREE.BoxGeometry(0.02, LEG1_RISER, LEG1_WIDTH);
+      const riserMesh = new THREE.Mesh(riserGeo, treadMat);
+      riserMesh.position.set(x0, ceilingH + i*LEG1_RISER + LEG1_RISER/2, zCenter);
+      group.add(riserMesh);
+      group.add((() => { const e = edges(riserGeo, 0x3a3a3a); e.position.copy(riserMesh.position); return e; })());
     }
     const legRise10 = LEG1_TREADS * LEG1_RISER;
     const legRun10 = LEG1_TREADS * LEG1_GOING;
@@ -2181,6 +2191,15 @@
       mesh.position.set((leg2X0+leg2X1)/2, y, (z0+z1)/2);
       group.add(mesh);
       group.add((() => { const e = edges(geo, 0x3a3a3a); e.position.copy(mesh.position); return e; })());
+
+      // closed riser: vertical face at the back of this tread, from the
+      // previous tread's level (or Leg 1's landing, for the first step) up
+      // to this tread's own surface
+      const riserGeo = new THREE.BoxGeometry(leg2X1 - leg2X0, LEG1_RISER, 0.02);
+      const riserMesh = new THREE.Mesh(riserGeo, treadMat);
+      riserMesh.position.set((leg2X0+leg2X1)/2, leg2LandingHeight + i*LEG1_RISER + LEG1_RISER/2, z0);
+      group.add(riserMesh);
+      group.add((() => { const e = edges(riserGeo, 0x3a3a3a); e.position.copy(riserMesh.position); return e; })());
     }
     // small landing/arrival platform at the top of Leg 2 (rooftop level)
     const leg2TopZ = leg2ZStart + LEG2_TREADS*LEG1_GOING;
@@ -2292,9 +2311,18 @@
     const wallMat = new THREE.MeshLambertMaterial({ color: wallColor, side: THREE.DoubleSide });
 
     const shortRun = SHORT_TREADS * GOING, shortRise = SHORT_TREADS * RISER;
-    const shortWedgeGeo = makeWedgeZ(WIDTH, shortRun, shortRise);
-    group.add(new THREE.Mesh(shortWedgeGeo, wallMat));
-    group.add(edges(shortWedgeGeo, 0x3a3a3a));
+    // Stepped solid instead of a smooth diagonal wedge - each box is one
+    // step's own full-height, full-width slice, so the silhouette reads as
+    // proper stairs (flat tread + vertical riser) rather than a ramp with
+    // floating tread caps on top.
+    for (let i = 0; i < SHORT_TREADS; i++) {
+      const stepH = (i + 1) * RISER;
+      const stepGeo = new THREE.BoxGeometry(WIDTH, stepH, GOING);
+      const stepMesh = new THREE.Mesh(stepGeo, wallMat);
+      stepMesh.position.set(WIDTH / 2, stepH / 2, i * GOING + GOING / 2);
+      group.add(stepMesh);
+      group.add((() => { const e = edges(stepGeo, 0x3a3a3a); e.position.copy(stepMesh.position); return e; })());
+    }
 
     const landingHeight = shortRise;
     const landingGeo = new THREE.BoxGeometry(WIDTH, landingHeight, LANDING);
@@ -2305,11 +2333,16 @@
 
     const longStartX = WIDTH, longStartZ = shortRun;
     const longRun = LONG_TREADS * GOING, longRise = LONG_TREADS * RISER;
-    const longWedgeGeo = makeTrapezoidWedgeX(longRun, landingHeight, landingHeight + longRise, LANDING);
-    const longWedge = new THREE.Mesh(longWedgeGeo, wallMat);
-    longWedge.position.set(longStartX, 0, longStartZ);
-    group.add(longWedge);
-    const le3 = edges(longWedgeGeo, 0x3a3a3a); le3.position.copy(longWedge.position); group.add(le3);
+    // Same stepped-solid treatment as the short flight, starting from
+    // landingHeight (this flight begins already elevated, at the landing)
+    for (let i = 0; i < LONG_TREADS; i++) {
+      const stepH = landingHeight + (i + 1) * RISER;
+      const stepGeo = new THREE.BoxGeometry(GOING, stepH, LANDING);
+      const stepMesh = new THREE.Mesh(stepGeo, wallMat);
+      stepMesh.position.set(longStartX + i * GOING + GOING / 2, stepH / 2, longStartZ + LANDING / 2);
+      group.add(stepMesh);
+      group.add((() => { const e = edges(stepGeo, 0x3a3a3a); e.position.copy(stepMesh.position); return e; })());
+    }
 
     // Door removed from here - moved to the new vertical wall below, same
     // X/height position, now on the outer (dining-facing) face of that wall
@@ -2353,9 +2386,11 @@
     group.add(longWall);
     const lwe3 = edges(longWallGeo, 0x3a3a3a); lwe3.position.copy(longWall.position); group.add(lwe3);
 
-    // Storage-access door, same position as before, now on the new wall's
-    // outer (dining-facing) face
-    addDoor(group, longStartX + 1.6, longStartX + 2.3, 0, 1.15, longStartZ - longWallThickness, -1);
+    // Storage-access door, same center position as before, resized to
+    // 0.8m wide x 1.6m tall (was 0.7 x 1.15) - now on the new wall's outer
+    // (dining-facing) face. Fits comfortably under the slope here: ~2.24m
+    // clearance at its near edge, ~2.76m at its far edge.
+    addDoor(group, longStartX + 1.55, longStartX + 2.35, 0, 1.6, longStartZ - longWallThickness, -1);
 
     return group;
   }
