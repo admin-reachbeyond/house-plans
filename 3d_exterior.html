@@ -949,6 +949,149 @@ for (let i = 0; i <= nLeftRight; i++) {
 }
 
 
+// ---- Roof drainage (v2, terrace roof only). Gutters along the back and front roof edges (each panel sheds toward its
+// own edge). The downpipes end up FLUSH against the wall face. Because the roof deck overhangs the wall (0.8m back,
+// 1.6m front) the route from gutter to wall is:
+//   1. short jog inward at the gutter outlet, above the balustrade top rail
+//   2. drop INSIDE the parapet (terrace side), through the deck slab (flashing collar on the deck)
+//   3. horizontal run tight under the deck soffit, back to the wall face
+//   4. vertical run flush against the wall, stopping just above the GF canopy: elbow kicks out 0.3m onto a splash plate and the
+//      water runs off down the canopy slope (no pipe through the canopy, no ground run yet) ----
+const gutterMat = new THREE.MeshStandardMaterial({ color: "#6d7278", roughness: 0.45, metalness: 0.2 });
+const dpMat = new THREE.MeshStandardMaterial({ color: "#4a4f55", roughness: 0.5, metalness: 0.15 });
+const GUT_W = 0.2, GUT_H = 0.12, DP_R = 0.05, DP_GAP = 0.02;
+const backRate = (backEaveH - backRidgeH) / splitZ, frontRate = (frontEaveH - frontRidgeH) / (D - splitZ);
+const backEdgeY = deckY + backRidgeH - backRate * ohBack;    // roof-panel centreline height at the back edge (z=-ohBack)
+const frontEdgeY = deckY + frontEaveH + frontRate * ohFront; // ... and at the front edge (z=D+ohFront)
+const soffitY = H;                                           // underside of the 0.3m roof deck slab
+
+function gutterSegment(xa, xb, bA, bB, zc, dir) { // dir=+1 front gutter, -1 back gutter
+  const len = xb - xa;
+  if (len < 0.001) return;
+  const g = new THREE.Group();
+  const bottom = new THREE.Mesh(new THREE.BoxGeometry(len, 0.015, GUT_W), gutterMat);
+  const inner = new THREE.Mesh(new THREE.BoxGeometry(len, GUT_H, 0.015), gutterMat);
+  inner.position.set(0, GUT_H / 2, -dir * (GUT_W / 2 - 0.0075));
+  const outer = new THREE.Mesh(new THREE.BoxGeometry(len, GUT_H - 0.02, 0.015), gutterMat); // 20mm lower lip = overflow side
+  outer.position.set(0, (GUT_H - 0.02) / 2, dir * (GUT_W / 2 - 0.0075));
+  [bottom, inner, outer].forEach((m) => { m.castShadow = true; g.add(m); });
+  g.position.set((xa + xb) / 2, (bA + bB) / 2, zc);
+  g.rotation.z = Math.atan2(bB - bA, len);
+  group.add(g);
+}
+
+function dpCyl(x, y0, y1, z) { // vertical pipe
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(DP_R, DP_R, y1 - y0, 12), dpMat);
+  m.position.set(x, (y0 + y1) / 2, z); m.castShadow = true; group.add(m);
+}
+function dpAlongZ(x, y, z0, z1) { // horizontal pipe running along z
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(DP_R, DP_R, Math.abs(z1 - z0), 12), dpMat);
+  m.rotation.x = Math.PI / 2; m.position.set(x, y, (z0 + z1) / 2); m.castShadow = true; group.add(m);
+}
+function dpAlongX(y, z, x0, x1) { // horizontal pipe running along x
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(DP_R, DP_R, Math.abs(x1 - x0), 12), dpMat);
+  m.rotation.z = Math.PI / 2; m.position.set((x0 + x1) / 2, y, z); m.castShadow = true; group.add(m);
+}
+function dpElbow(x, y, z) {
+  const m = new THREE.Mesh(new THREE.SphereGeometry(DP_R * 1.15, 12, 10), dpMat);
+  m.position.set(x, y, z); group.add(m);
+}
+function dpCollar(x, y, z) { // flashing collar where a pipe passes through a slab
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(DP_R + 0.03, DP_R + 0.03, 0.04, 14), gutterMat);
+  m.position.set(x, y, z); group.add(m);
+}
+
+// gutter: pts = [[x, dropBelowHighPoint], ...] from the roof's left end to right end (piecewise-linear bottom);
+// outlets = x positions where a downpipe leaves the gutter
+function addRoofGutter(edgeZ, dir, edgeY, pts, outletXs) {
+  pts = pts.slice().sort((p, q) => p[0] - q[0]);       // segments are built left-to-right in x
+  const zc = edgeZ + dir * (GUT_W / 2);                  // gutter centreline, just outside the panel edge
+  const bTop = edgeY - 0.14;                             // gutter bottom at its highest point
+  for (let i = 0; i < pts.length - 1; i++) gutterSegment(pts[i][0], pts[i + 1][0], bTop - pts[i][1], bTop - pts[i + 1][1], zc, dir);
+  [pts[0], pts[pts.length - 1]].forEach(([ex, ed]) => { // end caps
+    const cap = new THREE.Mesh(new THREE.BoxGeometry(0.015, GUT_H - 0.01, GUT_W), gutterMat);
+    cap.position.set(ex, bTop - ed + (GUT_H - 0.01) / 2, zc);
+    group.add(cap);
+  });
+  const dropAt = (x) => { for (let i = 0; i < pts.length - 1; i++) { const [x0, d0] = pts[i], [x1, d1] = pts[i + 1]; if (x >= x0 - 1e-6 && x <= x1 + 1e-6) return d0 + (d1 - d0) * ((x - x0) / (x1 - x0 || 1)); } return 0; };
+
+  const zI = edgeZ - dir * (0.05 + DP_R + DP_GAP);       // drop line: just inside the 0.1m parapet's inner face
+  const zW = dir > 0 ? D + DP_R + DP_GAP : -(DP_R + DP_GAP); // pipe centre when flush against the wall face
+  const yRun = soffitY - DP_R - DP_GAP;                  // horizontal run, tight under the soffit
+  outletXs.forEach((ox) => {
+    const bOut = bTop - dropAt(ox);
+    const outlet = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.03, 0.14), gutterMat); // drop outlet under the gutter
+    outlet.position.set(ox, bOut - 0.005, zc); group.add(outlet);
+    const yJog = bOut - 0.07;                            // jog level, above the balustrade top rail (7.4m)
+    dpCyl(ox, yJog + 0.0, bOut - 0.02, zc);              // short drop from the outlet
+    dpElbow(ox, yJog, zc);
+    dpAlongZ(ox, yJog, zc, zI);                          // jog inward over the parapet
+    dpElbow(ox, yJog, zI);
+    dpCyl(ox, yRun, yJog, zI);                           // inside-parapet drop, through the slab
+    dpCollar(ox, H + 0.3 + 0.02, zI);                    // collar on the deck surface
+    dpElbow(ox, yRun, zI);
+    dpAlongZ(ox, yRun, zI, zW);                          // horizontal run under the soffit to the wall
+    dpElbow(ox, yRun, zW);
+    // flush vertical run stops just above the GF canopy; the elbow kicks 0.3m out and discharges onto a splash plate
+    // so the water spreads and runs off down the canopy slope to its outer edge
+    const surf = gfShadeY - (dir > 0 ? (zW - D) : (-zW)) * LOW_SLOPE_RATIO + 0.06; // canopy top face at the wall-side
+    const yEnd = surf + 0.2;
+    dpCyl(ox, yEnd, yRun, zW);
+    dpElbow(ox, yEnd, zW);
+    dpAlongZ(ox, yEnd, zW, zW + dir * 0.3);                                // kick-out stub, pointing away from the wall
+    const zS = zW + dir * 0.3;
+    dpElbow(ox, yEnd, zS);
+    const surfS = surf - 0.3 * LOW_SLOPE_RATIO;                             // slab is lower 0.3m further out
+    dpCyl(ox, surfS + 0.09, yEnd, zS);                                      // nozzle, ends just above the plate
+    const plate = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.02, 0.4), gutterMat); // splash plate / spreader
+    plate.position.set(ox, surfS + 0.03, zS + dir * 0.05);
+    plate.rotation.x = (dir > 0 ? 1 : -1) * Math.atan(LOW_SLOPE_RATIO);     // follows the canopy slope
+    plate.castShadow = true;
+    group.add(plate);
+  });
+  return { zc, bTop, dropAt, zI, yRun };
+}
+// Wall openings dictate x: back wall is clear at x=0.6 and 8.4 (ground + first floor). Front wall is clear at x=0.6 and
+// x=4.5 only (living/dining sliding doors, master window and the balcony sit between; the balcony spans x=5.3..9).
+// Back gutter: high in the middle, falls 1:100 both ways to the outlets. Front gutter: a single outlet at x=0.6 (the
+// central x=4.5 pipe was dropped), high at the right end and falling 1:100 the full width to it.
+addRoofGutter(-ohBack, -1, backEdgeY, [[-ohLeft, 0.039], [0.6, 0.039], [4.5, 0], [8.4, 0.039], [W + ohRight, 0.039]], [0.6, 8.4]);
+// Front gutter: two outlets - x=0.6 (down the FRONT wall, stops above the front canopy) and the right-end one below (down the
+// RIGHT side wall, outlet in line with the wall face at x=W+0.07). High point midway between them (x=4.835), falling ~1:100 both ways.
+const fg = addRoofGutter(D + ohFront, +1, frontEdgeY, [[-ohLeft, 0.0435], [0.6, 0.0435], [4.835, 0], [W + DP_R + DP_GAP, 0.0424], [W + ohRight, 0.0424]], [0.6]);
+
+// Front downpipe: sits at the RIGHT end of the front gutter but does NOT run down the front wall. It goes down the SIDE
+// (x=W) wall instead: jog in, drop inside the parapet through the slab, one run under the soffit straight back along the
+// wall plane, then flush down the side wall face just behind the front corner (z=D-0.22, clear of the dining window at z=D-3.9..D-2.4).
+// The right GF canopy is in the way, so like the back pipes it stops just above the canopy: elbow kicks 0.3m out onto a
+// splash plate and the water runs off down the canopy slope. ----
+{
+  const xo = W + DP_R + DP_GAP;                            // outlet/drop line already in the plane of the side wall face, so no sideways run is needed
+  const bOut = fg.bTop - fg.dropAt(xo);
+  const outlet = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.03, 0.14), gutterMat);
+  outlet.position.set(xo, bOut - 0.005, fg.zc); group.add(outlet);
+  const yJog = bOut - 0.07, yRun = fg.yRun, zP = D - 0.22, xW = xo;
+  dpCyl(xo, yJog, bOut - 0.02, fg.zc); dpElbow(xo, yJog, fg.zc);
+  dpAlongZ(xo, yJog, fg.zc, fg.zI); dpElbow(xo, yJog, fg.zI);         // jog inward over the parapet
+  dpCyl(xo, yRun, yJog, fg.zI); dpCollar(xo, H + 0.3 + 0.02, fg.zI);  // inside-parapet drop, through the deck slab
+  dpElbow(xo, yRun, fg.zI);
+  dpAlongZ(xo, yRun, fg.zI, zP); dpElbow(xo, yRun, zP);               // one run under the soffit, straight back along the wall plane to the front corner
+  const surf = gfShadeY - (xW - W) * LOW_SLOPE_RATIO + 0.06;          // right canopy top face at the wall-side
+  const yEnd = surf + 0.2;
+  dpCyl(xW, yEnd, yRun, zP);                                           // flush vertical run down the side wall
+  dpElbow(xW, yEnd, zP);
+  dpAlongX(yEnd, zP, xW, xW + 0.3);                                    // kick-out stub, pointing away from the wall
+  const xS = xW + 0.3;
+  dpElbow(xS, yEnd, zP);
+  const surfS = surf - 0.3 * LOW_SLOPE_RATIO;
+  dpCyl(xS, surfS + 0.09, yEnd, zP);                                   // nozzle, ends just above the plate
+  const plate = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.02, 0.5), gutterMat); // splash plate / spreader
+  plate.position.set(xS + 0.05, surfS + 0.03, zP);
+  plate.rotation.z = -Math.atan(LOW_SLOPE_RATIO);                      // follows the canopy slope (falls toward +x)
+  plate.castShadow = true;
+  group.add(plate);
+}
+
 let theta = Math.PI / 4, phi = 1.1, radius = 22;
 let dragging = false, lastX = 0, lastY = 0;
 function updateCamera() {
