@@ -45,10 +45,10 @@ const TRIM = "#2a2a2a";
 
 const openings = [
   // FRONT (south, z = D)
-  { wall: "front", x0: 1.05, x1: 3.45, y0: 0, y1: 2, type: "door", label: "Living sliding 2.4x2" },
-  { wall: "front", x0: 5.55, x1: 7.95, y0: 0, y1: 2, type: "door", label: "Dining sliding 2.4x2" },
+  { wall: "front", x0: 1.05, x1: 3.45, y0: 0, y1: 2.1, type: "door", label: "Living sliding 2.4x2.1" },
+  { wall: "front", x0: 5.55, x1: 7.95, y0: 0, y1: 2.1, type: "door", label: "Dining sliding 2.4x2.1" },
   { wall: "front", x0: 1.5, x1: 3.0, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Master 1.5x1.2" },
-  { wall: "front", x0: 5.85, x1: 7.65, y0: FLOOR_H, y1: FLOOR_H + 2, type: "door", label: "Balcony sliding 1.8x2" },
+  { wall: "front", x0: 5.75, x1: 7.75, y0: FLOOR_H, y1: FLOOR_H + 2.1, type: "door", label: "Balcony sliding 2x2.1" },
   // BACK (north, z = 0)
   { wall: "back", x0: 4.1, x1: 5.0, y0: 0, y1: 2, type: "door", label: "Kitchen door" },
   { wall: "back", x0: 6.25, x1: 7.75, y0: 0.75, y1: 1.95, type: "window", label: "Kitchen 1.5x1.2" },
@@ -864,7 +864,7 @@ addPottedPlant(8.5, D + 0.6, 1.1);
 addPottedPlant(4.65, D + 3.7, 0.9);
 
 
-const balX0 = 5.3, balX1 = W; // 5.3m -> east wall, matches Chill Room's width on the front wall
+const balX0 = 0, balX1 = W; // full 9m front of the house (was 5.3..9, chill room width only)
 const balDepth = 1.5;
 const balZ0 = D, balZ1 = D + balDepth;
 const deckMat = new THREE.MeshStandardMaterial({ color: WALL_DARK, roughness: 0.9 });
@@ -891,9 +891,10 @@ const railRight = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, balDepth), ra
 railRight.position.set(balX1, FLOOR_H + railH, (balZ0 + balZ1) / 2);
 group.add(railRight);
 // balusters along the front edge
-for (let i = 0; i <= 12; i++) {
+const balBays = 29; // keeps the original ~0.31m baluster spacing over the full 9m
+for (let i = 0; i <= balBays; i++) {
   const baluster = new THREE.Mesh(new THREE.BoxGeometry(0.03, railH, 0.03), railMat);
-  baluster.position.set(balX0 + (i / 12) * (balX1 - balX0), railY, balZ1);
+  baluster.position.set(balX0 + (i / balBays) * (balX1 - balX0), railY, balZ1);
   group.add(baluster);
 }
 // balusters along the left and right edges
