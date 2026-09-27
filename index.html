@@ -801,13 +801,13 @@
     <path d="M205.5,300 A27,27 0 0 1 178.5,327" fill="none" stroke="#b0a890" stroke-width="1" stroke-dasharray="2,2"/>
     <line x1="178.5" y1="300" x2="178.5" y2="327" stroke="#1a1a1a" stroke-width="1.4"/>
 
-    <!-- Window: bottom wall, 1.5m wide x 1.2m tall, centered directly above the Living sliding door below -->
-    <line x1="105" y1="450" x2="150" y2="450" stroke="#fbf9f3" stroke-width="5"/>
-    <line x1="105" y1="447" x2="127.5" y2="447" stroke="#1a1a1a" stroke-width="1.4"/>
-    <line x1="127.5" y1="453" x2="150" y2="453" stroke="#1a1a1a" stroke-width="1.4"/>
-    <path d="M111,447 L118,447 M114.5,444 L118,447 L114.5,450" fill="none" stroke="#6b6558" stroke-width="0.8"/>
-    <path d="M144,453 L137,453 M140.5,450 L137,453 L140.5,456" fill="none" stroke="#6b6558" stroke-width="0.8"/>
-    <text x="127.5" y="440" text-anchor="middle" style="font-size:6.5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">1.5m x 1.2m</text>
+    <!-- Sliding door: master bedroom to balcony, bottom (front) wall, 2m wide x 2.1m tall, centered directly above the Living sliding door below (center=127.5) -->
+    <line x1="97.5" y1="450" x2="157.5" y2="450" stroke="#fbf9f3" stroke-width="5"/>
+    <line x1="97.5" y1="447" x2="127.5" y2="447" stroke="#1a1a1a" stroke-width="1.4"/>
+    <line x1="127.5" y1="453" x2="157.5" y2="453" stroke="#1a1a1a" stroke-width="1.4"/>
+    <path d="M104,447 L112,447 M108,444 L112,447 L108,450" fill="none" stroke="#6b6558" stroke-width="0.8"/>
+    <path d="M151,453 L143,453 M147,450 L143,453 L147,456" fill="none" stroke="#6b6558" stroke-width="0.8"/>
+    <text x="127.5" y="463" text-anchor="middle" style="font-size:6px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">2m x 2.1m sliding door</text>
 
     <!-- Door: bottom-right corner, inswinging into ensuite -->
     <line x1="135" y1="330" x2="162" y2="330" stroke="#fbf9f3" stroke-width="3"/>
@@ -1049,6 +1049,14 @@
     <line x1="258" y1="246" x2="258" y2="330" stroke="#1a1a1a" stroke-width="1.6"/>
     <text x="245" y="235" text-anchor="middle" transform="rotate(-90 245,235)" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">0.9m door</text>
 
+    <!-- Window: east face of the utility room, 0.9m wide x 1.0m tall (top level with the door head at 2.0m), centered between the door and the room's south wall (matches 3d_exterior.html winCenterZ=6.6 -> y=288) -->
+    <line x1="258" y1="274.5" x2="258" y2="301.5" stroke="#fbf9f3" stroke-width="5"/>
+    <line x1="255" y1="274.5" x2="255" y2="288" stroke="#1a1a1a" stroke-width="1.4"/>
+    <line x1="261" y1="288" x2="261" y2="301.5" stroke="#1a1a1a" stroke-width="1.4"/>
+    <path d="M255,279 L255,283 M252,281 L255,283 L258,281" fill="none" stroke="#6b6558" stroke-width="0.8"/>
+    <path d="M261,297 L261,293 M258,295 L261,293 L264,295" fill="none" stroke="#6b6558" stroke-width="0.8"/>
+    <text x="245" y="288" text-anchor="middle" transform="rotate(-90 245,288)" style="font-size:5px; fill:#6b6558; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">0.9m x 1.0m</text>
+
     <!-- actual stair footprint within the room, dotted reference - 1.0m wide, flush against the outer/west wall, matching first floor leg2/landing (leg2 going updated 250mm -> 270mm, run 1.5m -> 1.62m) -->
     <rect x="300" y="221.4" width="30" height="48.6" fill="none" stroke="#c99a3a" stroke-width="1" stroke-dasharray="2,2"/>
     <text x="315" y="245" text-anchor="middle" style="font-size:4.5px; fill:#a97e1f; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">stairs up</text>
@@ -1112,9 +1120,9 @@
     <!-- GF Dining sliding door 2.4m x2.1m, reverted back from window -->
     <rect x="302" y="216" width="96" height="84" fill="#dce8ec" stroke="#1a1a1a" stroke-width="0.8"/>
     <line x1="350" y1="216" x2="350" y2="300" stroke="#1a1a1a" stroke-width="0.5"/>
-    <!-- FF Master bedroom window, 1.5m x1.2m, centered directly above the Living sliding door -->
-    <rect x="140" y="102" width="60" height="48" fill="#dce8ec" stroke="#1a1a1a" stroke-width="0.8"/>
-    <line x1="170" y1="102" x2="170" y2="150" stroke="#1a1a1a" stroke-width="0.5"/>
+    <!-- FF Master bedroom sliding door onto the balcony, 2m x2.1m, centered directly above the Living sliding door -->
+    <rect x="130" y="96" width="80" height="84" fill="#dce8ec" stroke="#1a1a1a" stroke-width="0.8"/>
+    <line x1="170" y1="96" x2="170" y2="180" stroke="#1a1a1a" stroke-width="0.5"/>
     <!-- FF Balcony door 2m x2.1m, aligned above dining door -->
     <rect x="310" y="96" width="80" height="84" fill="#dce8ec" stroke="#1a1a1a" stroke-width="0.8"/>
     <line x1="350" y1="96" x2="350" y2="180" stroke="#1a1a1a" stroke-width="0.5"/>
@@ -1152,7 +1160,7 @@
     <line x1="427.6" y1="152" x2="427.6" y2="180" stroke="#1a1a1a" stroke-width="0.7"/>
     <line x1="80" y1="300" x2="440" y2="300" stroke="#1a1a1a" stroke-width="1.5"/>
     <text x="170" y="325" text-anchor="middle" class="dim-text" font-size="8">Living door</text>
-    <text x="170" y="316" text-anchor="middle" class="dim-text" font-size="6.5">Master window</text>
+    <text x="170" y="316" text-anchor="middle" class="dim-text" font-size="6.5">Master door</text>
     <text x="350" y="325" text-anchor="middle" class="dim-text" font-size="8">Dining door / Balcony door</text>
   </svg>
 </div>
