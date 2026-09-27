@@ -47,7 +47,7 @@ const openings = [
   // FRONT (south, z = D)
   { wall: "front", x0: 1.05, x1: 3.45, y0: 0, y1: 2.1, type: "door", label: "Living sliding 2.4x2.1" },
   { wall: "front", x0: 5.55, x1: 7.95, y0: 0, y1: 2.1, type: "door", label: "Dining sliding 2.4x2.1" },
-  { wall: "front", x0: 1.5, x1: 3.0, y0: FLOOR_H + 0.75, y1: FLOOR_H + 1.95, type: "window", label: "Master 1.5x1.2" },
+  { wall: "front", x0: 1.25, x1: 3.25, y0: FLOOR_H, y1: FLOOR_H + 2.1, type: "door", label: "Master sliding 2x2.1" },
   { wall: "front", x0: 5.75, x1: 7.75, y0: FLOOR_H, y1: FLOOR_H + 2.1, type: "door", label: "Balcony sliding 2x2.1" },
   // BACK (north, z = 0)
   { wall: "back", x0: 4.1, x1: 5.0, y0: 0, y1: 2, type: "door", label: "Kitchen door" },
@@ -161,11 +161,43 @@ group.position.set(-W / 2, 0, -D / 2);
 scene.add(group);
 
 const wallMat = new THREE.MeshStandardMaterial({ color: WALL, roughness: 0.9 });
-const houseMesh = new THREE.Mesh(new THREE.BoxGeometry(W, H, D), wallMat);
-houseMesh.position.set(W / 2, H / 2, D / 2);
-houseMesh.castShadow = true;
-houseMesh.receiveShadow = true;
-group.add(houseMesh);
+// ---- House shell: hollow walls with real openings cut through them, so glass windows/doors are see-through ----
+// (Previously a solid W x H x D box with the openings painted on its surface.) Interior walls/furniture are not modeled -
+// looking through the glass shows the empty floor plates.
+const WALL_T = 0.2;
+function addWallShell(wall) {
+  // front/back walls run the full 9m; side walls fit BETWEEN them (z = WALL_T..D-WALL_T) so the corners don't overlap and z-fight
+  const isNS = wall === "front" || wall === "back";
+  const u0 = isNS ? 0 : WALL_T, u1 = isNS ? W : D - WALL_T;
+  const shape = new THREE.Shape();
+  shape.moveTo(u0, 0); shape.lineTo(u1, 0); shape.lineTo(u1, H); shape.lineTo(u0, H); shape.lineTo(u0, 0);
+  openings.filter((o) => o.wall === wall).forEach((o) => {
+    const hole = new THREE.Path();
+    hole.moveTo(o.x0, o.y0); hole.lineTo(o.x0, o.y1); hole.lineTo(o.x1, o.y1); hole.lineTo(o.x1, o.y0); hole.lineTo(o.x0, o.y0);
+    shape.holes.push(hole);
+  });
+  const geo = new THREE.ExtrudeGeometry(shape, { depth: WALL_T, bevelEnabled: false });
+  const m = new THREE.Mesh(geo, wallMat);
+  if (wall === "front") m.position.set(0, 0, D - WALL_T);
+  if (wall === "back") m.position.set(0, 0, 0);
+  if (wall === "right") { m.rotation.y = -Math.PI / 2; m.position.set(W, 0, 0); }   // local x -> world z, extrudes toward -x
+  if (wall === "left") { m.rotation.y = -Math.PI / 2; m.position.set(WALL_T, 0, 0); }
+  m.castShadow = true;
+  m.receiveShadow = true;
+  group.add(m);
+}
+["front", "back", "right", "left"].forEach(addWallShell);
+// floor plates: ground floor slab, first floor slab, roof/rooftop-deck slab
+const floorMat = new THREE.MeshStandardMaterial({ color: "#cfc8b8", roughness: 0.9 });
+function addPlate(y0, y1, mat) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(W, y1 - y0, D), mat);
+  m.position.set(W / 2, (y0 + y1) / 2, D / 2);
+  m.receiveShadow = true;
+  group.add(m);
+}
+addPlate(0, 0.06, floorMat);
+addPlate(FLOOR_H - 0.15, FLOOR_H, floorMat);
+addPlate(H - 0.2, H, wallMat);
 
 const trimGeo = new THREE.BoxGeometry(W + 0.04, 0.06, D + 0.04);
 const trimMat = new THREE.MeshStandardMaterial({ color: TRIM });
@@ -403,32 +435,48 @@ waterTank.castShadow = true;
 group.add(waterTank);
 
 
+const glassMat = new THREE.MeshPhysicalMaterial({
+  color: GLASS, transparent: true, opacity: 0.28, roughness: 0.05, metalness: 0.0,
+  side: THREE.DoubleSide, depthWrite: false
+});
+const solidDoorMat = new THREE.MeshStandardMaterial({ color: DOOR_SOLID, roughness: 0.7 });
+const frameMat = new THREE.MeshStandardMaterial({ color: TRIM });
 openings.forEach((o) => {
-  const { size, pos } = wallToWorld(o);
   const isGlassDoor = o.type === "door" && o.label.toLowerCase().includes("sliding");
   const isGlass = o.type === "window" || isGlassDoor;
-  const isFrontBack = o.wall === "front" || o.wall === "back";
-  const outward = o.wall === "front" ? 1 : o.wall === "back" ? -1 : o.wall === "right" ? 1 : -1;
-
-  const pad = 0.06;
-  const frameMat = new THREE.MeshStandardMaterial({ color: TRIM });
-  const frameSize = isFrontBack
-    ? [size[0] + pad, size[1] + pad, size[2]]
-    : [size[0], size[1] + pad, size[2] + pad];
-  const frameMesh = new THREE.Mesh(new THREE.BoxGeometry(...frameSize), frameMat);
-  frameMesh.position.set(...pos);
-  group.add(frameMesh);
-
-  const glassMat = isGlass
-    ? new THREE.MeshBasicMaterial({ color: GLASS })
-    : new THREE.MeshBasicMaterial({ color: DOOR_SOLID });
-  const glassPos = [...pos];
-  const offsetAxis = isFrontBack ? 2 : 0;
-  glassPos[offsetAxis] += outward * 0.02;
-  const mesh = new THREE.Mesh(new THREE.BoxGeometry(...size), glassMat);
-  mesh.position.set(...glassPos);
-  mesh.userData.label = o.label;
-  group.add(mesh);
+  const w = o.x1 - o.x0, h = o.y1 - o.y0;
+  const mid = (o.x0 + o.x1) / 2, yMid = (o.y0 + o.y1) / 2;
+  // everything is built in a local frame (u = along wall, v = up, n = outward normal) then placed on the wall
+  const holder = new THREE.Group();
+  if (o.wall === "front") { holder.position.set(mid, yMid, D); }
+  if (o.wall === "back") { holder.position.set(mid, yMid, 0); holder.rotation.y = Math.PI; }
+  if (o.wall === "right") { holder.position.set(W, yMid, mid); holder.rotation.y = Math.PI / 2; }
+  if (o.wall === "left") { holder.position.set(0, yMid, mid); holder.rotation.y = -Math.PI / 2; }
+  const plane = -0.07; // glass/door leaf sits recessed 70mm inside the outer wall face
+  const fT = 0.05, fD = 0.08; // frame bar thickness and depth
+  const bar = (bw, bh, x, y) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, fD), frameMat);
+    m.position.set(x, y, plane);
+    holder.add(m);
+  };
+  bar(w, fT, 0, h / 2 - fT / 2);          // head
+  bar(w, fT, 0, -h / 2 + fT / 2);         // sill / threshold
+  bar(fT, h, -w / 2 + fT / 2, 0);         // jambs
+  bar(fT, h, w / 2 - fT / 2, 0);
+  if (isGlass && w > 1.0) bar(fT, h, 0, 0); // centre mullion / meeting stile for sliding doors and wide windows
+  const leaf = new THREE.Mesh(
+    new THREE.BoxGeometry(w - fT * 2, h - fT * 2, isGlass ? 0.012 : 0.05),
+    isGlass ? glassMat : solidDoorMat
+  );
+  leaf.position.set(0, 0, plane);
+  leaf.userData.label = o.label;
+  holder.add(leaf);
+  group.add(holder);
+  holder.updateMatrixWorld(true);
+  // re-parent the leaf directly under group (keeping its world transform) so the hover raycast, which only checks
+  // group's direct children, still finds the label
+  group.attach(leaf);
+  if (isGlass) leaf.renderOrder = 2;
 });
 
 const shadeMat = new THREE.MeshStandardMaterial({ color: ROOF, roughness: 0.85 });
@@ -1053,7 +1101,7 @@ function addRoofGutter(edgeZ, dir, edgeY, pts, outletXs) {
   return { zc, bTop, dropAt, zI, yRun };
 }
 // Wall openings dictate x: back wall is clear at x=0.6 and 8.4 (ground + first floor). Front wall is clear at x=0.6 and
-// x=4.5 only (living/dining sliding doors, master window and the balcony sit between; the balcony spans x=5.3..9).
+// x=4.5 only (living/dining sliding doors, master and balcony sliding doors, and the balcony sit between; the balcony spans x=5.3..9).
 // Back gutter: high in the middle, falls 1:100 both ways to the outlets. Front gutter: a single outlet at x=0.6 (the
 // central x=4.5 pipe was dropped), high at the right end and falling 1:100 the full width to it.
 addRoofGutter(-ohBack, -1, backEdgeY, [[-ohLeft, 0.039], [0.6, 0.039], [4.5, 0], [8.4, 0.039], [W + ohRight, 0.039]], [0.6, 8.4]);
