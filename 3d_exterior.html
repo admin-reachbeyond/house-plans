@@ -417,14 +417,28 @@ winSill.position.set(tankBoxX0, deckY + winSillH / 2, winCenterZ);
 group.add(winSill);
 group.add(slopedWallAlongZ(tankBoxX0, 0.12, winZ0, winZ1, winTop, stairWallMat));           // header above window, sloped top to meet roof
 
-const winGlassMat = new THREE.MeshBasicMaterial({ color: GLASS });
+// window: same construction as the house windows - a frame ring (50mm bars, 80mm deep) around the opening with
+// see-through tinted glass set in it, so you can look into the utility room / tank from the terrace
+const winGlassMat = new THREE.MeshPhysicalMaterial({
+  color: GLASS, transparent: true, opacity: 0.28, roughness: 0.05, metalness: 0.0,
+  side: THREE.DoubleSide, depthWrite: false
+});
 const winFrameMat = new THREE.MeshStandardMaterial({ color: TRIM });
-const winFramePad = 0.03; // small pad on sides/bottom only, so the top stays flush with winTop (matching the door)
-const winFrame = new THREE.Mesh(new THREE.BoxGeometry(0.12, winH + winFramePad, winW + winFramePad * 2), winFrameMat);
-winFrame.position.set(tankBoxX0, deckY + winTop - (winH + winFramePad) / 2, winCenterZ);
-group.add(winFrame);
-const winGlass = new THREE.Mesh(new THREE.BoxGeometry(0.05, winH, winW - 0.05), winGlassMat);
-winGlass.position.set(tankBoxX0 - 0.04, deckY + winSillH + winH / 2, winCenterZ); // nudged outward (-x, toward the terrace) so it isn't swallowed inside the frame
+const wfT = 0.05, wfD = 0.08;
+const winY0 = deckY + winSillH, winYc = winY0 + winH / 2;
+const wBar = (sy, sz, y, z) => {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(wfD, sy, sz), winFrameMat);
+  m.position.set(tankBoxX0, y, z);
+  group.add(m);
+};
+wBar(wfT, winW, winY0 + winH - wfT / 2, winCenterZ);    // head
+wBar(wfT, winW, winY0 + wfT / 2, winCenterZ);           // sill
+wBar(winH, wfT, winYc, winZ0 + wfT / 2);                // jambs
+wBar(winH, wfT, winYc, winZ1 - wfT / 2);
+const winGlass = new THREE.Mesh(new THREE.BoxGeometry(0.012, winH - wfT * 2, winW - wfT * 2), winGlassMat);
+winGlass.position.set(tankBoxX0, winYc, winCenterZ);
+winGlass.renderOrder = 2;
+winGlass.userData.label = "Utility room 0.9x1.0";
 group.add(winGlass);
 
 // the tank itself: 1.6m diameter x 1.8m tall cylinder, centered in the compartment
