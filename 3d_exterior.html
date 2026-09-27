@@ -1114,14 +1114,15 @@ function addRoofGutter(edgeZ, dir, edgeY, pts, outletXs) {
   });
   return { zc, bTop, dropAt, zI, yRun };
 }
-// Wall openings dictate x: back wall is clear at x=0.6 and 8.4 (ground + first floor). Front wall is clear at x=0.6 and
-// x=4.5 only (living/dining sliding doors, master and balcony sliding doors, and the balcony sit between; the balcony spans x=5.3..9).
+// Wall openings dictate x: back wall is clear at x=0.6 and 8.4 (ground + first floor). The front wall carries no downpipes -
+// the full-width first floor balcony (x=0..9) sits under it, so both front pipes go down the side walls instead.
 // Back gutter: high in the middle, falls 1:100 both ways to the outlets. Front gutter: a single outlet at x=0.6 (the
 // central x=4.5 pipe was dropped), high at the right end and falling 1:100 the full width to it.
 addRoofGutter(-ohBack, -1, backEdgeY, [[-ohLeft, 0.039], [0.6, 0.039], [4.5, 0], [8.4, 0.039], [W + ohRight, 0.039]], [0.6, 8.4]);
-// Front gutter: two outlets - x=0.6 (down the FRONT wall, stops above the front canopy) and the right-end one below (down the
-// RIGHT side wall, outlet in line with the wall face at x=W+0.07). High point midway between them (x=4.835), falling ~1:100 both ways.
-const fg = addRoofGutter(D + ohFront, +1, frontEdgeY, [[-ohLeft, 0.0435], [0.6, 0.0435], [4.835, 0], [W + DP_R + DP_GAP, 0.0424], [W + ohRight, 0.0424]], [0.6]);
+// Front gutter: two outlets, one at EACH END, both in line with the side wall faces (x=-0.07 and x=W+0.07), each going down a
+// SIDE wall (see the two blocks below). Nothing runs down the front wall any more - the full-width first floor balcony is
+// in the way (the old x=0.6 front-wall pipe discharged onto the balcony deck). High point midway (x=4.5), ~1:100 both ways.
+const fg = addRoofGutter(D + ohFront, +1, frontEdgeY, [[-ohLeft, 0.0457], [-(DP_R + DP_GAP), 0.0457], [4.5, 0], [W + DP_R + DP_GAP, 0.0457], [W + ohRight, 0.0457]], []);
 
 // Front downpipe: sits at the RIGHT end of the front gutter but does NOT run down the front wall. It goes down the SIDE
 // (x=W) wall instead: jog in, drop inside the parapet through the slab, one run under the soffit straight back along the
@@ -1155,13 +1156,36 @@ const fg = addRoofGutter(D + ohFront, +1, frontEdgeY, [[-ohLeft, 0.0435], [0.6, 
   group.add(plate);
 }
 
+// Front-LEFT downpipe: mirror of the right-hand one above. Leaves the left end of the front gutter already in the plane of the
+// left (east) wall face, jogs in, drops inside the parapet through the deck slab, one run under the soffit straight back to
+// the front corner, then flush down the left wall face just behind the corner (z=D-0.22: clear of the master side window
+// at z=D-2.75..D-1.25 and the living window at z=D-1.4..D-0.5). There is no canopy on this side at the front corner (the
+// carport stops at z=D-2), so it runs all the way to the ground and ends in a shoe kicking out onto the concrete apron,
+// like the canopy corner pipes - the future ground drain picks it up there. ----
+{
+  const xo = -(DP_R + DP_GAP);
+  const bOut = fg.bTop - fg.dropAt(xo);
+  const outlet = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.03, 0.14), gutterMat);
+  outlet.position.set(xo, bOut - 0.005, fg.zc); group.add(outlet);
+  const yJog = bOut - 0.07, yRun = fg.yRun, zP = D - 0.22;
+  dpCyl(xo, yJog, bOut - 0.02, fg.zc); dpElbow(xo, yJog, fg.zc);
+  dpAlongZ(xo, yJog, fg.zc, fg.zI); dpElbow(xo, yJog, fg.zI);         // jog inward over the parapet
+  dpCyl(xo, yRun, yJog, fg.zI); dpCollar(xo, H + 0.3 + 0.02, fg.zI);  // inside-parapet drop, through the deck slab
+  dpElbow(xo, yRun, fg.zI);
+  dpAlongZ(xo, yRun, fg.zI, zP); dpElbow(xo, yRun, zP);               // one run under the soffit back to the front corner
+  const yShoe = 0.06 + DP_R;
+  dpCyl(xo, yShoe, yRun, zP);                                          // flush vertical run down the left side wall, to the ground
+  dpElbow(xo, yShoe, zP);
+  dpAlongX(yShoe, zP, xo - 0.28, xo);                                  // ground shoe, kicks out away from the wall (-x)
+}
+
 // ---- Rooftop deck drainage (wind-blown rain). The roof panels keep straight-down rain off the deck, but rain blown in
 // through the open band under the panel edges wets the perimeter. The deck falls ~1:100 toward the FRONT and BACK
 // parapets (high line across the middle, near the stair/utility block). A flush slotted-grate channel (~140mm) runs along
 // the base of each of those parapets and falls sideways to the roof-pipe drop points, where a gully outlet connects into
 // the SAME four downpipes (no new pipes). Small overflow scuppers through the parapet, 50mm above deck, sit beside each
-// outlet so a blocked grate spills outside instead of ponding (front ones have a 200mm projecting spout; the front-right one sits at
-// x=9.5, past the balcony's right end, so overflow can't land on the balcony). (Falls are not visible in the model - deck is drawn flat.) ----
+// outlet so a blocked grate spills outside instead of ponding (front ones have a 200mm projecting spout and sit past the balcony's
+// ends, at x=-0.5 and x=9.5, so overflow can't land on the full-width balcony). (Falls are not visible in the model - deck is drawn flat.) ----
 {
   const deckTopY = H + 0.3;
   const chW = 0.14, chL = (W + ohRight - 0.05) - (-ohLeft + 0.05);
@@ -1175,7 +1199,7 @@ const fg = addRoofGutter(D + ohFront, +1, frontEdgeY, [[-ohLeft, 0.0435], [0.6, 
   let bi = 0;
   const channels = [
     { zc: -ohBack + 0.12, outlets: [0.6, 8.4], scup: [1.2, 7.9], parZ: -ohBack },
-    { zc: D + ohFront - 0.12, outlets: [0.6, W + DP_R + DP_GAP], scup: [1.2, 9.5], parZ: D + ohFront, spout: 0.2 }, // right scupper moved to x=9.5, past the balcony's right end (balcony spans x=5.3..9)
+    { zc: D + ohFront - 0.12, outlets: [-(DP_R + DP_GAP), W + DP_R + DP_GAP], scup: [-0.5, 9.5], parZ: D + ohFront, spout: 0.2 }, // both front pipes now go down the side walls; scuppers sit past both ends of the full-width balcony (x=0..9)
   ];
   channels.forEach((c) => {
     const plate = new THREE.Mesh(new THREE.BoxGeometry(chL, 0.008, chW), gratePlateMat); // channel body seen through the slots
